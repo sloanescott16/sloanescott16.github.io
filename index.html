@@ -37,12 +37,13 @@ a.tile:active{transform:scale(.98)}
 .tile.soon img{filter:grayscale(1) drop-shadow(0 0 1px rgba(255,255,255,.4))}
 .soon .pill{position:absolute;top:12px;right:12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
-.hk img{width:62%;max-width:200px}
+.tile.hk img{width:62%;max-width:200px;filter:url(#cut) grayscale(1)}
 .fb{--c:#3b82f6}.bb{--c:#c0111f}.hk{--c:#00843d}.bk{--c:#0064b1}
 @media (max-width:420px){.grid{gap:12px}.tile{border-radius:16px;gap:8px}.soon .pill{top:8px;right:8px;font-size:10px}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="cut"><feComponentTransfer><feFuncA type="linear" slope="1.6" intercept="-0.45"/></feComponentTransfer></filter></svg>
 <h1>Press Box</h1>
 <div class="sub">Pick your game</div>
 <main class="grid">
