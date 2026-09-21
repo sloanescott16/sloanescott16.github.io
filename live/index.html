@@ -76,11 +76,11 @@ h2 a:hover{text-decoration:underline;text-underline-offset:4px}
 "use strict";
 const SITE = "https://sloanescott16.github.io/";
 const LEAGUES = [
-  { key:"nfl", label:"NFL",              path:"football/nfl",              q:"",                       fav:"DAL", href:SITE+"lone-star-board/?lg=nfl#scores" },
-  { key:"cfb", label:"College football", path:"football/college-football", q:"?groups=80&limit=400",   fav:"TTU", href:SITE+"lone-star-board/?lg=cfb#scores", slim:true },
-  { key:"mlb", label:"MLB",              path:"baseball/mlb",              q:"",                       fav:"TEX", href:SITE+"lone-star-diamond/#live" },
-  { key:"nhl", label:"NHL",              path:"hockey/nhl",                q:"",                       fav:"DAL", href:SITE+"the-crease/" },
-  { key:"nba", label:"NBA",              path:"basketball/nba",            q:"",                       fav:"DAL", href:SITE+"the-paint/" }
+  { key:"nfl", label:"NFL",              path:"football/nfl",              q:"",                       fav:"DAL", href:SITE+"lone-star-board/?lg=nfl#scores", game:SITE+"lone-star-board/?lg=nfl#game-" },
+  { key:"cfb", label:"College football", path:"football/college-football", q:"?groups=80&limit=400",   fav:"TTU", href:SITE+"lone-star-board/?lg=cfb#scores", game:SITE+"lone-star-board/?lg=cfb#game-", slim:true },
+  { key:"mlb", label:"MLB",              path:"baseball/mlb",              q:"",                       fav:"TEX", href:SITE+"lone-star-diamond/#live", game:SITE+"lone-star-diamond/#game-" },
+  { key:"nhl", label:"NHL",              path:"hockey/nhl",                q:"",                       fav:"DAL", href:SITE+"the-crease/#live", game:SITE+"the-crease/#game-" },
+  { key:"nba", label:"NBA",              path:"basketball/nba",            q:"",                       fav:"DAL", href:SITE+"the-paint/#live", game:SITE+"the-paint/#game-" }
 ];
 const FAST = 5000, SLOW = 60000;
 const data = {}, down = {};
@@ -88,12 +88,42 @@ let stamp = 0, timer = 0;
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
+/* Every board but MLB runs on ESPN ids, so a tile can link straight at the sport's game center.
+   Pennant Chase keys off the MLB gamePk, so today's Stats API slate is pulled once and matched
+   to the ESPN games by club name, with the start time breaking a doubleheader tie. */
+const PK = {}; let pkAt = 0;
+const slug = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+async function mlbKeys() {
+  if (Date.now() - pkAt < 15 * 60e3) return;
+  pkAt = Date.now();
+  try {
+    const d = new Date(), p = n => String(n).padStart(2, "0");
+    const r = await fetch(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`, { cache:"no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    for (const day of j.dates || []) for (const g of day.games || []) {
+      const k = slug((g.teams.away.team || {}).name) + "|" + slug((g.teams.home.team || {}).name);
+      (PK[k] = PK[k] || []).push({ pk:g.gamePk, t:+new Date(g.gameDate) });
+    }
+  } catch (e) { pkAt = Date.now() - 13 * 60e3; }   // try again in a couple of minutes, not every tick
+}
+function mlbPk(g) {
+  const set = PK[slug(g.away.full) + "|" + slug(g.home.full)];
+  if (!set || !set.length) return 0;
+  return set.slice().sort((x, y) => Math.abs(x.t - g.date) - Math.abs(y.t - g.date))[0].pk;
+}
+function gameHref(g) {
+  if (!g.lg.game) return g.lg.href;
+  if (g.lg.key === "mlb") { const pk = mlbPk(g); return pk ? g.lg.game + pk : g.lg.href; }
+  return g.id ? g.lg.game + g.id : g.lg.href;
+}
+
 function norm(lg, ev) {
   const c = (ev.competitions || [])[0] || {}, st = (c.status || ev.status || {}), ty = st.type || {}, sit = c.situation || {};
   const side = ha => {
     const x = (c.competitors || []).find(t => t.homeAway === ha) || {}, t = x.team || {};
     const rk = x.curatedRank && x.curatedRank.current;
-    return { id:String(t.id || x.id || ""), ab:t.abbreviation || "?", name:t.shortDisplayName || t.displayName || t.abbreviation || "?",
+    return { id:String(t.id || x.id || ""), ab:t.abbreviation || "?", name:t.shortDisplayName || t.displayName || t.abbreviation || "?", full:t.displayName || t.shortDisplayName || "",
       logo:t.logo || "", score:x.score == null ? "" : x.score, rank:rk && rk <= 25 ? rk : 0, conf:String(t.conferenceId || ""),
       rec:((x.records || [])[0] || {}).summary || "" };
   };
@@ -126,14 +156,14 @@ function logoFail(i) { const s = document.createElement("span"); s.className = "
 function card(g) {
   const a = +g.away.score || 0, h = +g.home.score || 0, pos = String((g.sit || {}).possession || "");
   const row = (t, trail) => `<div class="row${trail ? " trail" : ""}">${logo(t)}<div class="tm">${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim ? t.name : t.ab)}${pos && pos === t.id ? "<b></b>" : ""}${g.lg.slim ? "" : `<small>${esc(t.rec)}</small>`}</div><div class="sc">${esc(t.score)}</div></div>`;
-  return `<a class="g ${g.lg.key}${g.fav ? " fav" : ""}" href="${g.lg.href}">${row(g.away, a < h)}${row(g.home, h < a)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
+  return `<a class="g ${g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${row(g.away, a < h)}${row(g.home, h < a)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
 }
 function line(g) {
   const post = g.state === "post", a = +g.away.score || 0, h = +g.home.score || 0;
   const nm = (t, win) => `${t.rank ? `<i>${t.rank}</i>` : ""}${win ? `<b>${esc(t.ab)}</b>` : esc(t.ab)}`;
   const mid = post ? `${nm(g.away, a > h)} ${esc(g.away.score)}, ${nm(g.home, h > a)} ${esc(g.home.score)}` : `${nm(g.away)} at ${nm(g.home)}`;
   const t = post ? esc(g.detail) : g.date.toLocaleTimeString([], { hour:"numeric", minute:"2-digit" }) + (g.held ? ` <span class="dl">${esc((g.detail || "Delayed").split(",")[0])}</span>` : "");
-  return `<a class="li ${g.lg.key}${g.fav ? " fav" : ""}" href="${g.lg.href}"><span class="t">${t}</span><span class="m">${mid}</span><span class="r">${esc(post ? g.lg.label : g.tv || g.lg.label)}</span></a>`;
+  return `<a class="li ${g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}"><span class="t">${t}</span><span class="m">${mid}</span><span class="r">${esc(post ? g.lg.label : g.tv || g.lg.label)}</span></a>`;
 }
 function render() {
   const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
@@ -173,7 +203,7 @@ async function tick() {
   const full = !stamp || Date.now() - tick.full >= SLOW;
   const want = LEAGUES.filter(l => full || anyLive(l.key) || soon(l.key));
   if (full) tick.full = Date.now();
-  await Promise.all(want.map(pull));
+  await Promise.all(want.map(pull).concat([mlbKeys()]));   // self-throttled, one slate every 15 minutes
   stamp = Date.now(); render();
   const hot = LEAGUES.some(l => anyLive(l.key) || soon(l.key));
   timer = setTimeout(tick, hot && !document.hidden ? FAST : SLOW);
