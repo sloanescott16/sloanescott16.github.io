@@ -72,7 +72,7 @@ a.tile:active{transform:scale(.98)}
 // Hide a logo cleanly if its CDN is unreachable.
 // Live button: red and counting while anything is on in the leagues he follows.
 (function(){var P=['football/nfl','football/college-football','baseball/mlb','hockey/nhl','basketball/nba'];
-function go(){Promise.all(P.map(function(p){return fetch('https://site.api.espn.com/apis/site/v2/sports/'+p+'/scoreboard'+(p.indexOf('college')>0?'?groups=80&limit=400':'')).then(function(r){return r.json()}).then(function(d){return (d.events||[]).filter(function(e){return (((e.status||((e.competitions||[])[0]||{}).status||{}).type||{}).state)==='in'}).length}).catch(function(){return 0})})).then(function(n){var t=n.reduce(function(a,b){return a+b},0);document.getElementById('live').classList.toggle('on',t>0);document.getElementById('liveT').textContent=t?'Live · '+t:'Live'})}
+function go(){Promise.all(P.map(function(p){return fetch('https://site.api.espn.com/apis/site/v2/sports/'+p+'/scoreboard'+(p.indexOf('college')>0?'?groups=80&limit=400':'')).then(function(r){return r.json()}).then(function(d){return (d.events||[]).filter(function(e){return (((e.status||((e.competitions||[])[0]||{}).status||{}).type||{}).state)==='in'&&new Date(e.date)-Date.now()<60000}).length}).catch(function(){return 0})})).then(function(n){var t=n.reduce(function(a,b){return a+b},0);document.getElementById('live').classList.toggle('on',t>0);document.getElementById('liveT').textContent=t?'Live · '+t:'Live'})}
 go();setInterval(go,60000)})();
 document.querySelectorAll('.tile img').forEach(function(i){i.onerror=function(){i.style.visibility='hidden'}});
 </script>
