@@ -54,6 +54,17 @@ a.tile:active{transform:scale(.98)}
 @media (max-width:420px){.tile .lv{top:8px;right:8px;font-size:10px;padding:2px 7px 2px 6px}}
 @media (prefers-reduced-motion:reduce){.tile .lv i{animation:none}}
 .tile.hk img{width:70%;max-width:260px;aspect-ratio:auto;transform:translateX(4%)}.tile.hk.soon img{filter:grayscale(1) brightness(1.6) drop-shadow(0 0 1px rgba(255,255,255,.5))}
+/* v19: the football tile is two doors, Cowboys half opens Sunday, Double T half opens Saturday */
+.split .hf{position:absolute;top:0;bottom:0;width:50%;z-index:2;border-radius:inherit}.split .hf.l{left:0}.split .hf.r{right:0}
+.split .pair img{transition:transform .15s,opacity .15s}
+.split:has(.hf:hover),.split:has(.hf:focus-visible){transform:translateY(-3px);border-color:var(--c);box-shadow:0 10px 30px color-mix(in srgb,var(--c) 30%,transparent)}
+.split:has(.hf:active){transform:scale(.98)}
+.split:has(.hf.r:hover),.split:has(.hf.r:focus-visible){--c:#cc0000}
+.split:has(.hf.l:hover) .pair img:first-child,.split:has(.hf.l:focus-visible) .pair img:first-child,.split:has(.hf.r:hover) .pair img:last-child,.split:has(.hf.r:focus-visible) .pair img:last-child{transform:scale(1.07)}
+.split:has(.hf.l:hover) .pair img:last-child,.split:has(.hf.l:focus-visible) .pair img:last-child,.split:has(.hf.r:hover) .pair img:first-child,.split:has(.hf.r:focus-visible) .pair img:first-child{opacity:.45}
+.split .hf:focus-visible{outline:none}
+.tile.on.onl .lv{right:auto;left:12px}
+@media (max-width:420px){.tile.on.onl .lv{left:8px}}
 .fb{--c:#3b82f6}.bb{--c:#c0111f}.hk{--c:#00843d}.bk{--c:#0064b1}
 @media (max-width:420px){.grid{gap:12px}.tile{border-radius:16px;gap:8px}.soon .pill{top:8px;right:8px;font-size:10px}}
 </style>
@@ -63,9 +74,10 @@ a.tile:active{transform:scale(.98)}
 <h1>Press Box</h1>
 <a class="live" id="live" href="https://sloanescott16.github.io/live/"><i></i><span id="liveT">Live</span></a>
 <main class="grid">
-  <a class="tile fb" id="tFb" aria-label="Cowboys and Red Raiders" href="https://sloanescott16.github.io/lone-star-board/#home"><span class="lv"><i></i>Live</span>
+  <div class="tile fb split" id="tFb"><span class="lv"><i></i>Live</span>
     <span class="pair"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt=""><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt=""></span>
-  </a>
+    <a class="hf l" id="tFbN" data-lg="nfl" aria-label="Cowboys, Sunday" href="https://sloanescott16.github.io/lone-star-board/#home"></a><a class="hf r" id="tFbC" data-lg="cfb" aria-label="Red Raiders, Saturday" href="https://sloanescott16.github.io/lone-star-board/#home"></a>
+  </div>
   <a class="tile bb" id="tBb" aria-label="Rangers" href="https://sloanescott16.github.io/lone-star-diamond/"><span class="lv"><i></i>Live</span>
     <img src="https://www.mlbstatic.com/team-logos/140.svg" alt="">
   </a>
@@ -92,7 +104,8 @@ a.tile:active{transform:scale(.98)}
     nba: { path: "basketball/nba", q: "", fav: "DAL", game: SITE + "the-paint/#game-" }
   };
   var TILES = [
-    { el: "tFb", keys: ["nfl", "cfb"], home: SITE + "lone-star-board/#home" },
+    { el: "tFbN", tile: "tFb", keys: ["nfl"], home: SITE + "lone-star-board/#home" },
+    { el: "tFbC", tile: "tFb", keys: ["cfb"], home: SITE + "lone-star-board/#home" },
     { el: "tBb", keys: ["mlb"], home: SITE + "lone-star-diamond/" },
     { el: "tHk", keys: ["nhl"], home: SITE + "the-crease/#home" },
     { el: "tBk", keys: ["nba"], home: SITE + "the-paint/" }
@@ -161,12 +174,19 @@ a.tile:active{transform:scale(.98)}
   function paint() {
     document.getElementById("live").classList.toggle("on", count > 0);
     document.getElementById("liveT").textContent = count ? "Live \u00b7 " + count : "Live";
+    var on = {};
     TILES.forEach(function (t) {
       var el = document.getElementById(t.el); if (!el) return;
       var to = "";
       for (var i = 0; i < t.keys.length && !to; i++) to = href(t.keys[i]);
       el.href = to || t.home;
-      el.classList.toggle("on", !!to);
+      var id = t.tile || t.el;
+      if (to) on[id] = on[id] || t.el;
+    });
+    ["tFb", "tBb", "tHk", "tBk"].forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      el.classList.toggle("on", !!on[id]);
+      el.classList.toggle("onl", on[id] === "tFbN");   // Cowboys live: pill sits over the star
     });
   }
   function go() {
@@ -176,6 +196,13 @@ a.tile:active{transform:scale(.98)}
       paint();
     });
   }
+  // Command Center reads its league from localStorage cc-league (same origin), so each half picks the day
+  function pick(e) {
+    var a = e.target.closest && e.target.closest(".hf[data-lg]"); if (!a) return;
+    try { localStorage.setItem("cc-league", JSON.stringify(a.dataset.lg)); } catch (x) {}
+  }
+  document.addEventListener("click", pick, true);
+  document.addEventListener("auxclick", pick, true);
   paint(); go(); setInterval(go, 60000);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) go(); });
 })();
