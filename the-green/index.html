@@ -243,6 +243,7 @@ h1,h2,h3{font-weight:700; text-transform:uppercase; letter-spacing:.1em}
 .lbx td.nm{min-width:220px}
 .sch .r.past{opacity:.45}
 .sch .r.now .ev{color:#fff}
+@media (max-width:1240px){ .bar .chipb,.upd{display:none} }
 .empty{padding:26px; text-align:center; color:var(--mute); font-size:13px}
 @media (max-width:760px){ .det .dw{grid-template-columns:1fr} .math .v{font-size:28px} }
 </style>
@@ -348,6 +349,7 @@ var TZ='America/Chicago';
 var TEAMS={USA:{nm:'United States',c:'r'},INTL:{nm:'International',c:'b'},EUR:{nm:'Europe',c:'b'}};
 var CAPTAINS={'Presidents Cup 2026':{USA:'Captain Brandt Snedeker',INTL:'Captain Geoff Ogilvy'}};
 var FMT={fourball:'Four-ball',foursomes:'Foursomes',singles:'Singles'};
+function ftype(c){ var t=((c.type&&c.type.text)||'').toLowerCase(); return /four-?ball/.test(t)?'fourball':/foursome/.test(t)?'foursomes':/single/.test(t)?'singles':''; }
 var S={ev:null,cal:[],cup:null,stroke:null,open:{},sess:null,ts:0};
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -360,20 +362,20 @@ function upTxt(s){ return String(s||'').replace(/\s*&\s*/,' & ').replace(/up/i,'
 /* ---------- data ---------- */
 function getJSON(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
 function flat(c){ var o=[]; (c||[]).forEach(function(x){ if(Array.isArray(x)) x.forEach(function(y){o.push(y);}); else o.push(x); }); return o; }
-function isMatch(ev){ return flat(ev.competitions).some(function(c){ return (c.scoringSystem&&/match/i.test(c.scoringSystem.name))||(c.type&&/fourball|foursomes|singles/.test(c.type.text||'')); }); }
+function isMatch(ev){ return flat(ev.competitions).some(function(c){ return (c.scoringSystem&&/match/i.test(c.scoringSystem.name))||!!ftype(c); }); }
 
 function sideNames(p){
   if(p.athlete) return [p.athlete];
   return (p.roster||[]).map(function(r){return r.athlete||{};});
 }
 function parseCup(ev){
-  var all=flat(ev.competitions).filter(function(c){ return c.type&&FMT[c.type.text]; });
+  var all=flat(ev.competitions).filter(function(c){ return !!ftype(c); });
   var ln={}; all.forEach(function(c){ c.competitors.forEach(function(p){ sideNames(p).forEach(function(a){ ln[a.lastName]=(ln[a.lastName]||{}); ln[a.lastName][a.id]=1; }); }); });
   var nm=function(a){ return Object.keys(ln[a.lastName]||{}).length>1?(a.shortName||a.displayName):a.lastName; };
   var abbrs={};
   var sessions=[], byDesc={};
   all.forEach(function(c){
-    var m={id:c.id, desc:c.description||'', fmt:c.type.text, state:c.status.type.state, date:c.date, tee:null, side:{}};
+    var m={id:c.id, desc:c.description||'', fmt:ftype(c), state:c.status.type.state, date:c.date, tee:null, side:{}};
     c.competitors.forEach(function(p){
       var ab=(p.team&&p.team.abbreviation)||(p.homeAway==='home'?'USA':'INTL'); abbrs[ab]=1;
       var holes=((p.linescores||[])[0]||{}).linescores||[];
