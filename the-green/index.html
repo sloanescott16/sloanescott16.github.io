@@ -171,6 +171,7 @@ details.gloss summary{cursor:pointer; color:var(--yellow); font-weight:600; font
 .foot{margin-top:34px; color:var(--dim); text-align:center; font-family:var(--serif); font-style:italic; font-size:14px}
 
 .two > div{min-width:0}
+.two.solo{grid-template-columns:minmax(0,1fr)} .two.solo > .side{display:none}
 @media (max-width:1180px){ .hero{grid-template-columns:minmax(0,1fr)} .two{grid-template-columns:minmax(0,1fr)} .how,.rules{grid-template-columns:repeat(2,minmax(0,1fr))} }
 @media (max-width:760px){
   .bar{flex-wrap:wrap; height:auto; gap:4px 10px; padding:8px 12px 0}
@@ -279,12 +280,10 @@ h1,h2,h3{font-weight:700; text-transform:uppercase; letter-spacing:.1em}
       <div id="hmBoard"></div>
       <div class="bkey" id="hmKey"></div>
     </div>
-    <div>
+    <div class="side">
       <div id="hmMath"></div>
-      <div class="head"><h2>Up next</h2><span class="sub">times Central</span></div>
-      <div class="next" id="hmNext"></div>
-      <div class="head" style="margin-top:24px"><h2>How it works</h2></div>
-      <div class="panel" style="font-size:13.5px;color:#c9cdc3" id="hmHow"></div>
+      <div id="hmNextW" hidden><div class="head"><h2>Up next</h2><span class="sub">times Central</span></div>
+      <div class="next" id="hmNext"></div></div>
     </div>
   </section>
 </div>
@@ -514,9 +513,9 @@ function homeCup(c){
   c.sessions.forEach(function(ss){ ss.matches.forEach(function(m){ if(m.state==='pre') nx.push(m); }); });
   nx=nx.slice(0,6);
   var nh=nx.map(function(m){return '<div class="row"><span class="tee">'+tm(m.tee||m.date)+'</span><span>'+esc(m.a.names.join(' / ')||'TBD')+' v '+esc(m.b.names.join(' / ')||'TBD')+'<small>'+esc(dayName(m.date)+' · '+(FMT[m.fmt]||''))+'</small></span></div>';}).join('');
-  if(!nh) nh='<div class="row" style="color:var(--mute)">'+(o.rem?'Every match is on the course.':'That is the lot. The Cup is decided.')+'</div>';
   document.getElementById('hmNext').innerHTML=nh;
-  document.getElementById('hmHow').innerHTML=c.total+' matches over four days. Each match is worth <b style="color:var(--ink)">one point</b>, a tie is <b style="color:var(--ink)">a half each</b>. First side to <b style="color:var(--yellow)">'+fmt(c.toWin)+'</b> takes the Cup.<a href="#cup" style="display:block;margin-top:9px;color:var(--yellow);font-weight:600;text-decoration:none">The full breakdown ›</a>';
+  document.getElementById('hmNextW').hidden=!nh;
+  document.getElementById('hmTwo').classList.toggle('solo',!nh&&!mathH);
 }
 var HOWTXT={fourball:'Two-man teams. All four play their own ball; the better score on each side counts on each hole.',
   foursomes:'Two-man teams, one ball. Partners take turns hitting it. Also called alternate shot, and the hardest format.',
