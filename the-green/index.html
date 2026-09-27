@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Green</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Josefin+Sans:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* The Green: Augusta at dusk. Dark page, Augusta green chrome, yellow flag,
+   and the white hand-operated boards as the showpiece. */
+:root{
+  --ground:#0a0c0b; --card:#121513; --card2:#171b18; --line:#252b27;
+  --ink:#f5f3ea; --mute:#a5aaa1; --dim:#6f766d;
+  --augusta:#006747; --augusta-d:#004d35; --augusta-l:#3fa77a; --yellow:#f5d130;
+  --board:#fbfaf3; --board-2:#f3f1e6; --bline:#dcd8c7; --bink:#0e3b28;
+  --red:#c8102e; --blu:#1d4f9c; --usa:#e0374a; --intl:#6aa3ff; --live:#ff3b4e; --warn:#e8a33d;
+  --serif:'Josefin Sans','Futura','Century Gothic',sans-serif;
+  --board-f:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --body:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ground); color:var(--ink); font-family:var(--body); font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased; padding-bottom:40px; font-variant-numeric:lining-nums}
+button{font-variant-numeric:lining-nums}
+a{color:inherit}
+h1,h2,h3{margin:0; font-family:var(--serif); font-weight:600}
+
+/* ---------- top bar: Augusta green with the yellow rule ---------- */
+.bar{position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:16px;
+  padding:0 18px; padding-top:env(safe-area-inset-top,0px); height:58px;
+  background:var(--augusta); border-bottom:3px solid var(--yellow); box-shadow:0 4px 18px rgba(0,0,0,.45)}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; color:#fff; text-decoration:none}
+.brand svg{width:26px; height:30px; flex:none}
+.brand h1{font-size:27px; line-height:1; white-space:nowrap; font-weight:700; letter-spacing:.01em}
+.brand h1 i{font-style:italic; font-weight:600; color:rgba(255,255,255,.85); margin-right:3px}
+.chipb{font-family:var(--board-f); font-weight:700; font-size:16px; letter-spacing:.04em; background:var(--board); color:var(--bink); border-radius:3px; padding:3px 9px 2px; white-space:nowrap; box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.chipb .u{color:var(--red)} .chipb .i{color:var(--blu)}
+.nav{display:flex; gap:2px; align-self:stretch; flex-shrink:0}
+.nav a{display:flex; align-items:center; text-decoration:none; color:rgba(255,255,255,.72); font-size:12.5px; font-weight:600; letter-spacing:.04em; padding:0 12px; white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-3px}
+.nav a:hover{color:#fff} .nav a.on{color:#fff; border-bottom-color:#fff}
+.nav a .ns{display:none}
+.spacer{flex:1}
+.mock{font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--yellow); border:1px dashed rgba(245,209,48,.6); border-radius:3px; padding:3px 7px; white-space:nowrap}
+.st{display:flex; align-items:center; gap:7px; color:#fff; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap; background:rgba(0,0,0,.22); border-radius:999px; padding:5px 11px; text-decoration:none}
+.dot{width:8px; height:8px; border-radius:50%; background:var(--live); animation:pulse 1.9s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,78,.6)}70%{box-shadow:0 0 0 8px rgba(255,59,78,0)}100%{box-shadow:0 0 0 0 rgba(255,59,78,0)}}
+
+.wrap{max-width:1560px; margin:0 auto; padding:0 22px}
+section{margin-top:30px}
+.head{display:flex; align-items:baseline; gap:12px; margin-bottom:12px; flex-wrap:wrap}
+.head h2{font-size:28px; line-height:1.05; color:var(--ink)}
+.head .sub{color:var(--augusta-l); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700}
+.head .note{color:var(--mute); font-size:12px; margin-left:auto}
+.panel{background:var(--card); border:1px solid var(--line); border-top:2px solid var(--augusta); border-radius:4px; padding:14px 16px}
+.view{display:none} body.v-home #vHome, body.v-cup #vCup, body.v-board #vBoard, body.v-sched #vSched, body.v-stand #vStand{display:block}
+
+/* ---------- hero ---------- */
+.hero{position:relative; overflow:hidden; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(360px,1fr); gap:34px; align-items:center;
+  padding:34px 34px 30px; border-radius:4px; border:1px solid #1f2923;
+  background:radial-gradient(90% 120% at 0% 0%,rgba(0,103,71,.38),transparent 60%),radial-gradient(80% 90% at 100% 100%,rgba(0,103,71,.22),transparent 60%),#0d110f}
+.hero .topo{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+.hero > *:not(.topo){position:relative}
+.kick{color:var(--yellow); font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; display:flex; gap:10px; align-items:center}
+.kick .lv{color:#ff8791}
+.hero h2{font-size:clamp(40px,5vw,68px); line-height:.95; font-weight:600; margin:10px 0 6px; letter-spacing:-.005em}
+.hero .where{color:var(--mute); font-family:var(--serif); font-style:italic; font-size:18px}
+.race{margin-top:26px; max-width:620px}
+.race .rt{display:flex; justify-content:space-between; align-items:baseline; font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--mute); margin-bottom:8px}
+.race .rt b{font-family:var(--serif); font-size:20px; letter-spacing:0; color:var(--yellow); text-transform:none; font-weight:700}
+.race .track{position:relative; height:10px; border-radius:5px; background:#050706; border:1px solid #232b26; overflow:hidden}
+.race .seg{position:absolute; top:0; bottom:0}
+.race .seg.u{left:0; background:var(--usa)} .race .seg.i{right:0; background:var(--intl)}
+.race .seg.pu{background:repeating-linear-gradient(135deg,rgba(224,55,74,.6) 0 3px,transparent 3px 6px)}
+.race .seg.pi{background:repeating-linear-gradient(135deg,rgba(106,163,255,.6) 0 3px,transparent 3px 6px)}
+.race .mid{position:absolute; top:-2px; bottom:-2px; width:2px; background:var(--yellow)}
+.race .lab{display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--mute); margin-top:8px}
+.race .lab b{color:var(--ink)}
+
+/* ---------- the white hand-operated board ---------- */
+.board{background:var(--board); color:var(--bink); border-radius:3px; box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 1px #e6e2d2 inset; overflow:hidden}
+.board .band{background:var(--augusta); color:#fff; text-align:center; font-family:var(--serif); font-weight:700; font-size:19px; letter-spacing:.2em; text-transform:uppercase; padding:7px 10px 6px; border-bottom:3px solid var(--yellow)}
+.board .band small{display:block; font-family:var(--body); font-size:9.5px; letter-spacing:.2em; font-weight:600; color:rgba(255,255,255,.75); margin-top:1px}
+.bscroll{overflow-x:auto}
+.board table{border-collapse:collapse; width:100%}
+.board th{font-family:var(--board-f); font-weight:700; font-size:13px; letter-spacing:.06em; color:var(--bink); padding:6px 0 5px; border-bottom:2px solid var(--bink); background:var(--board-2); text-transform:uppercase}
+.board td{font-family:var(--board-f); font-weight:700; font-size:21px; line-height:1; text-align:center; height:40px; min-width:30px; border-right:1px solid var(--bline); border-bottom:1px solid var(--bline); color:var(--bink)}
+.board td:last-child,.board th:last-child{border-right:0}
+.board tr:last-child td{border-bottom:0}
+.board .nm{text-align:left; padding:6px 12px; font-size:18px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap; min-width:190px; line-height:1.05}
+.board .nm .u{color:var(--red)} .board .nm .i{color:var(--blu)} .board .nm .x{display:block; font-size:10px; color:#8a8c80; letter-spacing:.14em; margin:2px 0}
+.board .r{color:var(--red)} .board .b{color:var(--blu)} .board .g{color:var(--bink)} .board .ev{color:#1d7a4f}
+.board .as{font-size:14px; color:#6c705f}
+.board .gap{border-left:2px solid var(--bink)}
+.board .stc{background:var(--board-2); min-width:92px; font-size:19px}
+.board .stc small{display:block; font-family:var(--body); font-size:9.5px; font-weight:700; letter-spacing:.1em; color:#8a8c80; margin-top:3px; text-transform:uppercase}
+.board .stc small.lv{color:var(--red)}
+.board .stc.fin.r{background:var(--red); color:#fff} .board .stc.fin.b{background:var(--blu); color:#fff}
+.board .stc.fin small{color:rgba(255,255,255,.8)}
+.board .words{font-family:var(--serif); font-style:italic; font-weight:600; font-size:17px; color:#4d5347; text-align:left; padding:0 14px}
+.board .words b{font-style:normal; font-family:var(--board-f); letter-spacing:.03em}
+.board tr.tbd .nm{color:#a3a592}
+.board .ms{display:none}
+.bkey{display:flex; gap:16px; flex-wrap:wrap; font-size:11.5px; color:var(--mute); margin-top:10px; align-items:center}
+.bkey b{font-family:var(--board-f); font-size:15px; background:var(--board); padding:1px 6px; border-radius:2px; margin-right:5px}
+/* keep the name column pinned while a board scrolls sideways on a phone */
+.board .nm{position:sticky; left:0; background:var(--board); z-index:1; box-shadow:1px 0 0 var(--bline)}
+.board th.nm{background:var(--board-2)}
+
+/* tally board in the hero */
+.tally td{height:auto; padding:10px 14px}
+.tally .tn{text-align:left; font-size:26px; letter-spacing:.04em; position:static; box-shadow:none}
+.tally .tn small{display:block; font-family:var(--body); font-weight:500; font-size:11px; letter-spacing:0; text-transform:none; color:#7b7f70; margin-top:3px}
+.tally .pt{font-size:58px; min-width:96px}
+.tally .nw{font-size:24px; min-width:80px}
+.tally th{padding:5px 14px}
+
+/* ---------- dark cards ---------- */
+.two{display:grid; grid-template-columns:minmax(0,1.75fr) minmax(0,1fr); gap:22px; align-items:start}
+.next{display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-top:2px solid var(--augusta); border-radius:4px; overflow:hidden}
+.next .row{display:flex; gap:14px; align-items:center; background:var(--card); padding:10px 13px; font-size:13px}
+.next .row .tee{min-width:58px; font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink)}
+.next .row small{display:block; color:var(--dim); font-size:11.5px}
+
+.how{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.day{background:var(--card); border:1px solid var(--line); border-top:2px solid var(--augusta); border-radius:4px; padding:14px 15px}
+.day.now{border-top-color:var(--yellow); background:linear-gradient(180deg,rgba(245,209,48,.06),var(--card) 55%)}
+.day .d{font-size:10.5px; color:var(--augusta-l); letter-spacing:.16em; text-transform:uppercase; font-weight:700}
+.day.now .d{color:var(--yellow)}
+.day .f{font-family:var(--serif); font-size:30px; font-weight:600; line-height:1; margin:4px 0 8px}
+.day .f small{font-family:var(--body); font-size:11px; color:var(--mute); font-weight:600; letter-spacing:.04em; margin-left:6px}
+.day p{margin:0; font-size:12.5px; color:#c9cdc3}
+.day .glyph{display:flex; gap:5px; margin:0 0 10px; align-items:center}
+.day .glyph span{width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700}
+.day .glyph .gu{background:var(--usa); color:#fff} .day .glyph .gi{background:var(--intl); color:#0b1a33}
+.day .glyph .ball{width:9px; height:9px; background:#fff; margin:0 2px}
+.day .glyph .then{width:auto; color:var(--dim); font-weight:500}
+.day .res{margin-top:11px; padding-top:9px; border-top:1px solid var(--line); font-size:11.5px; color:var(--mute); display:flex; justify-content:space-between; align-items:baseline}
+.day .res b{font-family:var(--board-f); font-size:17px; letter-spacing:.03em; color:var(--ink)}
+.rules{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px}
+.rule{font-size:12.5px; color:#c9cdc3; padding:2px 2px 0 14px; border-left:2px solid var(--augusta)}
+.rule b{display:block; font-family:var(--serif); font-size:21px; color:var(--ink); font-weight:600; line-height:1.1; margin-bottom:3px}
+details.gloss{margin-top:18px}
+details.gloss summary{cursor:pointer; color:var(--yellow); font-weight:600; font-size:12.5px; letter-spacing:.02em}
+.gl{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:10px}
+.gl div{font-size:12.5px; color:#c9cdc3; background:var(--card); border:1px solid var(--line); border-radius:4px; padding:8px 11px; display:flex; gap:10px; align-items:center}
+.gl div b{font-family:var(--board-f); font-size:17px; color:var(--bink); background:var(--board); border-radius:2px; padding:2px 7px 1px; min-width:64px; text-align:center; letter-spacing:.03em; flex:none}
+.gl div b.r{color:var(--red)}
+
+.stabs{display:flex; gap:0; flex-wrap:wrap; margin-bottom:12px; border-bottom:1px solid var(--line)}
+.stabs button{background:none; border:0; border-bottom:2px solid transparent; margin-bottom:-1px; color:var(--mute); padding:8px 14px; font:600 12.5px var(--body); cursor:pointer; display:flex; gap:8px; align-items:baseline}
+.stabs button b{font-family:var(--board-f); font-size:16px; color:var(--ink); font-weight:700; letter-spacing:.03em}
+.stabs button.on{color:var(--ink); border-bottom-color:var(--yellow)}
+
+/* schedule */
+.sch{display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden}
+.sch .r{display:grid; grid-template-columns:110px 1fr auto; gap:14px; align-items:center; background:var(--card); padding:12px 16px; border-left:3px solid transparent}
+.sch .r.maj{border-left-color:var(--yellow)}
+.sch .r.now{border-left-color:var(--live)}
+.sch .when{font-size:11px; color:var(--mute); letter-spacing:.12em; text-transform:uppercase; font-weight:700}
+.sch .ev{font-family:var(--serif); font-size:24px; font-weight:600; line-height:1.05}
+.sch .ev small{display:block; font-family:var(--body); font-size:11.5px; color:var(--dim); margin-top:2px}
+.tag{font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:4px 8px; border-radius:2px; white-space:nowrap; color:var(--mute); border:1px solid var(--line)}
+.tag.gold{color:var(--yellow); border-color:rgba(245,209,48,.45)}
+.tag.live{color:#ff8791; border-color:rgba(255,59,78,.45)}
+
+.recs{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start}
+.bnr{color:#e9cf7a; margin-bottom:12px; font-style:italic; font-family:var(--serif); font-size:16px}
+
+.foot{margin-top:34px; color:var(--dim); text-align:center; font-family:var(--serif); font-style:italic; font-size:14px}
+
+.two > div{min-width:0}
+@media (max-width:1180px){ .hero{grid-template-columns:minmax(0,1fr)} .two{grid-template-columns:minmax(0,1fr)} .how,.rules{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:760px){
+  .bar{flex-wrap:wrap; height:auto; gap:4px 10px; padding:8px 12px 0}
+  .bar .chipb,.mock{display:none}
+  .brand h1{font-size:23px}
+  .nav{order:3; width:100%; justify-content:space-between; height:34px}
+  .nav a{padding:0 6px; font-size:11.5px} .nav a .nl{display:none} .nav a .ns{display:inline}
+  .wrap{padding:0 12px}
+  .hero{padding:22px 16px 18px; gap:20px}
+  .hero .where{font-size:16px}
+  .tally .tn{font-size:18px} .tally .pt{font-size:44px; min-width:60px} .tally .nw{font-size:19px; min-width:52px} .tally td{padding:8px 10px}
+  .tally th{font-size:11px; padding:5px 8px}
+  .race .lab{font-size:11px}
+  .gl,.recs{grid-template-columns:1fr}
+  .board .nm{min-width:132px; font-size:14px; padding:6px 8px}
+  .board td{min-width:26px; font-size:18px; height:36px}
+  .board .words{font-size:15px}
+  .board .ms{display:block; margin-top:5px; font-size:13px; letter-spacing:.04em}
+  .board .ms.g{color:#6c705f}
+  .sch .r{grid-template-columns:74px 1fr auto; gap:10px; padding:10px 12px}
+  .sch .ev{font-size:20px}
+  .head h2{font-size:24px}
+}
+@media (max-width:560px){ .how,.rules{grid-template-columns:1fr} }
+
+/* ---------- type: Clubhouse Deco (Josefin Sans, 1930s golf poster caps) ---------- */
+h1,h2,h3{font-weight:700; text-transform:uppercase; letter-spacing:.1em}
+.brand h1{font-size:22px; letter-spacing:.14em} .brand h1 i{font-style:normal; font-weight:400; color:var(--yellow)}
+.hero h2{font-size:clamp(34px,4.2vw,58px); letter-spacing:.08em; line-height:1.02; margin-top:16px}
+.hero .where{font-family:var(--serif); font-style:normal; font-size:14px; letter-spacing:.2em; text-transform:uppercase}
+.head h2{font-size:22px; letter-spacing:.14em}
+.board .band{letter-spacing:.3em; font-size:17px}
+.day .f{font-size:22px; letter-spacing:.08em; text-transform:uppercase; font-weight:700}
+.rule b{font-size:16px; letter-spacing:.08em; text-transform:uppercase; font-weight:700}
+.next .row .tee{font-size:18px}
+.race .rt b{font-size:17px; letter-spacing:.06em}
+.sch .ev{font-size:19px; letter-spacing:.08em; text-transform:uppercase; font-weight:700}
+.board .words{font-style:normal; font-size:14px; font-weight:600; letter-spacing:.06em; color:#4d5347}
+.bnr{font-style:normal; font-size:12px; letter-spacing:.14em; text-transform:uppercase}
+.foot{font-style:normal; font-size:11px; letter-spacing:.16em; text-transform:uppercase}
+@media (max-width:760px){ .hero h2{font-size:30px} .head h2{font-size:18px} .brand h1{font-size:19px} .hero .where{font-size:11.5px; letter-spacing:.14em} }
+
+/* ---------- live build additions ---------- */
+.board tr.m{cursor:pointer}
+.board tr.m:hover td{background:#f4f1e2} .board tr.m:hover td.nm{background:#f4f1e2}
+.board tr.m.open td{background:#efeadb} .board tr.m.open td.nm{background:#efeadb}
+.board tr.m td.stc.fin.r,.board tr.m:hover td.stc.fin.r{background:var(--red)}
+.board tr.m td.stc.fin.b,.board tr.m:hover td.stc.fin.b{background:var(--blu)}
+.board tr.det td{height:auto; text-align:left; padding:14px 16px; background:#f6f3e8; cursor:default}
+.board tr.det td.nm{background:#f6f3e8}
+.det .dw{display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; font-family:var(--body); font-weight:500; font-size:13px; color:#3e453a}
+.det .dw b{display:block; font-family:var(--board-f); font-size:22px; letter-spacing:.03em; text-transform:uppercase}
+.det .dw .k{font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; color:#8a8c80; margin-bottom:3px}
+.det .hw{display:flex; gap:4px; flex-wrap:wrap; margin-top:12px}
+.det .hw i{font-style:normal; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font:700 11px var(--body); border:1.5px dashed #c9c5b3; color:#9a9c8e}
+.det .hw i.u{background:var(--red); border:1.5px solid var(--red); color:#fff}
+.det .hw i.i{background:var(--blu); border:1.5px solid var(--blu); color:#fff}
+.det .hw i.h{border:1.5px solid #6c705f; color:#3e453a}
+.det .hw i.gap{margin-left:10px}
+.math{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-top:2px solid var(--yellow); border-radius:4px; overflow:hidden; margin-bottom:24px}
+.math > div{background:var(--card); padding:12px 14px}
+.math .k{font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:700; color:var(--mute)}
+.math .v{font-family:var(--board-f); font-size:34px; line-height:1.05; letter-spacing:.02em}
+.math .v small{font-family:var(--body); font-size:12px; color:var(--mute); letter-spacing:0; margin-left:6px; font-weight:500}
+.math .full{grid-column:1/-1}
+.math .ld{display:flex; gap:16px; font-family:var(--board-f); font-size:20px; letter-spacing:.03em; margin-top:4px}
+.err{display:none; margin-top:14px; padding:9px 12px; border:1px solid rgba(255,59,78,.4); color:#ff9aa3; border-radius:4px; font-size:12.5px}
+.err.on{display:block}
+.upd{font-size:11px; color:var(--dim); letter-spacing:.08em; text-transform:uppercase}
+.lbx td.nm{min-width:220px}
+.sch .r.past{opacity:.45}
+.sch .r.now .ev{color:#fff}
+.empty{padding:26px; text-align:center; color:var(--mute); font-size:13px}
+@media (max-width:760px){ .det .dw{grid-template-columns:1fr} .math .v{font-size:28px} }
+</style>
+</head>
+<body class="v-home">
+<div class="bar">
+  <a class="brand" href="https://sloanescott16.github.io/" title="Back to the Press Box">
+    <svg viewBox="0 0 26 30" aria-hidden="true"><rect x="3" y="1" width="1.8" height="28" rx=".9" fill="#fff"/><path d="M4.8 2 H23 L19.5 7.5 L23 13 H4.8Z" fill="#f5d130"/></svg>
+    <h1><i>The</i> Green</h1>
+  </a>
+  <span class="chipb" id="barRec" hidden></span>
+  <nav class="nav" id="nav">
+    <a href="#home" data-v="home">Home</a>
+    <a href="#cup" data-v="cup" id="navCup"><span class="nl">The Cup</span><span class="ns">Cup</span></a>
+    <a href="#board" data-v="board"><span class="nl">Leaderboard</span><span class="ns">Board</span></a>
+    <a href="#sched" data-v="sched"><span class="nl">Schedule</span><span class="ns">Sched</span></a>
+    <a href="#stand" data-v="stand"><span class="nl">Standings</span><span class="ns">Stand</span></a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="upd" id="upd"></span>
+  <a class="st" href="#cup" id="stBtn"><span class="dot" id="dot"></span><span id="stText">loading</span></a>
+</div>
+
+<div class="wrap">
+<div class="err" id="err"></div>
+
+<!-- ================= HOME ================= -->
+<div class="view" id="vHome">
+  <section><div class="hero" id="hero"><div class="empty">Loading the course…</div></div></section>
+  <section class="two" id="hmTwo">
+    <div>
+      <div class="head"><h2 id="hmTitle">On the course</h2><span class="sub" id="hmSub"></span><span class="note">tap a match for hole by hole</span></div>
+      <div id="hmBoard"></div>
+      <div class="bkey" id="hmKey"></div>
+    </div>
+    <div>
+      <div id="hmMath"></div>
+      <div class="head"><h2>Up next</h2><span class="sub">times Central</span></div>
+      <div class="next" id="hmNext"></div>
+      <div class="head" style="margin-top:24px"><h2>How it works</h2></div>
+      <div class="panel" style="font-size:13.5px;color:#c9cdc3" id="hmHow"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= CUP ================= -->
+<div class="view" id="vCup">
+  <section>
+    <div class="head"><h2 id="howTitle">How the Cup works</h2><span class="sub" id="howSub">match play</span></div>
+    <div class="how" id="how"></div>
+    <div class="rules" id="rules"></div>
+    <details class="gloss" open>
+      <summary>Reading the board</summary>
+      <div class="gl">
+        <div><b class="r">2 UP</b>leading by two holes</div>
+        <div><b>AS</b>all square, the match is level</div>
+        <div><b>THRU 14</b>14 holes played, 4 left</div>
+        <div><b class="r">3 &amp; 2</b>won by three with two to play, so it ended on 16</div>
+        <div><b class="r">1 UP</b>as a final: won on the 18th green</div>
+        <div><b>DORMIE</b>up by as many holes as are left: cannot lose, can still be tied</div>
+      </div>
+    </details>
+  </section>
+  <section>
+    <div class="head"><h2>The board</h2><span class="sub" id="sessSub"></span><span class="note">each column is a hole · the number is the lead after it · tap a match</span></div>
+    <div class="stabs" id="stabs"></div>
+    <div id="sessBoard"></div>
+  </section>
+</div>
+
+<!-- ================= LEADERBOARD ================= -->
+<div class="view" id="vBoard">
+  <section>
+    <div class="head"><h2>Leaderboard</h2><span class="sub" id="lbSub"></span></div>
+    <div id="lb"></div>
+  </section>
+</div>
+
+<!-- ================= SCHEDULE ================= -->
+<div class="view" id="vSched">
+  <section>
+    <div class="head"><h2>Schedule</h2><span class="sub">PGA Tour season · majors marked in yellow</span></div>
+    <div class="sch" id="sch"></div>
+  </section>
+</div>
+
+<!-- ================= STANDINGS ================= -->
+<div class="view" id="vStand">
+  <section>
+    <div class="head"><h2>Player records</h2><span class="sub" id="recSub">completed matches</span></div>
+    <div class="recs" id="recs"></div>
+  </section>
+</div>
+
+<div class="foot">The Green · live from the PGA Tour feed · refreshes every 30 seconds while matches are on</div>
+</div>
+
+<script>
+/* ================= The Green v1 ================= */
+var SB='https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
+var LB='https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga';
+var TZ='America/Chicago';
+var TEAMS={USA:{nm:'United States',c:'r'},INTL:{nm:'International',c:'b'},EUR:{nm:'Europe',c:'b'}};
+var CAPTAINS={'Presidents Cup 2026':{USA:'Captain Brandt Snedeker',INTL:'Captain Geoff Ogilvy'}};
+var FMT={fourball:'Four-ball',foursomes:'Foursomes',singles:'Singles'};
+var S={ev:null,cal:[],cup:null,stroke:null,open:{},sess:null,ts:0};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function fmt(x){ return (Math.floor(x)||(x%1?'':'0'))+(x%1?'½':''); }
+function tm(d){ try{return new Date(d).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',timeZone:TZ}).replace(' AM','a').replace(' PM','p');}catch(e){return '';} }
+function dayName(d){ try{return new Date(d).toLocaleDateString('en-US',{weekday:'long',timeZone:TZ});}catch(e){return '';} }
+function md(d){ try{return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:TZ});}catch(e){return '';} }
+function upTxt(s){ return String(s||'').replace(/\s*&\s*/,' & ').replace(/up/i,'UP').replace(/^AS$/i,'AS'); }
+
+/* ---------- data ---------- */
+function getJSON(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+function flat(c){ var o=[]; (c||[]).forEach(function(x){ if(Array.isArray(x)) x.forEach(function(y){o.push(y);}); else o.push(x); }); return o; }
+function isMatch(ev){ return flat(ev.competitions).some(function(c){ return (c.scoringSystem&&/match/i.test(c.scoringSystem.name))||(c.type&&/fourball|foursomes|singles/.test(c.type.text||'')); }); }
+
+function sideNames(p){
+  if(p.athlete) return [p.athlete];
+  return (p.roster||[]).map(function(r){return r.athlete||{};});
+}
+function parseCup(ev){
+  var all=flat(ev.competitions).filter(function(c){ return c.type&&FMT[c.type.text]; });
+  var ln={}; all.forEach(function(c){ c.competitors.forEach(function(p){ sideNames(p).forEach(function(a){ ln[a.lastName]=(ln[a.lastName]||{}); ln[a.lastName][a.id]=1; }); }); });
+  var nm=function(a){ return Object.keys(ln[a.lastName]||{}).length>1?(a.shortName||a.displayName):a.lastName; };
+  var abbrs={};
+  var sessions=[], byDesc={};
+  all.forEach(function(c){
+    var m={id:c.id, desc:c.description||'', fmt:c.type.text, state:c.status.type.state, date:c.date, tee:null, side:{}};
+    c.competitors.forEach(function(p){
+      var ab=(p.team&&p.team.abbreviation)||(p.homeAway==='home'?'USA':'INTL'); abbrs[ab]=1;
+      var holes=((p.linescores||[])[0]||{}).linescores||[];
+      m.side[ab]={ab:ab, names:sideNames(p).map(nm), full:sideNames(p).map(function(a){return a.displayName;}), score:p.score||{}, winner:!!(p.score&&p.score.winner), thru:(p.status&&p.status.thru)||0, holes:holes};
+      if(p.status&&p.status.teeTime) m.tee=p.status.teeTime;
+    });
+    if(!byDesc[m.desc]){ byDesc[m.desc]={desc:m.desc, fmt:m.fmt, date:m.date, matches:[]}; sessions.push(byDesc[m.desc]); }
+    byDesc[m.desc].matches.push(m);
+  });
+  var ab=Object.keys(abbrs).sort(function(a,b){return a==='USA'?-1:b==='USA'?1:0;});
+  var A=ab[0]||'USA', B=ab[1]||'INTL';
+  sessions.forEach(function(s){ s.matches.forEach(function(m){ derive(m,A,B); }); s.state=s.matches.some(function(m){return m.state==='in';})?'in':s.matches.every(function(m){return m.state==='post';})?'post':'pre'; });
+  sessions.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  var total=sessions.reduce(function(n,s){return n+s.matches.length;},0);
+  return {name:ev.name, year:(ev.season&&ev.season.year)||new Date(ev.date).getFullYear(), A:A, B:B, sessions:sessions, total:total, toWin:total/2+.5};
+}
+function derive(m,A,B){
+  var a=m.side[A]||{holes:[],names:[],full:[],score:{}}, b=m.side[B]||{holes:[],names:[],full:[],score:{}};
+  m.a=a; m.b=b; var h='', n=Math.max(a.holes.length,b.holes.length);
+  for(var k=0;k<n;k++){ var x=a.holes[k]||{}, y=b.holes[k]||{};
+    if(x.draw||y.draw) h+='h'; else if(x.value>0) h+='u'; else if(y.value>0) h+='i'; else if(x.value===0&&y.value===0&&(x.displayValue!=null)) h+='h'; else break; }
+  var thru=Math.max(a.thru||0,b.thru||0); if(m.state!=='pre'&&h.length>thru&&thru>0) h=h.slice(0,thru);
+  m.h=h; m.thru=m.state==='pre'?0:(thru||h.length);
+  var d=0; for(var k2=0;k2<h.length;k2++){ if(h[k2]==='u')d++; else if(h[k2]==='i')d--; }
+  m.d=d; var left=18-m.thru; m.dormie=m.state==='in'&&d&&Math.abs(d)===left;
+  if(m.state==='post'){
+    m.lead=a.winner?'u':b.winner?'i':'';
+    m.txt=m.lead?upTxt((m.lead==='u'?a:b).score.displayValue||''):'Halved';
+    if(!m.lead&&!(a.score.draw||b.score.draw)&&d){ m.lead=d>0?'u':'i'; }
+  } else if(m.state==='in'){
+    m.lead=d>0?'u':d<0?'i':'';
+    var sv=(m.lead==='u'?a:m.lead==='i'?b:a).score.displayValue; m.txt=m.lead?upTxt(sv&&/up/i.test(sv)?sv:Math.abs(d)+' UP'):'AS';
+  } else { m.lead=''; m.txt=m.tee?tm(m.tee):'—'; }
+}
+function points(c){
+  var o={u:0,i:0,pu:0,pi:0,live:0,lu:0,li:0,la:0,rem:0};
+  c.sessions.forEach(function(s){ s.matches.forEach(function(m){
+    if(m.state==='post'){ if(m.lead==='u')o.u++; else if(m.lead==='i')o.i++; else {o.u+=.5;o.i+=.5;} }
+    else if(m.state==='in'){ o.live++; o.rem++; if(m.lead==='u'){o.pu++;o.lu++;} else if(m.lead==='i'){o.pi++;o.li++;} else {o.pu+=.5;o.pi+=.5;o.la++;} }
+    else o.rem++;
+  }); });
+  o.left=c.total-o.u-o.i; return o;
+}
+
+/* ---------- render: cup ---------- */
+function tname(ab){ return (TEAMS[ab]||{nm:ab}).nm; }
+function topo(){
+  var out='', sets=[[1250,40,1.15],[120,300,.6]];
+  sets.forEach(function(c){ for(var k=1;k<=11;k++){ var rx=(24+k*33)*c[2], ry=(14+k*20)*c[2], d='';
+    for(var a=0;a<=72;a++){ var t=a/72*Math.PI*2, w=1+.07*Math.sin(3*t+k*.7)+.04*Math.sin(5*t-k);
+      d+=(a?'L':'M')+(c[0]+Math.cos(t)*rx*w).toFixed(1)+' '+(c[1]+Math.sin(t)*ry*w).toFixed(1); }
+    out+='<path d="'+d+'Z" fill="none" stroke="rgba(120,200,160,'+(k<3?.14:.06)+')" stroke-width="1"/>'; } });
+  return '<svg class="topo" viewBox="0 0 1500 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+out+'</svg>';
+}
+function curSession(c){
+  var live=c.sessions.filter(function(s){return s.state==='in';})[0]; if(live) return live;
+  var next=c.sessions.filter(function(s){return s.state==='pre';})[0]; var last=c.sessions.filter(function(s){return s.state==='post';}).pop();
+  if(next&&last&&(new Date(next.date)-Date.now())<3*3600e3) return next;
+  return last||next||c.sessions[0];
+}
+function heroCup(c){
+  var o=points(c), w=function(x){return (x/c.total*100).toFixed(2)+'%';}, cap=CAPTAINS[c.name+' '+c.year]||{};
+  var cs=curSession(c), done=o.u>=c.toWin||o.i>=c.toWin, allDone=!o.rem;
+  var kick=cs?cs.desc:'';
+  var status=done?(o.u>=c.toWin?tname(c.A):tname(c.B))+' win the Cup':(o.live?'● live':'');
+  var mark=(c.toWin/c.total*100);
+  document.getElementById('hero').innerHTML=topo()+
+   '<div><div class="kick"><span>'+esc(kick)+'</span><span class="lv">'+esc(status)+'</span></div>'+
+    '<h2>The '+esc(c.name)+'</h2><div class="where">'+esc(S.where||'')+'</div>'+
+    '<div class="race"><div class="rt"><span>Race to the Cup</span><b>'+fmt(c.toWin)+' wins</b></div><div class="track">'+
+      '<div class="seg u" style="width:'+w(o.u)+'"></div><div class="seg pu" style="left:'+w(o.u)+';width:'+w(o.pu)+'"></div>'+
+      '<div class="seg i" style="width:'+w(o.i)+'"></div><div class="seg pi" style="right:'+w(o.i)+';width:'+w(o.pi)+'"></div>'+
+      '<div class="mid" style="left:'+mark.toFixed(3)+'%"></div><div class="mid" style="left:'+(100-mark).toFixed(3)+'%"></div></div>'+
+      '<div class="lab"><span>'+c.A+' need <b>'+fmt(Math.max(0,c.toWin-o.u))+'</b> more</span><span>'+fmt(o.left)+' points left</span><span>'+c.B+' need <b>'+fmt(Math.max(0,c.toWin-o.i))+'</b> more</span></div></div></div>'+
+   '<div class="board tally"><div class="band">'+esc(c.name)+'<small>'+(allDone?'final':'official points')+'</small></div><table>'+
+     '<tr><th style="text-align:left">Team</th><th>Points</th><th>'+(o.live?'If it ended now':'Matches left')+'</th></tr>'+
+     '<tr><td class="nm tn r">'+tname(c.A)+'<small>'+esc(cap[c.A]||'')+'</small></td><td class="pt r">'+fmt(o.u)+'</td><td class="nw r">'+(o.live?fmt(o.u+o.pu):o.rem)+'</td></tr>'+
+     '<tr><td class="nm tn b">'+tname(c.B)+'<small>'+esc(cap[c.B]||'')+'</small></td><td class="pt b">'+fmt(o.i)+'</td><td class="nw b">'+(o.live?fmt(o.i+o.pi):o.rem)+'</td></tr>'+
+   '</table></div>';
+  var br=document.getElementById('barRec'); br.hidden=false; br.innerHTML='<span class="u">'+c.A+' '+fmt(o.u)+'</span> · <span class="i">'+fmt(o.i)+' '+c.B+'</span>';
+  var st=document.getElementById('stText'), dot=document.getElementById('dot');
+  st.textContent=o.live?'Live · '+o.live:(allDone?'Final':'Next up'); dot.style.display=o.live?'':'none';
+}
+function head(){
+  var h='<tr><th class="nm" style="text-align:left;padding-left:12px">Match</th>';
+  for(var k=1;k<=18;k++) h+='<th'+(k===10?' class="gap"':'')+'>'+k+'</th>';
+  return h+'<th>Status</th></tr>';
+}
+function brow(m,c){
+  var sc=m.lead==='u'?'r':m.lead==='i'?'b':'g';
+  var ms=m.state==='pre'?'tees off '+m.txt:(m.txt+' · '+(m.state==='post'?'final':'thru '+m.thru));
+  var nmc='<td class="nm"><span class="u">'+esc(m.a.names.join(' / '))+'</span><span class="x">v</span><span class="i">'+esc(m.b.names.join(' / '))+'</span><span class="ms '+(m.state==='pre'?'g':sc)+'">'+esc(ms)+'</span></td>';
+  var cells='';
+  if(m.state==='pre'){ cells='<td colspan="18" class="words">Tees off at <b>'+esc(m.txt)+'</b> Central</td>'; }
+  else { var d=0; for(var k=0;k<18;k++){ var ch=m.h[k], v='';
+      if(ch){ if(ch==='u')d++; else if(ch==='i')d--; v=d>0?'<span class="r">'+d+'</span>':d<0?'<span class="b">'+(-d)+'</span>':'<span class="as">AS</span>'; }
+      cells+='<td'+(k===9?' class="gap"':'')+'>'+v+'</td>'; } }
+  var st=m.state==='post'?'<td class="stc fin '+(m.lead?sc:'')+'">'+esc(m.txt)+'<small>final</small></td>':
+         m.state==='in'?'<td class="stc '+sc+'">'+esc(m.txt)+'<small class="lv">thru '+m.thru+(m.dormie?' · dormie':'')+'</small></td>':
+         '<td class="stc">'+esc(m.txt)+'<small>tee</small></td>';
+  var open=S.open[m.id];
+  var row='<tr class="m'+(open?' open':'')+'" data-m="'+m.id+'">'+nmc+cells+st+'</tr>';
+  if(open) row+='<tr class="det"><td colspan="20">'+detail(m,c)+'</td></tr>';
+  return row;
+}
+function detail(m,c){
+  var won={u:0,i:0,h:0}; for(var k=0;k<m.h.length;k++) won[m.h[k]]++;
+  var hw=''; for(var k2=0;k2<18;k2++){ var ch=m.h[k2]||''; hw+='<i class="'+ch+(k2===9?' gap':'')+'">'+(k2+1)+'</i>'; }
+  var left=18-m.thru, st=m.state==='post'?'Final':m.state==='in'?(m.txt+' with '+left+' to play'+(m.dormie?', dormie':'')):'Not started';
+  return '<div class="dw"><div><div class="k">'+tname(c.A)+'</div><b class="r" style="color:var(--red)">'+esc(m.a.full.join(' & '))+'</b>won '+won.u+' hole'+(won.u===1?'':'s')+'</div>'+
+    '<div><div class="k">'+tname(c.B)+'</div><b style="color:var(--blu)">'+esc(m.b.full.join(' & '))+'</b>won '+won.i+' hole'+(won.i===1?'':'s')+'</div>'+
+    '<div><div class="k">'+esc(FMT[m.fmt]||m.fmt)+' · '+(m.tee?'teed off '+tm(m.tee):'')+'</div><b style="color:var(--bink)">'+esc(st)+'</b>'+won.h+' halved</div></div>'+
+    '<div class="hw">'+hw+'</div>';
+}
+function boardFor(s,c,sub){
+  var rows=s.matches.map(function(m){return brow(m,c);}).join('');
+  return '<div class="board"><div class="band">'+esc(FMT[s.fmt]||s.fmt)+'<small>'+esc(sub||s.desc)+'</small></div><div class="bscroll"><table>'+head()+rows+'</table></div></div>';
+}
+function homeCup(c){
+  var s=curSession(c), o=points(c);
+  document.getElementById('hmTitle').textContent=s.state==='in'?'On the course':s.state==='post'?'Latest results':'Up first';
+  document.getElementById('hmSub').textContent=s.desc;
+  document.getElementById('hmBoard').innerHTML=boardFor(s,c);
+  document.getElementById('hmKey').innerHTML='<span><b style="color:var(--red)">2</b>'+c.A+' 2 up after that hole</span><span><b style="color:var(--blu)">1</b>'+c.B+' 1 up</span><span><b style="color:#6c705f;font-size:12px">AS</b>all square</span>';
+  // the maths
+  var mathH='';
+  if(o.rem&&o.u<c.toWin&&o.i<c.toWin){
+    var nu=c.toWin-o.u, ni=c.toWin-o.i;
+    mathH='<div class="math"><div><div class="k">'+c.A+' need</div><div class="v r" style="color:var(--usa)">'+fmt(nu)+'<small>of '+fmt(o.left)+' left</small></div></div>'+
+      '<div><div class="k">'+c.B+' need</div><div class="v" style="color:var(--intl)">'+fmt(ni)+'<small>of '+fmt(o.left)+' left</small></div></div>'+
+      (o.live?'<div class="full"><div class="k">Leading on the course right now</div><div class="ld"><span style="color:var(--usa)">'+c.A+' '+o.lu+'</span><span style="color:var(--mute)">AS '+o.la+'</span><span style="color:var(--intl)">'+c.B+' '+o.li+'</span></div></div>':'')+
+      '</div>';
+  }
+  document.getElementById('hmMath').innerHTML=mathH;
+  var nx=[];
+  c.sessions.forEach(function(ss){ ss.matches.forEach(function(m){ if(m.state==='pre') nx.push(m); }); });
+  nx=nx.slice(0,6);
+  var nh=nx.map(function(m){return '<div class="row"><span class="tee">'+tm(m.tee||m.date)+'</span><span>'+esc(m.a.names.join(' / ')||'TBD')+' v '+esc(m.b.names.join(' / ')||'TBD')+'<small>'+esc(dayName(m.date)+' · '+(FMT[m.fmt]||''))+'</small></span></div>';}).join('');
+  if(!nh) nh='<div class="row" style="color:var(--mute)">'+(o.rem?'Every match is on the course.':'That is the lot. The Cup is decided.')+'</div>';
+  document.getElementById('hmNext').innerHTML=nh;
+  document.getElementById('hmHow').innerHTML=c.total+' matches over four days. Each match is worth <b style="color:var(--ink)">one point</b>, a tie is <b style="color:var(--ink)">a half each</b>. First side to <b style="color:var(--yellow)">'+fmt(c.toWin)+'</b> takes the Cup.<a href="#cup" style="display:block;margin-top:9px;color:var(--yellow);font-weight:600;text-decoration:none">The full breakdown ›</a>';
+}
+var HOWTXT={fourball:'Two-man teams. All four play their own ball; the better score on each side counts on each hole.',
+  foursomes:'Two-man teams, one ball. Partners take turns hitting it. Also called alternate shot, and the hardest format.',
+  singles:'One on one. Every player on each side goes out. Most Cups are decided here.'};
+function glyph(f){ var U='<span class="gu">U</span>', I='<span class="gi">I</span>', B='<span class="ball"></span>';
+  return f==='fourball'?U+U+B+B+I+I+B+B : f==='foursomes'?U+U+B+I+I+B : U+B+I+B; }
+function cupTab(c){
+  document.getElementById('howTitle').textContent='How the '+c.name+' works';
+  document.getElementById('howSub').textContent=tname(c.A)+' v '+tname(c.B)+' · match play';
+  var days=[], by={};
+  c.sessions.forEach(function(s){ var d=dayName(s.date); if(!by[d]){by[d]={d:d,ss:[]};days.push(by[d]);} by[d].ss.push(s); });
+  var today=dayName(new Date());
+  document.getElementById('how').innerHTML=days.map(function(D){
+    var n=0,u=0,i=0,any=false; D.ss.forEach(function(s){ n+=s.matches.length; s.matches.forEach(function(m){ if(m.state==='post'){any=true; if(m.lead==='u')u++; else if(m.lead==='i')i++; else {u+=.5;i+=.5;}} }); });
+    var two=D.ss.length>1, f=two?'Both':(FMT[D.ss[0].fmt]||D.ss[0].fmt);
+    var p=two?(FMT[D.ss[0].fmt]+' in the morning ('+D.ss[0].matches.length+' matches), '+(FMT[D.ss[1].fmt]||'').toLowerCase()+' in the afternoon ('+D.ss[1].matches.length+'). Not everyone plays both.'):HOWTXT[D.ss[0].fmt]||'';
+    var g=two?glyph(D.ss[0].fmt).split('<span class="gi">')[0]+'<span class="then">then</span>'+glyph(D.ss[1].fmt).split('<span class="gi">')[0]:glyph(D.ss[0].fmt);
+    var now=D.d===today;
+    return '<div class="day'+(now?' now':'')+'"><div class="d">'+D.d+(now?' · today':'')+'</div><div class="f">'+f+'<small>'+n+' matches</small></div><div class="glyph">'+g+'</div><p>'+p+'</p>'+
+      '<div class="res"><span>'+(any?'Points so far':'Not started')+'</span><b>'+(any?'<span style="color:var(--usa)">'+c.A+' '+fmt(u)+'</span> · <span style="color:var(--intl)">'+fmt(i)+' '+c.B+'</span>':n+' points')+'</b></div></div>';
+  }).join('');
+  document.getElementById('rules').innerHTML=
+    '<div class="rule"><b>One point a match</b>Win the match, bank a point. Level after 18 holes (halved) and each side takes a half.</div>'+
+    '<div class="rule"><b>Holes, not strokes</b>Total score does not matter. Each hole is won, lost or halved. Win more holes, win the match.</div>'+
+    '<div class="rule"><b>First to '+fmt(c.toWin)+'</b>'+c.total+' points on offer. Reach '+fmt(c.toWin)+' and the Cup is yours, even with matches still out on the course.</div>'+
+    '<div class="rule"><b>Captains pick pairs</b>Pairings are set one session at a time, so the singles lineup is not known until the night before.</div>';
+  if(!S.sess||!c.sessions.some(function(s){return s.desc===S.sess;})) S.sess=curSession(c).desc;
+  document.getElementById('stabs').innerHTML=c.sessions.map(function(s){
+    var u=0,i=0,any=false; s.matches.forEach(function(m){ if(m.state==='post'){any=true; if(m.lead==='u')u++; else if(m.lead==='i')i++; else {u+=.5;i+=.5;}} });
+    var lab=s.desc.replace(/Four-Balls?/,'Four-ball').replace(/^(\w+day) /,function(x,d){return d.slice(0,3)+' · ';});
+    return '<button data-s="'+esc(s.desc)+'" class="'+(s.desc===S.sess?'on':'')+'">'+esc(lab)+' <b>'+(any?fmt(u)+'–'+fmt(i):s.matches.length+' pts')+'</b>'+(s.state==='in'?' <span style="color:var(--live)">●</span>':'')+'</button>';
+  }).join('');
+  var s=c.sessions.filter(function(x){return x.desc===S.sess;})[0];
+  document.getElementById('sessSub').textContent=dayName(s.date)+' · '+(FMT[s.fmt]||s.fmt)+(s.state==='in'?' · live':'');
+  document.getElementById('sessBoard').innerHTML=boardFor(s,c);
+}
+function standCup(c){
+  var rec={}; rec[c.A]={}; rec[c.B]={};
+  c.sessions.forEach(function(s){ s.matches.forEach(function(m){ if(m.state!=='post')return;
+    [['u',m.a,c.A],['i',m.b,c.B]].forEach(function(t){ t[1].full.forEach(function(p,k){ var nm=t[1].names[k]||p; var r=rec[t[2]][nm]||(rec[t[2]][nm]=[0,0,0]); if(!m.lead) r[2]++; else r[m.lead===t[0]?0:1]++; }); });
+  }); });
+  var tbl=function(ab){ var cc=ab===c.A?'r':'b';
+    var rows=Object.keys(rec[ab]).map(function(p){return [p,rec[ab][p]];}).sort(function(a,b){return (b[1][0]+b[1][2]/2)-(a[1][0]+a[1][2]/2)||a[1][1]-b[1][1];});
+    return '<div class="board"><div class="band">'+tname(ab)+'<small>won · lost · halved</small></div><table><tr><th class="nm" style="text-align:left;padding-left:12px">Player</th><th>W</th><th>L</th><th>H</th><th>Pts</th></tr>'+
+      (rows.map(function(r){return '<tr><td class="nm '+cc+'">'+esc(r[0])+'</td><td>'+r[1][0]+'</td><td>'+r[1][1]+'</td><td>'+r[1][2]+'</td><td class="stc '+cc+'">'+fmt(r[1][0]+r[1][2]/2)+'</td></tr>';}).join('')||'<tr><td colspan="5" class="words">No completed matches yet.</td></tr>')+'</table></div>'; };
+  document.getElementById('recSub').textContent=c.name+' · completed matches';
+  document.getElementById('recs').innerHTML=tbl(c.A)+tbl(c.B);
+}
+
+/* ---------- render: stroke play ---------- */
+function strokeRows(ev){
+  var comp=flat(ev.competitions)[0]||{}; return (comp.competitors||[]).slice().sort(function(a,b){return (a.sortOrder||999)-(b.sortOrder||999);});
+}
+function lbStroke(ev){
+  var rows=strokeRows(ev).slice(0,60);
+  document.getElementById('lbSub').textContent=ev.name+(ev.status&&ev.status.type?' · '+ev.status.type.detail:'');
+  if(!rows.length){ document.getElementById('lb').innerHTML='<div class="panel empty">No leaderboard posted yet.</div>'; return; }
+  var tp=function(s){ s=String(s==null?'':s); return /^-/.test(s)?'<span class="r">'+esc(s)+'</span>':'<span class="ev">'+esc(s)+'</span>'; };
+  var h='<tr><th class="nm" style="text-align:left;padding-left:12px">Pos · Player</th><th>To par</th><th>Today</th><th>Thru</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th></tr>';
+  document.getElementById('lb').innerHTML='<div class="board lbx"><div class="band">Leaders<small>'+esc(ev.name)+'</small></div><div class="bscroll"><table>'+h+rows.map(function(p){
+    var a=p.athlete||{}, st=p.status||{}, pos=(st.position&&st.position.displayName)||'', ls=p.linescores||[];
+    var today=(ls[(st.period||1)-1]||{}); var todayTP=today.displayValue&&/^[-+E]/.test(today.displayValue)?today.displayValue:'';
+    return '<tr><td class="nm"><span style="color:#8a8c80;display:inline-block;min-width:38px">'+esc(pos)+'</span>'+esc(a.displayName||'')+'</td><td class="stc" style="font-size:24px">'+tp((p.score&&p.score.displayValue)||p.score)+'</td><td>'+(todayTP?tp(todayTP):'')+'</td><td>'+esc(st.displayThru||st.thru||'')+'</td>'+
+      [0,1,2,3].map(function(k){ var r=ls[k]||{}; return '<td>'+esc(r.value&&r.value>50?r.value:'')+'</td>'; }).join('')+'</tr>';
+  }).join('')+'</table></div></div>';
+}
+
+/* ---------- schedule ---------- */
+function sched(){
+  var now=Date.now();
+  var rows=S.cal.map(function(e){
+    var l=e.label||'', st=new Date(e.startDate), en=new Date(e.endDate);
+    var maj=/Masters Tournament|PGA Championship|U\.S\. Open|The Open|Open Championship/i.test(l)&&!/Players/i.test(l);
+    var team=/Presidents Cup|Ryder Cup/i.test(l);
+    var cur=S.ev&&String(e.id)===String(S.ev.id);
+    var cls=cur?'now':(en<now-864e5?'past':'')+(maj?' maj':'');
+    var tag=cur?'<span class="tag live">This week</span>':maj?'<span class="tag gold">Major</span>':team?'<span class="tag">Team cup</span>':'';
+    return '<div class="r '+cls+'"><span class="when">'+md(e.startDate)+'–'+md(e.endDate).replace(/^\w+ /,function(x){return md(e.startDate).indexOf(x.trim())===0?'':x;})+'</span><span class="ev">'+esc(l)+'</span>'+tag+'</div>';
+  });
+  document.getElementById('sch').innerHTML=rows.join('')||'<div class="r"><span class="ev">Calendar not available</span></div>';
+  var cur=document.querySelector('#sch .r.now'); S.schedEl=cur;
+}
+
+/* ---------- main ---------- */
+function render(){
+  var ev=S.ev; if(!ev) return;
+  var navCup=document.getElementById('navCup');
+  if(S.cup){
+    navCup.style.display=''; document.getElementById('hmTwo').style.display='';
+    heroCup(S.cup); homeCup(S.cup); cupTab(S.cup); standCup(S.cup);
+    document.getElementById('lbSub').textContent=ev.name+' is match play';
+    document.getElementById('lb').innerHTML='<div class="panel empty">This week is match play, so there is no stroke-play leaderboard. <a href="#cup" style="color:var(--yellow)">The Cup tab has every match ›</a></div>';
+  } else {
+    navCup.style.display='none';
+    lbStroke(ev); heroStroke(ev);
+    document.getElementById('recs').innerHTML='<div class="panel empty">FedExCup standings arrive in a later version.</div>';
+  }
+  sched();
+  document.getElementById('upd').textContent='updated '+tm(S.ts);
+}
+function heroStroke(ev){
+  var rows=strokeRows(ev).slice(0,5), st=ev.status&&ev.status.type||{};
+  document.getElementById('hero').innerHTML=topo()+'<div><div class="kick"><span>'+esc(st.detail||'')+'</span>'+(st.state==='in'?'<span class="lv">● live</span>':'')+'</div><h2>'+esc(ev.name)+'</h2><div class="where">'+esc(S.where||'')+'</div></div>'+
+    '<div class="board tally"><div class="band">Leaders<small>top five</small></div><table>'+rows.map(function(p){ var s=(p.score&&p.score.displayValue)||''; return '<tr><td class="nm tn" style="font-size:20px">'+esc((p.status&&p.status.position&&p.status.position.displayName)||'')+' '+esc((p.athlete||{}).displayName||'')+'</td><td class="pt '+(/^-/.test(s)?'r':'')+'" style="font-size:34px">'+esc(s)+'</td></tr>'; }).join('')+'</table></div>';
+  document.getElementById('hmTwo').style.display='none';
+  var stt=document.getElementById('stText'); stt.textContent=st.state==='in'?'Live':st.state==='post'?'Final':'Next up';
+  document.getElementById('dot').style.display=st.state==='in'?'':'none';
+  document.getElementById('stBtn').setAttribute('href','#board');
+}
+var timer=null;
+function load(){
+  var err=document.getElementById('err');
+  return getJSON(SB).then(function(sb){
+    var lg=(sb.leagues||[])[0]||{}; S.cal=lg.calendar||S.cal;
+    var e=(sb.events||[])[0]; if(!e) throw new Error('no event');
+    return getJSON(LB+'&event='+e.id).then(function(lb){ return (lb.events||[])[0]||e; }).catch(function(){ return e; });
+  }).then(function(ev){
+    S.ev=ev; S.ts=Date.now();
+    var crs=(ev.courses||[])[0]; if(crs) S.where=[crs.name,(crs.address&&[crs.address.city,crs.address.state].filter(Boolean).join(', '))].filter(Boolean).join(' · ');
+    S.cup=isMatch(ev)?parseCup(ev):null;
+    err.classList.remove('on'); render();
+  }).catch(function(e){ err.textContent='Could not reach the golf feed ('+e.message+'). Retrying shortly.'; err.classList.add('on'); })
+  .then(function(){ clearTimeout(timer); var live=S.cup?points(S.cup).live:(S.ev&&S.ev.status&&S.ev.status.type.state==='in'); timer=setTimeout(load, document.hidden?120e3:(live?30e3:300e3)); });
+}
+document.addEventListener('click',function(e){
+  var r=e.target.closest('tr.m'); if(r){ var id=r.getAttribute('data-m'); S.open[id]=!S.open[id]; render(); return; }
+  var b=e.target.closest('#stabs button'); if(b){ S.sess=b.getAttribute('data-s'); S.open={}; render(); }
+});
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) load(); });
+function route(){
+  var h=(location.hash||'#home').slice(1), v=h;
+  if(/^match-/.test(h)){ v='cup'; var id=h.slice(6); S.open={}; S.open[id]=true;
+    if(S.cup) S.cup.sessions.forEach(function(s){ s.matches.forEach(function(m){ if(String(m.id)===id) S.sess=s.desc; }); }); render(); }
+  if(!/^(home|cup|board|sched|stand)$/.test(v)) v='home';
+  document.body.className='v-'+v;
+  [].forEach.call(document.querySelectorAll('#nav a'),function(a){a.classList.toggle('on',a.getAttribute('data-v')===v);});
+  if(v==='sched'&&S.schedEl) setTimeout(function(){ S.schedEl.scrollIntoView({block:'center'}); },30);
+}
+window.addEventListener('hashchange',route);
+route(); load().then(route);
+</script>
+</body>
+</html>
