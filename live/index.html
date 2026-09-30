@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Live">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Live · Press Box</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23ef4444'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,11 +15,13 @@
 :root{--bg:#0b1220;--card:#131c2e;--line:#22304a;--ink:#e8eef8;--dim:#8a98b3;--live:#ef4444}
 *{box-sizing:border-box;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;min-height:100dvh;
-  padding:18px clamp(14px,2.5vw,32px) calc(28px + env(safe-area-inset-bottom))}
+  padding:calc(18px + env(safe-area-inset-top)) clamp(14px,2.5vw,32px) calc(28px + env(safe-area-inset-bottom))}
+@media (max-width:520px){body{padding-top:calc(30px + env(safe-area-inset-top))}}
 a{color:inherit;text-decoration:none}
 header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .back{font-family:Oswald,sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--dim);
-  border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:36px;display:inline-flex;align-items:center}
+@media (pointer:coarse){.back{min-height:44px;padding:0 18px;font-size:14px}}
 .back:hover{color:var(--ink);border-color:var(--dim)}
 h1{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(24px,3.4vw,38px);
   display:flex;align-items:center;gap:12px}
@@ -132,7 +135,11 @@ function norm(lg, ev) {
   const raw = ty.state || "pre", when = new Date(ev.date);
   // ESPN flags a delayed start as "in" before first pitch; nothing is live until its start time passes
   const held = raw === "in" && when - Date.now() > 60e3;
-  return { lg, id:ev.id, date:when, state:held ? "pre" : raw, held, detail:ty.shortDetail || ty.detail || "", away, home, tv,
+  // ESPN can sit on "Scheduled" for several minutes past the start time (warmups, anthem); once the clock
+  // passes the start it counts as live and shows as a card, up to 3 hours in case the feed never flips
+  const late = raw === "pre" && Date.now() >= +when && Date.now() - when < 3 * 3600e3;
+  const soonTxt = { mlb:"First pitch soon", nhl:"Puck drop soon", nba:"Tip-off soon" }[lg.key] || "Kickoff soon";
+  return { lg, id:ev.id, date:when, state:held ? "pre" : late ? "in" : raw, held, late, detail:late ? soonTxt : ty.shortDetail || ty.detail || "", away, home, tv,
     fav:away.ab === lg.fav || home.ab === lg.fav, sit, close:Math.abs((+away.score || 0) - (+home.score || 0)) };
 }
 function keep(g) {              // college carries about 75 games, so the today lists keep only the ones he cares about
