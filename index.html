@@ -180,7 +180,9 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
           var st = ((c.status || e.status || {}).type || {}).state || "pre";
           var when = new Date(e.date);
           // ESPN flags a delayed start as "in" before first pitch; nothing is live until its start time passes
-          if (st !== "in" || when - Date.now() > 60e3) return;
+          // ...and once the clock passes the start, a game ESPN still calls "Scheduled" counts as live (up to 3 hours)
+          var late = st === "pre" && Date.now() >= +when && Date.now() - when < 3 * 3600e3;
+          if (!late && (st !== "in" || when - Date.now() > 60e3)) return;
           on.push(e.id);
           var side = function (ha) {
             var x = (c.competitors || []).filter(function (t) { return t.homeAway === ha; })[0] || {};
