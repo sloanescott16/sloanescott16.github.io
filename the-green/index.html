@@ -497,7 +497,7 @@ body.pp-on{overflow:hidden}
 </div>
 
 <script>
-/* ================= The Green v6 ================= */
+/* ================= The Green v7 ================= */
 var SB='https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
 var LB='https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga';
 var TZ='America/Chicago';
@@ -783,7 +783,7 @@ function scorecard(m,p,d){
   var rds=(d&&d.rounds)||[];
   rds.forEach(function(r){ if(!r||!(r.linescores||[]).length) return;
     var by={}; (r.linescores||[]).forEach(function(h){ by[h.period]=h; });
-    var o=0,i=0,row='<tr class="rd"><td class="nm">Round '+r.period+'<span class="x2">'+(r.value>50?r.value+' · ':'')+esc(r.displayValue||'')+'</span></td>';
+    var o=0,i=0,row='<tr class="rd"><td class="nm">Round '+r.period+'<span class="x2">'+((r.linescores||[]).length>=18&&r.value>50?r.value+' · ':'')+esc(r.displayValue||'')+'</span></td>';
     for(var k2=1;k2<=18;k2++){ var h=by[k2]; if(k2===10) row+='<td class="tot">'+(o||'')+'</td>';
       if(h&&h.value!=null){ var t=scoreType(h); row+='<td><i class="'+t+'">'+h.value+'</i></td>'; if(k2<=9) o+=h.value; else i+=h.value; } else row+='<td></td>'; }
     row+='<td class="tot">'+(i||'')+'</td><td class="tot">'+((o+i)||'')+'</td></tr>'; rows+=row; });
