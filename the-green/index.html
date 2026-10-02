@@ -497,7 +497,7 @@ body.pp-on{overflow:hidden}
 </div>
 
 <script>
-/* ================= The Green v7 ================= */
+/* ================= The Green v8 ================= */
 var SB='https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
 var LB='https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga';
 var TZ='America/Chicago';
@@ -832,7 +832,7 @@ function chase(m){
     var w=Math.abs(p.tot)/mx*100, td=p.started&&p.today!=null?p.today:0, under=p.tot<=0;
     var tw=under?Math.min(w,Math.max(0,-td)/mx*100):0;
     return '<div class="cr"><span class="cn">'+esc(p.pos)+'</span><span class="cnm">'+nameH(p)+'</span><span class="ct"><span class="cb '+(under?'u':'o')+'" style="width:'+w.toFixed(1)+'%">'+(tw>0?'<span class="tdy" style="width:'+(tw/w*100).toFixed(1)+'%"></span>':'')+'</span><b class="'+tpc(p.tot)+'">'+tpar(p.tot)+'</b></span></div>';
-  }).join('')+'<div class="bkey"><span><b class="sw u"></b>under par so far</span><span><b class="sw t"></b>of it today</span></div>'+
+  }).join('')+'<div class="bkey"><span><b class="sw u"></b>coming into today</span><span><b class="sw t"></b>picked up today</span></div>'+
   (all.length>10?'<button class="xp" id="chaseMore">'+(S.chaseAll?'Collapse · top ten':'Expand · the whole field · '+all.length)+'</button>':'')+'</div>';
 }
 function movers(m){
