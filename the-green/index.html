@@ -296,9 +296,9 @@ sup{font-size:9px; color:#8a8c80; margin-left:3px}
 .lbx tr.more button{width:100%; background:var(--board-2); border:0; padding:11px; font:700 12px var(--body); letter-spacing:.1em; text-transform:uppercase; color:var(--bink); cursor:pointer}
 .lbx tr.more button:hover{background:#ece8d8}
 /* scorecard */
-.sc th{font-size:12px} .sc th.tot,.sc td.tot{background:var(--board-2); font-size:15px; min-width:36px}
-.sc td{height:38px; min-width:33px; font-size:17px}
-.sc td.nm,.sc th.nm{min-width:108px; font-size:14px; letter-spacing:.06em}
+.sc th{font-size:12px} .sc th.tot,.sc td.tot{background:var(--board-2); font-size:15px; min-width:34px}
+.sc td{height:38px; min-width:30px; font-size:16px}
+.sc td.nm,.sc th.nm{min-width:96px; font-size:13px; letter-spacing:.05em; padding-left:10px; padding-right:8px}
 .sc .nm .x2{display:block; font-size:12px; color:#8a8c80; letter-spacing:.04em; margin-top:2px}
 .sc tr.meta td{font-size:13px; color:#6c705f; height:26px; font-weight:600}
 .sc tr.meta.yd td{font-size:11px; color:#9a9c8e; letter-spacing:0}
@@ -310,7 +310,7 @@ sup{font-size:9px; color:#8a8c80; margin-left:3px}
 .sc i.db,.sck i.db{border-color:#1d7a4f; border-radius:2px; color:#1d7a4f; box-shadow:0 0 0 2px var(--board),0 0 0 4px #1d7a4f}
 .sck{gap:18px} .sck span{display:inline-flex; align-items:center; gap:8px} .sck i{width:24px; height:24px; font-size:14px; background:var(--board)}
 .sck i.eg{box-shadow:0 0 0 2px var(--board),0 0 0 3px var(--red)} .sck i.db{box-shadow:0 0 0 2px var(--board),0 0 0 3px #1d7a4f}
-.two.sk2{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}
+.two.sk2{grid-template-columns:minmax(0,1.85fr) minmax(0,1fr)}
 /* the chase */
 .chase{background:var(--card); border:1px solid var(--line); border-top:2px solid var(--augusta); border-radius:4px; padding:12px 14px 10px}
 .chase .cr{display:grid; grid-template-columns:34px minmax(120px,200px) 1fr; gap:10px; align-items:center; padding:5px 0}
@@ -460,7 +460,7 @@ sup{font-size:9px; color:#8a8c80; margin-left:3px}
 </div>
 
 <script>
-/* ================= The Green v4 ================= */
+/* ================= The Green v5 ================= */
 var SB='https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
 var LB='https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga';
 var TZ='America/Chicago';
@@ -695,6 +695,7 @@ function stat(p,name){ var s=(p.statistics||[]).filter(function(x){return x.name
 function strokeModel(ev){
   var comp=flat(ev.competitions)[0]||{}, t=ev.tournament||{}, st=(ev.status&&ev.status.type)||{};
   var rd=(comp.status&&comp.status.period)||1, nR=t.numberOfRounds||4, crs=(ev.courses||[])[0]||{};
+  var cst=(comp.status&&comp.status.type)||{}; var detail=st.detail||cst.detail||cst.shortDetail||st.description||'';
   var ps=(comp.competitors||[]).slice().sort(function(a,b){return (a.sortOrder||999)-(b.sortOrder||999);}).map(function(p){
     var a=p.athlete||{}, s=p.status||{}, ls=p.linescores||[], ty=s.type||{};
     var byR={}; ls.forEach(function(l){ byR[l.period]=l; });
@@ -713,7 +714,7 @@ function strokeModel(ev){
   var live=ps.filter(function(p){return !p.cut;}), out=ps.filter(function(p){return p.cut;});
   var leader=live[0]||null;
   var anyStarted=ps.some(function(p){return p.started;});
-  return {ev:ev, name:ev.name, rd:rd, nR:nR, st:st, detail:st.detail||'', state:st.state, players:ps, live:live, out:out, leader:leader, anyStarted:anyStarted,
+  return {ev:ev, name:ev.name, rd:rd, nR:nR, st:st, detail:detail, state:st.state||cst.state, players:ps, live:live, out:out, leader:leader, anyStarted:anyStarted,
     course:crs, par:crs.shotsToPar, yards:crs.totalYards, holes:crs.holes||[], purse:ev.displayPurse, dc:ev.defendingChampion&&ev.defendingChampion.athlete&&ev.defendingChampion.athlete.displayName,
     cutRound:t.cutRound||2, cutScore:num(t.cutScore), cutCount:t.cutCount, major:!!t.major, tv:(comp.broadcasts||[]).map(function(b){return b.media&&b.media.shortName;}).filter(Boolean), leaders:comp.leaders||[]};
 }
