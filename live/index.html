@@ -162,7 +162,10 @@ function norm(lg, ev) {
       rec:((x.records || [])[0] || {}).summary || "" };
   };
   const away = side("away"), home = side("home");
-  const tv = [].concat(...(c.broadcasts || []).map(b => b.names || []))[0] || "";
+  const bc = c.broadcasts || [], mk = m => [].concat(...bc.filter(b => b.market === m).map(b => b.names || []))[0] || "";
+  // MLB: the national network if there is one ("FS1"), else the two local feeds away / home; other leagues as before
+  const tv = (lg.key === "mlb" && (mk("national") || [mk("away"), mk("home")].filter((x, i, a) => x && a.indexOf(x) === i).join(" / "))) ||
+    [].concat(...bc.map(b => b.names || []))[0] || "";
   const raw = ty.state || "pre", when = new Date(ev.date);
   // ESPN flags a delayed start as "in" before first pitch; nothing is live until its start time passes
   const held = raw === "in" && when - Date.now() > 60e3;
@@ -186,7 +189,7 @@ function sitText(g) {
   }
   if (g.lg.key === "mlb" && s.outs != null) {
     const on = [s.onFirst && "1st", s.onSecond && "2nd", s.onThird && "3rd"].filter(Boolean);
-    return `<span>${s.outs} out${s.outs === 1 ? "" : "s"} · ${on.length ? "on " + on.join(", ") : "bases empty"}</span>`;
+    return `<span>${s.outs} out${s.outs === 1 ? "" : "s"} · ${on.length ? "on " + on.join(", ") : "bases empty"}${g.tv ? " · " + esc(g.tv) : ""}</span>`;   // the network rides after the bases
   }
   return g.tv ? `<span>${esc(g.tv)}</span>` : "";
 }
