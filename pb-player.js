@@ -51,9 +51,26 @@
   function get(u) {
     u = https(u);
     if (inflight[u]) return inflight[u];
-    var p = fetch(u).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
-    inflight[u] = p; p.then(function () { delete inflight[u]; }, function () { delete inflight[u]; });
+    // a feed that hangs gives up after 10 seconds, so the view shows its failure message instead of loading forever
+    var ac = typeof AbortController === "function" ? new AbortController() : null, tm = 0;
+    var p = new Promise(function (ok, no) {
+      tm = setTimeout(function () { if (ac) ac.abort(); no(new Error("timeout")); }, 10e3);
+      fetch(u, ac ? { signal: ac.signal } : undefined).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(ok, no);
+    });
+    inflight[u] = p; p.then(function () { clearTimeout(tm); delete inflight[u]; }, function () { clearTimeout(tm); delete inflight[u]; });
     return p;
+  }
+  function pool(list, n, fn) {                  // run fn over list, at most n at a time
+    var out = new Array(list.length), i = 0;
+    function next() { if (i >= list.length) return Promise.resolve(); var k = i++; return Promise.resolve(fn(list[k], k)).then(function (v) { out[k] = v; return next(); }); }
+    var w = []; for (var j = 0; j < Math.min(n, list.length); j++) w.push(next());
+    return Promise.all(w).then(function () { return out; });
+  }
+  function dob(a) {                             // ESPN's displayDOB is day first (9/3/1999 is 9 March); show "Mar 9, 1999"
+    var d = null, m;
+    if (a.dateOfBirth) d = new Date(a.dateOfBirth);
+    else if ((m = String(a.displayDOB || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/))) d = new Date(Date.UTC(+m[3], +m[2] - 1, +m[1], 12));
+    return d && !isNaN(d) ? d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }) : (a.displayDOB || "");
   }
   function soft(u) { return get(u).catch(function () { return null; }); }
   function lsGet(k) { try { var v = JSON.parse(localStorage.getItem("pbp:" + k) || "null"); return v && Date.now() - v.t < TTL ? v.d : null; } catch (e) { return null; } }
@@ -73,7 +90,7 @@
       id: String(a.id || ""), name: a.displayName || a.fullName || "", first: a.firstName || "", last: a.lastName || "",
       hs: hs, team: t.displayName || "", teamLogo: (t.logos && t.logos[0] && t.logos[0].href) || t.logo || "", teamColor: t.color || "",
       pos: (a.position && (a.position.displayName || a.position.name)) || "", jersey: a.displayJersey || (a.jersey ? "#" + a.jersey : ""),
-      age: a.age || "", dob: a.displayDOB || "", birth: String(a.displayBirthPlace || "").replace(/\s+/g, " ").trim() || (a.birthPlace && [a.birthPlace.city, a.birthPlace.state, a.birthPlace.country].filter(Boolean).join(", ")) || "",
+      age: a.age || "", dob: dob(a), birth: String(a.displayBirthPlace || "").replace(/\s+/g, " ").trim() || (a.birthPlace && [a.birthPlace.city, a.birthPlace.state, a.birthPlace.country].filter(Boolean).join(", ")) || "",
       ht: a.displayHeight || "", wt: a.displayWeight || "", college: col.name || col.displayName || col.shortName || "",
       draft: a.displayDraft || "", exp: a.displayExperience || "", debut: a.debutYear || "", turnedPro: a.turnedPro || "",
       bt: a.displayBatsThrows || "", hand: a.hand ? (a.hand.displayValue || a.hand.abbreviation || "") : "",
@@ -81,7 +98,7 @@
       status: (a.status && a.status.name) || "", active: a.active !== false,
       inj: inj ? [inj.status, inj.details && inj.details.type, inj.type && inj.type.description].filter(Boolean).filter(function (x, i, l) { return l.indexOf(x) === i; }).join(", ") : "",
       sum: a.statsSummary && (a.statsSummary.statistics || []).length ? { n: a.statsSummary.displayName || "", st: (a.statsSummary.statistics || []).map(function (x) { return [x.shortDisplayName || x.abbreviation || x.displayName, x.displayValue, x.rankDisplayValue || ""]; }) } : null,
-      espn: ((a.links || []).filter(function (l) { return (l.rel || []).indexOf("playercard") >= 0; })[0] || {}).href || ""
+      espn: https(((a.links || []).filter(function (l) { return (l.rel || []).indexOf("playercard") >= 0; })[0] || {}).href || "")
     };
   }
   function tableOf(st) {                       // overview.statistics: labels plus splits
@@ -277,7 +294,7 @@
     if (has("teams") && m.teams.length) {
       out += sec("Teams", '<ul class="pbp-teams">' + m.teams.map(function (t) { return "<li>" + (t.logo ? '<img src="' + esc(t.logo) + '" alt="">' : "") + "<span>" + esc(t.n) + '</span><span class="z">' + esc(String(t.s).replace("-CURRENT", " to now")) + "</span></li>"; }).join("") + "</ul>");
     }
-    if (opts.link !== false && b.espn) out += '<p class="pbp-src"><a href="' + esc(b.espn) + '" target="_blank" rel="noopener">Full player card on ESPN</a></p>';
+    if (opts.link !== false && /^https:\/\/[^\s"'<>]+$/i.test(b.espn || "")) out +=   // https links only '<p class="pbp-src"><a href="' + esc(b.espn) + '" target="_blank" rel="noopener">Full player card on ESPN</a></p>';
     return '<div class="pbp">' + out + "</div>";
   }
 
