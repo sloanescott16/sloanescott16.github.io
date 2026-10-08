@@ -83,6 +83,14 @@ h2{border-left-color:#33415e}
   color:#c9d3e4;font:500 11px/1.2 Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .li.fav .lc{border-color:#55648a;color:var(--ink)}
 @media (max-width:420px){.li{grid-template-columns:56px 38px 1fr auto;gap:8px;padding:8px 9px}}
+/* v9: players. Each card and list row names its leading players (or the probable starters before a game); one tap opens the shared player sheet */
+.who{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--dim)}
+.who span[data-pbp]{color:var(--ink);font-weight:600;border-bottom:1px dotted var(--dim);padding:2px 0}
+.who span[data-pbp]:hover{border-bottom-color:var(--ink)}
+.who small{font-size:11px;margin-left:4px;color:var(--dim)}
+.li .m .who{display:block;margin-top:2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .m .who>span{margin-right:10px}   /* v9: a list row fits its names on one line and ends in an ellipsis, never a clipped tag */
+@media (pointer:coarse){.who span[data-pbp]{padding:6px 0}}
 </style>
 </head>
 <body>
@@ -228,9 +236,30 @@ function norm(lg, ev) {
   const late = raw === "pre" && Date.now() >= +when && Date.now() - when < 3 * 3600e3;
   const soonTxt = { mlb:"First pitch soon", nhl:"Puck drop soon", nba:"Tip-off soon" }[lg.key] || "Kickoff soon";
   const rival = lg.key === "cfb" ? rivalryOf(away.id, home.id) : "";   // v7
-  return { lg, id:ev.id, date:when, state:held ? "pre" : late ? "in" : raw, held, late, detail:late ? soonTxt : ty.shortDetail || ty.detail || "", away, home, tv,
+  const who = people(lg, c, raw);   // v9
+  return { lg, id:ev.id, who, date:when, state:held ? "pre" : late ? "in" : raw, held, late, detail:late ? soonTxt : ty.shortDetail || ty.detail || "", away, home, tv,
     rival, fav:lg.soc ? !!(MYSOC[away.id] || MYSOC[home.id]) : away.ab === lg.fav || home.ab === lg.fav, sit, close:Math.abs((+away.score || 0) - (+home.score || 0)) };
 }
+/* v9: the players on a card. Football: the game's passing, rushing and receiving leaders. Soccer: the scorers.
+   Baseball and hockey before the start: the probable pitchers or goalies. Otherwise each side's first leader. */
+function people(lg, c, state) {
+  const out = [], seen = {};
+  const add = (a, val, tag) => { if (!a || !a.id || seen[a.id] || out.length >= 3) return; seen[a.id] = 1; out.push({ id:String(a.id), nm:a.shortName || a.displayName || "", val:val || "", tag:tag || "" }); };
+  const sides = c.competitors || [];
+  if (lg.soc) {
+    for (const d of c.details || []) if (d.scoringPlay) for (const a of d.athletesInvolved || []) add(a, (d.clock && d.clock.displayValue) || "", "goal");
+    return out;
+  }
+  if (lg.path.startsWith("football")) {
+    for (const L of c.leaders || []) { const x = (L.leaders || [])[0]; if (x) add(x.athlete, x.displayValue); }
+    return out;
+  }
+  if (state === "pre") for (const t of sides) for (const p of t.probables || []) add(p.athlete, lg.key === "mlb" ? "probable" : "in goal");
+  if (out.length) return out;
+  for (const t of sides) { const L = (t.leaders || [])[0], x = L && (L.leaders || [])[0]; if (x) add(x.athlete, `${x.displayValue} ${L.shortDisplayName || L.abbreviation || ""}`.trim()); }
+  return out;
+}
+const whoHtml = g => g.who && g.who.length ? `<span class="who">${g.who.map(p => `<span data-pbp="${esc(g.lg.soc ? "soc" : g.lg.key)}:${esc(p.id)}" data-pbp-name="${esc(p.nm)}">${esc(p.nm)}</span>${p.val ? `<small>${esc(p.val)}</small>` : ""}`.replace(/^/, "<span>") + "</span>").join("")}</span>` : "";
 function keep(g) {              // college carries about 75 games, so the today lists keep only the ones he cares about
   if (!g.lg.slim) return true;
   if (g.lg.soc) return g.fav;
@@ -255,7 +284,7 @@ function card(g) {
   const a = +g.away.score || 0, h = +g.home.score || 0, pos = String((g.sit || {}).possession || "");
   const row = (t, trail) => `<div class="row${trail ? " trail" : ""}">${logo(t)}<div class="tm">${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim || g.lg.soc ? t.name : t.ab)}${pos && pos === t.id ? "<b></b>" : ""}${g.lg.slim || g.lg.soc ? "" : `<small>${esc(t.rec)}</small>`}</div><div class="sc">${esc(t.score)}</div></div>`;
   const top = g.lg.soc ? row(g.home, h < a) + row(g.away, a < h) : row(g.away, a < h) + row(g.home, h < a);   // soccer reads home side first
-  return `<a class="g ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${g.rival ? `<span class="rv" title="Rivalry game">${esc(g.rival)}</span>` : ""}${top}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
+  return `<a class="g ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${g.rival ? `<span class="rv" title="Rivalry game">${esc(g.rival)}</span>` : ""}${top}${whoHtml(g)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
 }
 function line(g) {
   const post = g.state === "post", a = +g.away.score || 0, h = +g.home.score || 0;
@@ -263,7 +292,7 @@ function line(g) {
   const mid = g.lg.soc ? (post ? `${nm(g.home, h > a)} ${esc(g.home.score)}, ${nm(g.away, a > h)} ${esc(g.away.score)}` : `${nm(g.home)} v ${nm(g.away)}`)
     : post ? `${nm(g.away, a > h)} ${esc(g.away.score)}, ${nm(g.home, h > a)} ${esc(g.home.score)}` : `${nm(g.away)} at ${nm(g.home)}`;
   const t = post ? esc(g.detail) : g.date.toLocaleTimeString([], { hour:"numeric", minute:"2-digit" }) + (g.held ? ` <span class="dl">${esc((g.detail || "Delayed").split(",")[0])}</span>` : "");
-  return `<a class="li ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}"><span class="t">${t}</span><span class="lc" title="${esc(g.lg.label)}">${esc(chipOf(g.lg))}</span><span class="m">${mid}${g.rival ? `<em class="rv" title="Rivalry game">${esc(g.rival)}</em>` : ""}</span><span class="r">${esc(post ? "" : g.tv)}</span></a>`;
+  return `<a class="li ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}"><span class="t">${t}</span><span class="lc" title="${esc(g.lg.label)}">${esc(chipOf(g.lg))}</span><span class="m">${mid}${g.rival ? `<em class="rv" title="Rivalry game">${esc(g.rival)}</em>` : ""}${whoHtml(g)}</span><span class="r">${esc(post ? "" : g.tv)}</span></a>`;
 }
 function render() {
   const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
@@ -316,5 +345,6 @@ tick.full = 0;
 document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); });
 render(); tick();
 </script>
+<script src="../pb-player.js"></script>
 </body>
 </html>
