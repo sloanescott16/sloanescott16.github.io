@@ -29,7 +29,7 @@ h1{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.14em;text-trans
 .live i{width:9px;height:9px;border-radius:50%;background:var(--dim)}
 .live.on{border-color:#ef4444}.live.on i{background:#ef4444;animation:lp 1.6s infinite}
 .live:hover,.live:focus-visible{transform:translateY(-2px);border-color:#ef4444;box-shadow:0 8px 24px rgba(239,68,68,.25);outline:none}
-.live.pl{margin-left:8px}.live.pl:hover,.live.pl:focus-visible{border-color:#3b82f6;box-shadow:0 8px 24px rgba(59,130,246,.25)}   /* v34 */
+.live.pl{margin-left:8px}.live.pl:hover,.live.pl:focus-visible{border-color:#3b82f6;box-shadow:0 8px 24px rgba(59,130,246,.25)}   /* v33 */
 @keyframes lp{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
 @media (prefers-reduced-motion:reduce){.live.on i{animation:none}}
 .sub{color:var(--dim);font-size:14px;margin-bottom:28px;letter-spacing:.04em}
@@ -105,7 +105,7 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
 @media (max-width:420px){.tile .gq{top:8px;right:8px;max-width:calc(100% - 16px);font-size:10px;padding:2px 7px}}
 </style>
 <style>
-/* v35 (league-look): calmer tiles. No coloured top bars or tinted glows; one neutral edge for every tile, and colour
+/* v33 (league-look): calmer tiles. No coloured top bars or tinted glows; one neutral edge for every tile, and colour
    kept for state only (live red). Each tile carries a small neutral league chip in its bottom corner, so the Cowboys
    (NFL) and the Mavericks (NBA) no longer read as the same blue tile. The football tile has one chip per half (markup); the
    others draw theirs with ::after. Kept in its own style block so other lanes' edits to the one above merge cleanly. */
@@ -126,7 +126,7 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{box-shadow:0 0 0 3px #4a5b80,0
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="cut"><feComponentTransfer><feFuncA type="linear" slope="1.6" intercept="-0.45"/></feComponentTransfer></filter></svg>
 <h1>Press Box</h1>
 <a class="live" id="live" href="https://sloanescott16.github.io/live/"><i></i><span id="liveT">Live</span></a>
-<a class="live pl" href="https://sloanescott16.github.io/player/" aria-label="Find a player">Players</a><!-- v34: player search, career and bio for any player -->
+<a class="live pl" href="https://sloanescott16.github.io/player/" aria-label="Find a player">Players</a><!-- v33: player search, career and bio for any player -->
 <main class="grid">
   <div class="tile fb split" id="tFb"><span class="lv"><i></i>Live</span>
     <span class="pair"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt=""><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt=""></span>

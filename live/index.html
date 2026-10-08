@@ -83,13 +83,13 @@ h2{border-left-color:#33415e}
   color:#c9d3e4;font:500 11px/1.2 Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .li.fav .lc{border-color:#55648a;color:var(--ink)}
 @media (max-width:420px){.li{grid-template-columns:56px 38px 1fr auto;gap:8px;padding:8px 9px}}
-/* v9: players. Each card and list row names its leading players (or the probable starters before a game); one tap opens the shared player sheet */
+/* v8: players. Each card and list row names its leading players (or the probable starters before a game); one tap opens the shared player sheet */
 .who{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--dim)}
 .who span[data-pbp]{color:var(--ink);font-weight:600;border-bottom:1px dotted var(--dim);padding:2px 0}
 .who span[data-pbp]:hover{border-bottom-color:var(--ink)}
 .who small{font-size:11px;margin-left:4px;color:var(--dim)}
 .li .m .who{display:block;margin-top:2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.li .m .who>span{margin-right:10px}   /* v9: a list row fits its names on one line and ends in an ellipsis, never a clipped tag */
+.li .m .who>span{margin-right:10px}   /* v8: a list row fits its names on one line and ends in an ellipsis, never a clipped tag */
 @media (pointer:coarse){.who span[data-pbp]{padding:6px 0}}
 </style>
 </head>
@@ -236,11 +236,11 @@ function norm(lg, ev) {
   const late = raw === "pre" && Date.now() >= +when && Date.now() - when < 3 * 3600e3;
   const soonTxt = { mlb:"First pitch soon", nhl:"Puck drop soon", nba:"Tip-off soon" }[lg.key] || "Kickoff soon";
   const rival = lg.key === "cfb" ? rivalryOf(away.id, home.id) : "";   // v7
-  const who = people(lg, c, raw);   // v9
+  const who = people(lg, c, raw);   // v8
   return { lg, id:ev.id, who, date:when, state:held ? "pre" : late ? "in" : raw, held, late, detail:late ? soonTxt : ty.shortDetail || ty.detail || "", away, home, tv,
     rival, fav:lg.soc ? !!(MYSOC[away.id] || MYSOC[home.id]) : away.ab === lg.fav || home.ab === lg.fav, sit, close:Math.abs((+away.score || 0) - (+home.score || 0)) };
 }
-/* v9: the players on a card. Football: the game's passing, rushing and receiving leaders. Soccer: the scorers.
+/* v8: the players on a card. Football: the game's passing, rushing and receiving leaders. Soccer: the scorers.
    Baseball and hockey before the start: the probable pitchers or goalies. Otherwise each side's first leader. */
 function people(lg, c, state) {
   const out = [], seen = {};
