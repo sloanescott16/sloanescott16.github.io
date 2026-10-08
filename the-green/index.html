@@ -517,6 +517,65 @@ function upTxt(s){ return String(s||'').replace(/\s*&\s*/,' & ').replace(/up/i,'
 /* ---------- data ---------- */
 function getJSON(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
 function flat(c){ var o=[]; (c||[]).forEach(function(x){ if(Array.isArray(x)) x.forEach(function(y){o.push(y);}); else o.push(x); }); return o; }
+/* GOLFNOW-START v33 (Press Box) / v9 (The Green): golf is live only while players are on the course.
+   ESPN keeps a tournament "In Progress" all week, overnight too, so the event status alone is not enough.
+   Same code in both pages; _tests/golf-live/test-golfnow.js checks the two copies match. */
+function golfNow(ev, now){
+  now = now == null ? Date.now() : now;
+  var STOP = /suspend|delay|postpon|cancel|halt|weather|rain|dark/i;
+  function ty(x){ return (x && x.status && x.status.type) || {}; }
+  function words(t){ return [t.name, t.description, t.detail, t.shortDetail].join(' '); }
+  function when(iso){
+    var d = new Date(iso), o = {timeZone:'America/Chicago'};
+    var day = function(x){ return x.toLocaleDateString('en-US', {timeZone:'America/Chicago'}); };
+    var t = d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone:o.timeZone});
+    return day(d) === day(new Date(now)) ? t : d.toLocaleDateString('en-US', {weekday:'short', timeZone:o.timeZone}) + ' ' + t;
+  }
+  var out = {live:false, text:'', round:0};
+  if (!ev) return out;
+  var es = ty(ev), cs = [];
+  (ev.competitions || []).forEach(function(c){ if (Array.isArray(c)) c.forEach(function(y){ cs.push(y); }); else cs.push(c); });
+  var c0 = cs[0] || {}, ct = ty(c0);
+  var round = out.round = (c0.status && c0.status.period) || 0;
+  if (es.state === 'post' || es.completed) {
+    out.text = /cancel/i.test(words(es)) ? 'Canceled' : /postpon/i.test(words(es)) ? 'Postponed' : 'Final';
+    return out;
+  }
+  var going = es.state === 'in' || cs.some(function(c){ return ty(c).state === 'in'; });
+  if (!going) return out;                                   // before the week starts: nothing to say here
+  var stopped = cs.filter(function(c){ return STOP.test(words(ty(c))); })[0] || (STOP.test(words(es)) ? ev : null);
+  // per-player status (leaderboard feed, stroke play) is the best evidence; the scoreboard feed has none
+  var players = cs.length === 1 ? (c0.competitors || []).filter(function(p){ return ty(p).state; }) : [];
+  if (!stopped) {
+    if (players.length) {
+      out.live = players.some(function(p){
+        var t = ty(p), tee = p.status.teeTime ? Date.parse(p.status.teeTime) : NaN;
+        return t.state === 'in' && !STOP.test(words(t)) && !(tee > now + 60e3);
+      });
+    } else {
+      out.live = cs.some(function(c){ var t = ty(c); return t.state === 'in' && !/complete|final/i.test(words(t)); });
+    }
+  }
+  if (out.live) { out.text = round ? 'Round ' + round : 'On the course'; return out; }
+  if (stopped) {
+    var w = words(ty(stopped)) + ' ' + words(es), r = (stopped.status && stopped.status.period) || round;
+    out.text = (r ? 'Round ' + r + ' ' : 'Play ') + (/suspend|halt|dark/i.test(w) ? 'suspended' : /postpon/i.test(w) ? 'postponed' : /cancel/i.test(w) ? 'canceled' : 'delayed');
+    return out;
+  }
+  var next = players.filter(function(p){ return ty(p).state === 'pre' && p.status.teeTime && Date.parse(p.status.teeTime) > now; })
+    .sort(function(a, b){ return Date.parse(a.status.teeTime) - Date.parse(b.status.teeTime); })[0];
+  if (next) {
+    var nr = next.status.period || round;
+    out.next = next.status.teeTime;
+    out.text = (nr ? 'R' + nr + ' tees off ' : 'Tees off ') + when(next.status.teeTime);
+    return out;
+  }
+  var allDone = players.length && players.every(function(p){ return ty(p).state === 'post'; });
+  if (round && (/complete/i.test(words(ct)) || allDone)) out.text = 'Round ' + round + ' complete';
+  else out.text = 'Between rounds';
+  return out;
+}
+/* GOLFNOW-END */
 function isMatch(ev){ return flat(ev.competitions).some(function(c){ return (c.scoringSystem&&/match/i.test(c.scoringSystem.name))||!!ftype(c); }); }
 
 function sideNames(p){
@@ -750,8 +809,9 @@ function strokeModel(ev){
   });
   var live=ps.filter(function(p){return !p.cut;}), out=ps.filter(function(p){return p.cut;});
   var leader=live[0]||null;
-  var anyStarted=ps.some(function(p){return p.started;});
-  return {ev:ev, name:ev.name, rd:rd, nR:nR, st:st, detail:detail, state:st.state||cst.state, players:ps, live:live, out:out, leader:leader, anyStarted:anyStarted,
+  var anyStarted=ps.some(function(p){return p.started;})||(comp.competitors||[]).some(function(p){ return (p.linescores||[]).some(function(l){return l.value>50;}); }); /* v9: a finished round counts */
+  var G=golfNow(ev); /* v9: live means players on the course, not just a week under way */
+  return {ev:ev, name:ev.name, rd:rd, nR:nR, st:st, detail:detail, state:st.state||cst.state, players:ps, live:live, out:out, leader:leader, anyStarted:anyStarted, onCourse:G.live, quiet:G.text,
     course:crs, par:crs.shotsToPar, yards:crs.totalYards, holes:crs.holes||[], purse:ev.displayPurse, dc:ev.defendingChampion&&ev.defendingChampion.athlete&&ev.defendingChampion.athlete.displayName,
     cutRound:t.cutRound||2, cutScore:num(t.cutScore), cutCount:t.cutCount, major:!!t.major, tv:(comp.broadcasts||[]).map(function(b){return b.media&&b.media.shortName;}).filter(Boolean), leaders:comp.leaders||[]};
 }
@@ -817,11 +877,11 @@ function heroStroke(m){
     var ft=m.players.filter(function(p){return p.tee;}).sort(function(a,b){return new Date(a.tee)-new Date(b.tee);}).slice(0,5);
     board='<div class="board tally lb5"><div class="band">First off<small>round 1 · times Central</small></div><table>'+(ft.map(function(p){return '<tr><td class="nm tn">'+nameH(p)+'</td><td class="nw th">'+tm(p.tee)+'</td></tr>';}).join('')||'<tr><td class="words">Tee times are posted the night before.</td></tr>')+'</table></div>';
   }
-  document.getElementById('hero').innerHTML=topo()+'<div><div class="kick"><span>'+esc(kick)+'</span>'+(m.state==='in'?'<span class="lv">● live</span>':'')+'</div><h2>'+esc(m.name)+'</h2><div class="where">'+esc(S.where||'')+'</div>'+
+  document.getElementById('hero').innerHTML=topo()+'<div><div class="kick"><span>'+esc(kick)+'</span>'+(m.onCourse?'<span class="lv">● live</span>':'')+'</div><h2>'+esc(m.name)+'</h2><div class="where">'+esc(S.where||'')+'</div>'+
     '<div class="facts">'+facts.map(function(f){return '<span>'+esc(f)+'</span>';}).join('')+'</div>'+spot+'</div>'+board;
   document.getElementById('hmTwo').style.display='none';
-  var stt=document.getElementById('stText'); stt.textContent=m.state==='in'?'Live':fin?'Final':'Next up';
-  document.getElementById('dot').style.display=m.state==='in'?'':'none';
+  var stt=document.getElementById('stText'); stt.textContent=m.onCourse?'Live':fin?'Final':(m.state==='in'&&m.quiet)?m.quiet:'Next up';
+  document.getElementById('dot').style.display=m.onCourse?'':'none';
   document.getElementById('stBtn').setAttribute('href','#board');
   document.getElementById('barRec').hidden=true;
 }
@@ -982,7 +1042,7 @@ function load(){
     S.cup=isMatch(ev)?parseCup(ev):null;
     err.classList.remove('on'); render();
   }).catch(function(e){ err.textContent='Could not reach the golf feed ('+e.message+'). Retrying shortly.'; err.classList.add('on'); })
-  .then(function(){ clearTimeout(timer); var live=S.cup?points(S.cup).live:(S.ev&&S.ev.status&&S.ev.status.type.state==='in'); timer=setTimeout(load, document.hidden?120e3:(live?30e3:300e3)); });
+  .then(function(){ clearTimeout(timer); var g=S.ev?golfNow(S.ev):{}, live=S.cup?points(S.cup).live:g.live, wk=!S.cup&&g.text&&!/^(Final|Canceled|Postponed)$/.test(g.text); timer=setTimeout(load, document.hidden?120e3:(live?30e3:wk?60e3:300e3)); /* v9: between rounds, look every minute for the first tee */ });
 }
 document.addEventListener('click',function(e){
   var r=e.target.closest('tr.m'); if(r){ var id=r.getAttribute('data-m'); S.open[id]=!S.open[id]; render(); return; }
