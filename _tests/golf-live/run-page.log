@@ -1,0 +1,74 @@
+PASS landing between-rounds @1280: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing between-rounds @1280: quiet line "R2 tees off 6:45 PM" shown true (want "R2 tees off 6:45 PM")
+PASS landing between-rounds @1280: quiet line fits the tile (142 of 336 px, no clipping)
+   aria-label: The Green, golf, R2 tees off 6:45 PM
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401850916
+PASS landing between-rounds @1280: golf feeds were answered from the samples
+PASS landing between-rounds @1280: no service worker between the page and the mocks
+PASS landing between-rounds @390: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing between-rounds @390: quiet line "R2 tees off 6:45 PM" shown true (want "R2 tees off 6:45 PM")
+PASS landing between-rounds @390: quiet line fits the tile (127 of 173 px, no clipping)
+   aria-label: The Green, golf, R2 tees off 6:45 PM
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401850916
+PASS landing between-rounds @390: golf feeds were answered from the samples
+PASS landing between-rounds @390: no service worker between the page and the mocks
+PASS the-green between-rounds: hero shows the round so far, not the week ahead (kick "Round 1 - Play Complete", spot "Leader")
+PASS the-green between-rounds: header "R2 tees off 6:45 PM", dot none, hero live tag false (want live false)
+PASS landing in-round @1280: live styling true (class on true, badge flex, border rgb(239, 68, 68))
+PASS landing in-round @1280: quiet line "" shown false (want "")
+   aria-label: The Green, golf, live
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401837451
+PASS landing in-round @1280: golf feeds were answered from the samples
+PASS landing in-round @1280: no service worker between the page and the mocks
+PASS landing in-round @390: live styling true (class on true, badge flex, border rgb(239, 68, 68))
+PASS landing in-round @390: quiet line "" shown false (want "")
+   aria-label: The Green, golf, live
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401837451
+PASS landing in-round @390: golf feeds were answered from the samples
+PASS landing in-round @390: no service worker between the page and the mocks
+PASS the-green in-round: header "Live", dot block, hero live tag true (want live true)
+PASS landing suspended @1280: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing suspended @1280: quiet line "Round 1 suspended" shown true (want "Round 1 suspended")
+PASS landing suspended @1280: quiet line fits the tile (146 of 336 px, no clipping)
+   aria-label: The Green, golf, Round 1 suspended
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401837451
+PASS landing suspended @1280: golf feeds were answered from the samples
+PASS landing suspended @1280: no service worker between the page and the mocks
+PASS landing suspended @390: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing suspended @390: quiet line "Round 1 suspended" shown true (want "Round 1 suspended")
+PASS landing suspended @390: quiet line fits the tile (131 of 173 px, no clipping)
+   aria-label: The Green, golf, Round 1 suspended
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401837451
+PASS landing suspended @390: golf feeds were answered from the samples
+PASS landing suspended @390: no service worker between the page and the mocks
+PASS the-green suspended: header "Round 1 suspended", dot none, hero live tag false (want live false)
+PASS landing final @1280: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing final @1280: quiet line "" shown false (want "")
+   aria-label: The Green, golf
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard
+PASS landing final @1280: golf feeds were answered from the samples
+PASS landing final @1280: no service worker between the page and the mocks
+PASS landing final @390: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing final @390: quiet line "" shown false (want "")
+   aria-label: The Green, golf
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard
+PASS landing final @390: golf feeds were answered from the samples
+PASS landing final @390: no service worker between the page and the mocks
+PASS the-green final: header "Final", dot none, hero live tag false (want live false)
+PASS landing leaderboard-down @1280: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing leaderboard-down @1280: quiet line "Round 1 complete" shown true (want "Round 1 complete")
+PASS landing leaderboard-down @1280: quiet line fits the tile (138 of 336 px, no clipping)
+   aria-label: The Green, golf, Round 1 complete
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401850916
+PASS landing leaderboard-down @1280: golf feeds were answered from the samples
+PASS landing leaderboard-down @1280: no service worker between the page and the mocks
+PASS landing leaderboard-down @390: live styling false (class on false, badge none, border rgb(245, 209, 48))
+PASS landing leaderboard-down @390: quiet line "Round 1 complete" shown true (want "Round 1 complete")
+PASS landing leaderboard-down @390: quiet line fits the tile (123 of 173 px, no clipping)
+   aria-label: The Green, golf, Round 1 complete
+   golf feeds answered from samples: /apis/site/v2/sports/golf/pga/scoreboard , /apis/site/v2/sports/golf/leaderboard?league=pga&event=401850916
+PASS landing leaderboard-down @390: golf feeds were answered from the samples
+PASS landing leaderboard-down @390: no service worker between the page and the mocks
+PASS no page errors
+
+PASSED 52/52

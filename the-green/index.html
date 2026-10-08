@@ -809,7 +809,7 @@ function strokeModel(ev){
   });
   var live=ps.filter(function(p){return !p.cut;}), out=ps.filter(function(p){return p.cut;});
   var leader=live[0]||null;
-  var anyStarted=ps.some(function(p){return p.started;});
+  var anyStarted=ps.some(function(p){return p.started;})||(comp.competitors||[]).some(function(p){ return (p.linescores||[]).some(function(l){return l.value>50;}); }); /* v9: a finished round counts */
   var G=golfNow(ev); /* v9: live means players on the course, not just a week under way */
   return {ev:ev, name:ev.name, rd:rd, nR:nR, st:st, detail:detail, state:st.state||cst.state, players:ps, live:live, out:out, leader:leader, anyStarted:anyStarted, onCourse:G.live, quiet:G.text,
     course:crs, par:crs.shotsToPar, yards:crs.totalYards, holes:crs.holes||[], purse:ev.displayPurse, dc:ev.defendingChampion&&ev.defendingChampion.athlete&&ev.defendingChampion.athlete.displayName,
