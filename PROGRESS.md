@@ -8,5 +8,5 @@
 - Live page has no golf. sw.js is pass-through. No shared script file exists.
 - Real samples saved in _tests/golf-live/samples (PGA play complete, Korn Ferry in progress, PGA final, pre-event).
 
-## Stage 2: shared decision function golfNow(ev, now) in landing v33 and The Green v9
+## Stage 2 (done): golfNow(ev, now) added to landing v33 (tile + quiet pill) and The Green v9 (hero tag, header pill, poll)
 ## Stage 3: tests against samples, local page check
