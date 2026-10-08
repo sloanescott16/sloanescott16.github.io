@@ -125,31 +125,43 @@
     });
     return cats.length ? cats : null;
   }
+  var TOURS = { pga: "PGA Tour", lpga: "LPGA Tour", eur: "DP World Tour", liv: "LIV Golf", "champions-tour": "PGA Tour Champions", ntw: "Korn Ferry Tour", "pga-champions": "PGA Tour Champions" };
+  function tourName(lg) { return TOURS[lg] || (lg ? lg.toUpperCase() + " tour" : "Tour"); }
+  /* golf: every season ESPN logs, one table per tour (PGA Tour, LPGA Tour, DP World Tour ...) */
   function golfCareer(id) {
     return soft(CORE + "golf/athletes/" + id + "/statisticslog").then(function (log) {
-      var ents = ((log && log.entries) || []).map(function (e) {
-        var s = (e.statistics || []).filter(function (x) { return x.statistics && x.statistics.$ref; })[0];
-        return s ? { y: yr(e.season && e.season.$ref), ref: s.statistics.$ref } : null;
-      }).filter(Boolean).sort(function (a, b) { return b.y - a.y; }).slice(0, 14);
+      var ents = [];
+      ((log && log.entries) || []).forEach(function (e) {
+        (e.statistics || []).forEach(function (s) { if (s.statistics && s.statistics.$ref) ents.push({ y: yr(e.season && e.season.$ref) || yr(s.statistics.$ref), lg: lgOf(s.statistics.$ref) || lgOf(e.season && e.season.$ref), ref: s.statistics.$ref }); });
+      });
+      ents.sort(function (a, b) { return b.y - a.y; });
       if (!ents.length) return null;
-      return Promise.all(ents.map(function (e) { return soft(e.ref); })).then(function (rs) {
+      return pool(ents, 8, function (e) { return soft(e.ref); }).then(function (rs) {
         var lab = ["Events", "Cuts", "Wins", "Top 10", "Avg", "Earnings"], keys = ["tournamentsPlayed", "cutsMade", "wins", "topTenFinishes", "scoringAverage", "officialAmount"];
-        var tot = [0, 0, 0, 0, 0, 0], money = 0, rows = [];
+        var by = {}, order = [];
         rs.forEach(function (r, i) {
-          if (!r || !r.splits) return; var v = {};
+          var e = ents[i], T = by[e.lg] || (by[e.lg] = { tot: [0, 0, 0, 0], money: 0, rows: [], miss: 0 });
+          if (order.indexOf(e.lg) < 0) order.push(e.lg);
+          if (!r || !r.splits) { T.miss++; return; } var v = {};
           (r.splits.categories || []).forEach(function (c) { (c.stats || []).forEach(function (x) { if (v[x.name] == null) v[x.name] = x; }); });
           if (!v.tournamentsPlayed || !v.tournamentsPlayed.value) return;
           var s = keys.map(function (k) { var x = v[k] || (k === "officialAmount" ? v.amount : null); return x ? x.displayValue : ""; });
-          [0, 1, 2, 3].forEach(function (j) { tot[j] += +(v[keys[j]] && v[keys[j]].value) || 0; });
-          money += +((v.officialAmount || v.amount || {}).value) || 0;
-          rows.push({ y: String(ents[i].y), t: "", s: s });
+          [0, 1, 2, 3].forEach(function (j) { T.tot[j] += +(v[keys[j]] && v[keys[j]].value) || 0; });
+          T.money += +((v.officialAmount || v.amount || {}).value) || 0;
+          T.rows.push({ y: String(e.y), t: "", s: s });
         });
-        if (!rows.length) return null;
-        var t = [String(tot[0]), String(tot[1]), String(tot[2]), String(tot[3]), "", money ? "$" + Math.round(money).toLocaleString("en-US") : ""];
-        return [{ n: "PGA Tour by season", lab: lab, dn: ["Tournaments played", "Cuts made", "Wins", "Top 10 finishes", "Scoring average", "Official money"], rows: rows, tot: t, wins: tot[2] }];
+        var out = order.filter(function (lg) { return by[lg].rows.length; }).map(function (lg) {
+          var T = by[lg], tn = tourName(lg), first = T.rows[T.rows.length - 1].y;
+          return { n: tn + " by season", tour: tn, lab: lab, dn: ["Tournaments played", "Cuts made", "Wins", "Top 10 finishes", "Scoring average", "Official money"], rows: T.rows,
+            tot: [String(T.tot[0]), String(T.tot[1]), String(T.tot[2]), String(T.tot[3]), "", T.money ? "$" + Math.round(T.money).toLocaleString("en-US") : ""],
+            totLabel: "Since " + first, since: first, wins: T.tot[2], miss: T.miss };
+        });
+        return out.length ? out : null;
       });
     });
   }
+  /* soccer: every competition ESPN logs, added up by season (league, cups, Europe and country together) */
+  var CAL = /^(usa|fifa|concacaf|conmebol|campeones|bra|arg|jpn|chn|kor|nor|swe|fin|irl|caf)/;
   function socCareer(id, teamNames) {
     return soft(CORE + "soccer/athletes/" + id + "/statisticslog").then(function (log) {
       var ents = ((log && log.entries) || []).map(function (e) {
@@ -157,21 +169,28 @@
         if (!s || !s.statistics) return null;
         var tid = ((s.team && s.team.$ref) || "").match(/teams\/(\d+)/);
         return { y: yr(e.season && e.season.$ref), lg: lgOf(e.season && e.season.$ref), tid: tid ? tid[1] : "", ref: s.statistics.$ref };
-      }).filter(Boolean).sort(function (a, b) { return b.y - a.y; }).slice(0, 16);
+      }).filter(Boolean);
       if (!ents.length) return null;
-      return Promise.all(ents.map(function (e) { return soft(e.ref); })).then(function (rs) {
-        var rows = [], tot = [0, 0, 0, 0, 0];
+      return pool(ents, 8, function (e) { return soft(e.ref); }).then(function (rs) {
+        var by = {}, tot = [0, 0, 0, 0, 0], miss = 0;
         rs.forEach(function (r, i) {
-          if (!r || !r.splits) return; var v = {};
+          var e = ents[i];
+          if (!r || !r.splits) { miss++; return; } var v = {};
           (r.splits.categories || []).forEach(function (c) { (c.stats || []).forEach(function (x) { if (v[x.name] == null) v[x.name] = x.value; }); });
           var app = +v.appearances || 0; if (!app) return;
           var s = [app, +v.totalGoals || 0, +v.goalAssists || 0, +v.yellowCards || 0, +v.redCards || 0];
-          s.forEach(function (x, j) { tot[j] += x; });
-          var e = ents[i], lgn = SOCLG[e.lg] || e.lg.toUpperCase();
-          rows.push({ y: (e.lg.indexOf("usa") === 0 || e.lg.indexOf("fifa") === 0 || e.lg.indexOf("concacaf") === 0) ? String(e.y) : e.y + "-" + String(e.y + 1).slice(2), t: (teamNames[e.tid] ? teamNames[e.tid] + ", " : "") + lgn, s: s.map(String) });
+          var g = by[e.y] || (by[e.y] = { y: e.y, s: [0, 0, 0, 0, 0], teams: [], split: false });
+          s.forEach(function (x, j) { g.s[j] += x; tot[j] += x; });
+          if (!CAL.test(e.lg)) g.split = true;
+          var tn = teamNames[e.tid] || ""; if (tn && g.teams.indexOf(tn) < 0) g.teams.push(tn);
         });
+        var lab = function (g) { return g.split ? g.y + "-" + String(g.y + 1).slice(2) : String(g.y); };
+        var rows = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.y - a.y; })
+          .map(function (g) { return { y: lab(g), t: g.teams.join(", "), s: g.s.map(String) }; });
         if (!rows.length) return null;
-        return [{ n: "Club and country, recent seasons", lab: ["APP", "G", "A", "YC", "RC"], dn: ["Appearances", "Goals", "Assists", "Yellow cards", "Red cards"], rows: rows, tot: tot.map(String), part: (log.entries || []).length > ents.length }];
+        var first = rows[rows.length - 1].y;
+        return [{ n: "Club and country, every competition", lab: ["APP", "G", "A", "YC", "RC"], dn: ["Appearances", "Goals", "Assists", "Yellow cards", "Red cards"], rows: rows,
+          tot: tot.map(String), totLabel: "Since " + first, miss: miss }];
       });
     });
   }
@@ -203,7 +222,18 @@
       m.career = careerOf(r[2]);
       var names = {}; m.teams.forEach(function (t) { names[t.id] = t.n; });
       var extra = S.golf ? golfCareer(id) : S.soc ? socCareer(id, names) : null;
-      return Promise.resolve(extra).then(function (c) { if (c) m.career = c; return m; });
+      return Promise.resolve(extra).then(function (c) {
+        if (c) m.career = c;
+        // ESPN titles every golf overview "PGA Tour"; use the player's own tour (LPGA Tour, DP World Tour ...) where the record shows one
+        var tour = S.golf && c && c[0] && c[0].tour;
+        if (!tour && S.key === "lpga") tour = "LPGA Tour";
+        if (tour && tour !== "PGA Tour") {
+          var fix = function (s) { return String(s || "").replace(/PGA Tour/g, tour); };
+          if (m.ranks) m.ranks.n = fix(m.ranks.n);
+          if (m.season) { m.season.n = fix(m.season.n); m.season.rows.forEach(function (r) { r.n = fix(r.n); }); }
+        }
+        return m;
+      });
     });
   }
   function load(sport, id) {
@@ -219,9 +249,9 @@
   /* ---------- drawing ---------- */
   var ALL = ["head", "bio", "honours", "season", "recent", "career", "teams"];
   function cell(v) { return v === "0" || v === "0.0" || v === "-" || v === "--" || v === "" ? '<span class="z">' + esc(v || "") + "</span>" : esc(v); }
-  function table(lab, dn, rows, first, tot) {
+  function table(lab, dn, rows, first, tot, totLabel) {
     return '<div class="pbp-ts"><table class="pbp-t"><thead><tr><th class="l">' + esc(first) + "</th>" + lab.map(function (l, i) { return '<th title="' + esc(dn[i] || l) + '">' + esc(l) + "</th>"; }).join("") + "</tr></thead><tbody>" +
-      rows.join("") + (tot ? '<tr class="tot"><td class="l">Career</td>' + tot.map(function (v) { return "<td>" + cell(v) + "</td>"; }).join("") + "</tr>" : "") + "</tbody></table></div>";
+      rows.join("") + (tot ? '<tr class="tot"><td class="l">' + esc(totLabel || "Career") + "</td>" + tot.map(function (v) { return "<td>" + cell(v) + "</td>"; }).join("") + "</tr>" : "") + "</tbody></table></div>";
   }
   function sec(title, body, sub) { return '<section class="pbp-s"><h4>' + esc(title) + (sub ? "<small>" + esc(sub) + "</small>" : "") + "</h4>" + body + "</section>"; }
   function facts(b, m) {
@@ -255,8 +285,7 @@
     if (has("bio")) out += facts(b, m);
     if (has("honours")) {
       var hon = m.awards.map(function (a) { return '<li><b>' + esc(a.c || "") + "</b> " + esc(a.n) + (a.s ? ' <span class="z">' + esc(a.s) + "</span>" : "") + "</li>"; });
-      var c0 = m.golf && m.career && m.career[0];
-      if (c0 && c0.wins) hon.unshift("<li><b>" + c0.wins + "</b> PGA Tour wins since " + esc(c0.rows[c0.rows.length - 1].y) + "</li>");
+      if (m.golf && m.career) m.career.slice().reverse().forEach(function (c) { if (c.wins) hon.unshift("<li><b>" + c.wins + "</b> " + esc(c.tour || "Tour") + " win" + (c.wins === 1 ? "" : "s") + ' <span class="z">since ' + esc(c.since) + "</span></li>"); });
       if (hon.length) out += sec("Honours", '<ul class="pbp-aw">' + hon.join("") + "</ul>");
     }
     if (has("season")) {
@@ -284,8 +313,8 @@
       if (m.career) {
         out += sec("Career", m.career.map(function (c, i) {
           return '<details class="pbp-cat"' + (i === 0 ? " open" : "") + "><summary>" + esc(c.n) + ' <span class="z">' + c.rows.length + " season" + (c.rows.length === 1 ? "" : "s") + "</span></summary>" +
-            table(c.lab, c.dn, c.rows.map(function (r) { return '<tr><td class="l">' + esc(r.y) + (r.t ? ' <span class="z">' + esc(r.t) + "</span>" : "") + "</td>" + r.s.map(function (v) { return "<td>" + cell(v) + "</td>"; }).join("") + "</tr>"; }), "Season", c.tot) +
-            (c.part ? '<p class="pbp-note">Most recent seasons shown. The full record is on ESPN.</p>' : "") + "</details>";
+            table(c.lab, c.dn, c.rows.map(function (r) { return '<tr><td class="l">' + esc(r.y) + (r.t ? ' <span class="z">' + esc(r.t) + "</span>" : "") + "</td>" + r.s.map(function (v) { return "<td>" + cell(v) + "</td>"; }).join("") + "</tr>"; }), "Season", c.tot, c.totLabel) +
+            (c.miss ? '<p class="pbp-note">' + c.miss + " of ESPN's season records did not load, so the totals are short. The full record is on ESPN.</p>" : c.totLabel ? '<p class="pbp-note">Totals cover the seasons ESPN has on record.</p>' : "") + "</details>";
         }).join(""), m.golf ? "" : "by season");
       } else if (m.sport !== "loading") {
         out += sec("Career", '<p class="pbp-note">ESPN has no season by season record for this player.</p>');
@@ -294,7 +323,8 @@
     if (has("teams") && m.teams.length) {
       out += sec("Teams", '<ul class="pbp-teams">' + m.teams.map(function (t) { return "<li>" + (t.logo ? '<img src="' + esc(t.logo) + '" alt="">' : "") + "<span>" + esc(t.n) + '</span><span class="z">' + esc(String(t.s).replace("-CURRENT", " to now")) + "</span></li>"; }).join("") + "</ul>");
     }
-    if (opts.link !== false && /^https:\/\/[^\s"'<>]+$/i.test(b.espn || "")) out +=   // https links only '<p class="pbp-src"><a href="' + esc(b.espn) + '" target="_blank" rel="noopener">Full player card on ESPN</a></p>';
+    // the ESPN link: https addresses only
+    if (opts.link !== false && /^https:\/\/[^\s"'<>]+$/i.test(b.espn || "")) out += '<p class="pbp-src"><a href="' + esc(b.espn) + '" target="_blank" rel="noopener">Full player card on ESPN</a></p>';
     return '<div class="pbp">' + out + "</div>";
   }
 
