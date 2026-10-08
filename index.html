@@ -148,6 +148,25 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
   var SOC = { base: ["eng.1", "esp.1", "uefa.champions", "usa.1", "fifa.friendly", "fifa.world", "concacaf.nations.league", "uefa.nations"],
     mine: { "185": 1, "360": 1, "86": 1, "1068": 1, "660": 1 }, cups: [], at: 0, live: "", n: 0 };
   var ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/";
+  /* v32: every board is asked for today's Central date by name. ESPN's undated MLB, NHL and NBA boards keep
+     showing yesterday until about midday, so a morning game went uncounted. Before 6 AM yesterday is asked for
+     as well, so a late West Coast game still running after midnight still counts. */
+  var CT = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" });
+  function ctKey(d, off) {
+    var o = {}; CT.formatToParts(d).forEach(function (x) { o[x.type] = x.value; });
+    var t = new Date(Date.UTC(+o.year, +o.month - 1, +o.day + (off || 0)));
+    return { k: t.getUTCFullYear() + String(t.getUTCMonth() + 1).padStart(2, "0") + String(t.getUTCDate()).padStart(2, "0"), h: +o.hour };
+  }
+  function ctDays() { var now = new Date(), t = ctKey(now); return t.h < 6 ? [ctKey(now, -1).k, t.k] : [t.k]; }
+  function board(url) {      // url already carries its query, or none; the events of every day asked for, today's copy first
+    return Promise.all(ctDays().reverse().map(function (k) {
+      return fetch(url + (url.indexOf("?") < 0 ? "?" : "&") + "dates=" + k, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    })).then(function (all) {
+      var seen = {}, ev = [];
+      all.forEach(function (d) { (d.events || []).forEach(function (e) { if (!seen[e.id]) { seen[e.id] = 1; ev.push(e); } }); });
+      return { events: ev };
+    });
+  }
   function socCups() {
     if (Date.now() - SOC.at < 15 * 60e3) return Promise.resolve();
     SOC.at = Date.now();
@@ -160,7 +179,7 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
     })).then(function (l) { SOC.cups = l.filter(function (x, i) { return x && SOC.base.indexOf(x) < 0 && l.indexOf(x) === i; }); });
   }
   function pullSoc(lg, cup) {
-    return fetch(ESPN + lg + "/scoreboard", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+    return board(ESPN + lg + "/scoreboard").then(function (d) {
       var n = 0, mine = "";
       (d.events || []).forEach(function (e) {
         var c = (e.competitions || [])[0] || {}, st = ((c.status || e.status || {}).type || {}).state || "pre", when = new Date(e.date);
@@ -189,14 +208,15 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
   function mlbKeys() {
     if (Date.now() - pkAt < 15 * 60e3) return Promise.resolve();
     pkAt = Date.now();
-    var d = new Date(), p = function (n) { return String(n).padStart(2, "0"); };
-    return fetch("https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=" + d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()), { cache: "no-store" })
+    var ds = ctDays().map(function (k) { return k.slice(0, 4) + "-" + k.slice(4, 6) + "-" + k.slice(6); });
+    return fetch("https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=" + ds[0] + "&endDate=" + ds[ds.length - 1], { cache: "no-store" })
       .then(function (r) { return r.json(); })
       .then(function (jx) {
         (jx.dates || []).forEach(function (day) {
           (day.games || []).forEach(function (g) {
             var k = slug((g.teams.away.team || {}).name) + "|" + slug((g.teams.home.team || {}).name);
-            (PK[k] = PK[k] || []).push({ pk: g.gamePk, t: +new Date(g.gameDate) });
+            var set = PK[k] = PK[k] || [];
+            if (!set.some(function (x) { return x.pk === g.gamePk; })) set.push({ pk: g.gamePk, t: +new Date(g.gameDate) });
           });
         });
       })
@@ -210,8 +230,7 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{transform:none;box-shadow:0 0 
 
   function pull(key) {
     var lg = LG[key];
-    return fetch("https://site.api.espn.com/apis/site/v2/sports/" + lg.path + "/scoreboard" + lg.q, { cache: "no-store" })
-      .then(function (r) { return r.json(); })
+    return board("https://site.api.espn.com/apis/site/v2/sports/" + lg.path + "/scoreboard" + lg.q)
       .then(function (d) {
         var on = [], mine = null;
         (d.events || []).forEach(function (e) {
