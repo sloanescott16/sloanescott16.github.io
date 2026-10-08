@@ -73,7 +73,7 @@
       id: String(a.id || ""), name: a.displayName || a.fullName || "", first: a.firstName || "", last: a.lastName || "",
       hs: hs, team: t.displayName || "", teamLogo: (t.logos && t.logos[0] && t.logos[0].href) || t.logo || "", teamColor: t.color || "",
       pos: (a.position && (a.position.displayName || a.position.name)) || "", jersey: a.displayJersey || (a.jersey ? "#" + a.jersey : ""),
-      age: a.age || "", dob: a.displayDOB || "", birth: String(a.displayBirthPlace || "").replace(/s+/g, " ").trim() || (a.birthPlace && [a.birthPlace.city, a.birthPlace.state, a.birthPlace.country].filter(Boolean).join(", ")) || "",
+      age: a.age || "", dob: a.displayDOB || "", birth: String(a.displayBirthPlace || "").replace(/\s+/g, " ").trim() || (a.birthPlace && [a.birthPlace.city, a.birthPlace.state, a.birthPlace.country].filter(Boolean).join(", ")) || "",
       ht: a.displayHeight || "", wt: a.displayWeight || "", college: col.name || col.displayName || col.shortName || "",
       draft: a.displayDraft || "", exp: a.displayExperience || "", debut: a.debutYear || "", turnedPro: a.turnedPro || "",
       bt: a.displayBatsThrows || "", hand: a.hand ? (a.hand.displayValue || a.hand.abbreviation || "") : "",
@@ -295,7 +295,7 @@
     ".pbp-s h4 small{font:400 12px Inter,sans-serif;letter-spacing:0;text-transform:none;color:var(--pbp-dim)}" +
     ".pbp-ts{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;border:1px solid var(--pbp-line)}" +
     ".pbp-t{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}.pbp-t th,.pbp-t td{padding:6px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--pbp-line)}" +
-    ".pbp-t th{font:500 11px Oswald,sans-serif;letter-spacing:.08em;color:var(--pbp-dim);position:sticky;top:0}.pbp-t .l{text-align:left;position:sticky;left:0;background:#121a2b;z-index:1}" +
+    ".pbp-t th{font:500 11px Oswald,sans-serif;letter-spacing:.08em;color:var(--pbp-dim);position:sticky;top:0}.pbp-t .l{text-align:left;position:sticky;left:0;background:var(--pbp-bg,#121a2b);z-index:1}" +
     ".pbp-t tr:last-child td{border-bottom:0}.pbp-t tr.tot td{font-weight:700;border-top:2px solid var(--pbp-line)}" +
     ".pbp-res{display:inline-block;min-width:16px;font-weight:700}.pbp-res.W{color:#22c55e}.pbp-res.L{color:#ef4444}.pbp-res.T,.pbp-res.D{color:#eab308}.pbp-win{color:#eab308}" +
     ".pbp-cat{margin-bottom:8px}.pbp-cat summary{cursor:pointer;padding:6px 2px;font-weight:600;list-style-position:inside}" +
@@ -308,7 +308,7 @@
     "#pbpSheet{position:fixed;inset:0;z-index:2147483000;display:none}#pbpSheet.on{display:block}" +
     "#pbpSheet .pbp-bd{position:absolute;inset:0;background:rgba(0,0,0,.6)}" +
     "#pbpSheet .pbp-box{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;" +
-    "background:#0f1626;border:1px solid rgba(255,255,255,.12);border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom))}" +
+    "background:#0f1626;--pbp-bg:#0f1626;border:1px solid rgba(255,255,255,.12);border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom))}" +
     "@media (min-width:800px){#pbpSheet .pbp-box{top:4vh;bottom:auto;border-radius:18px;max-height:92vh}}" +
     "#pbpSheet .pbp-x{position:sticky;top:0;float:right;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:#1b2438;color:#e8eef8;font-size:22px;line-height:1;cursor:pointer;z-index:3}" +
     "body.pbp-lock{overflow:hidden}[data-pbp]{cursor:pointer}";

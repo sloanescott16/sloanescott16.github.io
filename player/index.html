@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Players">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Players · Press Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;600&display=swap">
+<style>
+/* Press Box players page v1 (2026-10-08): find any player in any ESPN sport, or open one from a link (?s=nfl&id=2577417) */
+:root{--bg:#0b1220;--card:#131c2e;--line:#22304a;--ink:#e8eef8;--dim:#8a98b3}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;min-height:100dvh;
+  padding:calc(18px + env(safe-area-inset-top)) clamp(14px,2.5vw,32px) calc(28px + env(safe-area-inset-bottom))}
+a{color:inherit;text-decoration:none}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.back{font-family:Oswald,sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--dim);
+  border:1px solid var(--line);border-radius:999px;padding:0 16px;min-height:40px;display:inline-flex;align-items:center}
+h1{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(24px,3.4vw,38px)}
+main{max-width:760px;margin:0 auto}
+#q{width:100%;font:16px Inter,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+#q:focus{border-color:#3b82f6}
+#res{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:4px}
+#res li{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--card);cursor:pointer;min-height:48px}
+#res img{width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:top;background:var(--line)}
+#res b{display:block}#res small{color:var(--dim)}
+#res .sp{margin-left:auto;font:500 11px Oswald,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+#one{margin-top:16px}
+.hint{color:var(--dim);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="../">&lsaquo; Press Box</a>
+  <h1>Players</h1>
+</header>
+<main>
+  <input id="q" type="search" placeholder="Find a player: Scheffler, Prescott, Seager, Makar…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+  <p class="hint" id="hint">Every sport ESPN covers. Tap a name for bio, this season, career by season, honours and recent games.</p>
+  <ul id="res"></ul>
+  <div id="one"></div>
+</main>
+<script src="../pb-player.js"></script>
+<script>
+"use strict";
+(function () {
+  var q = document.getElementById("q"), res = document.getElementById("res"), one = document.getElementById("one"), hint = document.getElementById("hint"), t = 0, n = 0;
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function show(s, id, push) {
+    res.innerHTML = ""; PBPlayer.mount(one, s, id);
+    if (push) history.pushState(null, "", "?s=" + encodeURIComponent(s) + "&id=" + encodeURIComponent(id));
+    window.scrollTo(0, 0);
+  }
+  function fromUrl() { var p = new URLSearchParams(location.search); if (p.get("id")) show(p.get("s") || "nfl", p.get("id"), false); else one.innerHTML = ""; }
+  q.addEventListener("input", function () {
+    clearTimeout(t); var v = q.value, my = ++n;
+    t = setTimeout(function () {
+      if (v.trim().length < 2) { res.innerHTML = ""; return; }
+      PBPlayer.search(v).then(function (r) {
+        if (my !== n) return;
+        res.innerHTML = r.length ? r.map(function (p) {
+          return '<li data-s="' + esc(p.sport) + '" data-id="' + esc(p.id) + '">' + (p.img ? '<img src="' + esc(p.img) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' : '<img alt="">') +
+            "<span><b>" + esc(p.name) + "</b><small>" + esc(p.sub) + '</small></span><span class="sp">' + esc(PBPlayer.sport(p.sport).label) + "</span></li>";
+        }).join("") : '<li style="cursor:default">No players found.</li>';
+      }).catch(function () { if (my === n) res.innerHTML = '<li style="cursor:default">Search is not answering. Try again in a moment.</li>'; });
+    }, 250);
+  });
+  res.addEventListener("click", function (e) { var li = e.target.closest("li[data-id]"); if (li) show(li.getAttribute("data-s"), li.getAttribute("data-id"), true); });
+  window.addEventListener("popstate", fromUrl);
+  fromUrl();
+})();
+</script>
+</body>
+</html>

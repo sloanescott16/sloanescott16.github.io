@@ -400,6 +400,7 @@ sup{font-size:9px; color:#8a8c80; margin-left:3px}
 .ppcard{margin-top:16px}
 .ppc .bkey{margin-top:10px}
 body.pp-on{overflow:hidden}
+.ppprof{margin-top:18px; padding-top:14px; border-top:1px solid #233029; --pbp-bg:var(--card)}
 @media (max-width:760px){ .pp .ppc{width:calc(100vw - 16px); padding:16px 14px 14px} .pph{gap:14px} .pph .hsw{width:76px; height:76px} .pph .big{font-size:36px} .sxs{grid-template-columns:repeat(3,minmax(0,1fr))} .rc{min-width:62px; padding:5px 8px} }
 </style>
 </head>
@@ -874,7 +875,9 @@ function renderCards(){
 }
 /* ---------- player panel (tap any name) ---------- */
 var PSTATS=[['eagles','Eagles'],['birdies','Birdies'],['pars','Pars'],['bogeys','Bogeys'],['doubleBogeysAndWorse','Doubles+'],['driveDistAvg','Driving'],['driveAccuracyPct','Fairways'],['gir','Greens'],['puttsGirAvg','Putts / GIR'],['sandSaves','Sand saves']];
-function openPlayer(id){ var m=S.stroke; if(!m||!id) return; S.ppId=String(id); document.body.classList.add('pp-on'); renderPanel(); needCards(m,[id]); }
+function openPlayer(id){ var m=S.stroke; if(!id) return;
+  /* players v1: a name outside this week's field (the cup, the schedule) opens the shared player sheet */
+  if(!m||!m.players.some(function(x){return String(x.id)===String(id);})){ if(window.PBPlayer) PBPlayer.open('golf',id); return; } S.ppId=String(id); document.body.classList.add('pp-on'); renderPanel(); needCards(m,[id]); }
 function closePlayer(){ S.ppId=null; document.body.classList.remove('pp-on'); var el=document.getElementById('pp'); if(el) el.hidden=true; }
 function renderPanel(){
   var m=S.stroke, el=document.getElementById('pp'); if(!el) return;
@@ -894,7 +897,9 @@ function renderPanel(){
       '<b>'+flagH(p)+esc(p.name)+(p.am?'<sup>(a)</sup>':'')+'</b><div class="sc2"><span class="big '+tpc(p.tot)+'">'+(p.tot!=null?tpar(p.tot):'')+'</span><span class="td">'+esc(line)+'</span></div>'+(bio?'<div class="ln">'+esc(bio)+'</div>':'')+'</div></div>'+
     (rds?'<div class="rcs">'+rds+'</div>':'')+
     (sh?'<div class="sxs">'+sh+'</div>':'')+
-    '<div class="ppcard">'+scorecard(m,p,d)+'</div>'+SCKEY+'</div>';
+    '<div class="ppcard">'+scorecard(m,p,d)+'</div>'+SCKEY+'<div class="ppprof" id="ppProf"></div></div>';
+  /* players v1: the shared Press Box player view (bio, season, career by season, recent tournaments) under the card */
+  if(window.PBPlayer) PBPlayer.mount(document.getElementById('ppProf'),'golf',p.id,{parts:['bio','honours','season','recent','career']});
 }
 
 /* ---------- leaderboard tab ---------- */
@@ -1006,5 +1011,6 @@ function route(){
 window.addEventListener('hashchange',route);
 route(); load().then(route);
 </script>
+<script src="../pb-player.js"></script>
 </body>
 </html>
