@@ -286,7 +286,7 @@
     if (has("head")) {
       out += '<div class="pbp-h">' + (b.hs ? '<img class="pbp-hs" src="' + esc(b.hs) + '" alt="" onerror="this.remove()">' : '<div class="pbp-hs pbp-ini">' + esc((b.first[0] || "") + (b.last[0] || "")) + "</div>") +
         '<div class="pbp-who"><div class="pbp-k">' + esc([m.label, b.jersey, b.pos].filter(Boolean).join(" · ")) + "</div><h3>" + (b.flag ? '<img class="pbp-fl" src="' + esc(b.flag) + '" alt="">' : "") + esc(b.name) + "</h3>" +
-        (b.team ? '<div class="pbp-tm">' + (b.teamLogo ? '<img src="' + esc(b.teamLogo) + '" alt="">' : "") + esc(b.team) + "</div>" : "") + "</div></div>";
+        (b.team ? '<div class="pbp-tm">' + (b.teamLogo ? '<img src="' + esc(fixLogo(b.teamLogo)) + '" alt="">' : "") + esc(b.team) + "</div>" : "") + "</div></div>";
     }
     if (has("bio")) out += facts(b, m);
     if (has("honours")) {
@@ -327,7 +327,7 @@
       }
     }
     if (has("teams") && m.teams.length) {
-      out += sec("Teams", '<ul class="pbp-teams">' + m.teams.map(function (t) { return "<li>" + (t.logo ? '<img src="' + esc(t.logo) + '" alt="">' : "") + "<span>" + esc(t.n) + '</span><span class="z">' + esc(String(t.s).replace("-CURRENT", " to now")) + "</span></li>"; }).join("") + "</ul>");
+      out += sec("Teams", '<ul class="pbp-teams">' + m.teams.map(function (t) { return "<li>" + (t.logo ? '<img src="' + esc(fixLogo(t.logo)) + '" alt="">' : "") + "<span>" + esc(t.n) + '</span><span class="z">' + esc(String(t.s).replace("-CURRENT", " to now")) + "</span></li>"; }).join("") + "</ul>");
     }
     // the ESPN link: https addresses only
     if (opts.link !== false && /^https:\/\/[^\s"'<>]+$/i.test(b.espn || "")) out += '<p class="pbp-src"><a href="' + esc(b.espn) + '" target="_blank" rel="noopener">Full player card on ESPN</a></p>';
