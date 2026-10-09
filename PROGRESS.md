@@ -21,3 +21,7 @@ The golf live fix (1f7344b / 7747a5c) changed only the Press Box golf tile and T
   No golf today: the column stays, its head says "No play today".
 - Checks: test-page.js 277/277 (today real feeds, busy Saturday as the no-golf fixture, golf fixture at 1 PM with rounds
   in progress); test-golfnow.js 27/27.
+
+## Stage 3 - checked and handed off
+- Golf sheet card edge made neutral like the others. Checks rerun: 277/277 and 27/27, no console or page errors.
+- Handoff: _notes/live-golf-handoff.md. Old v10 progress kept in _notes/live-vertical-progress.md.

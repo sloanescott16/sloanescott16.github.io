@@ -58,7 +58,7 @@ PASS today @390x844: "+N more" opens the full list (4 of 4 games)
 PASS today @390x844: a game in the list opens its card
 PASS today @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @390x844: Escape closes the card
-   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live6 still to come4 final | scroll 170,839 | hours 4 AM..12 AM
+   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live6 still to come4 final | scroll 170,840 | hours 4 AM..12 AM
 PASS today @375x667: one column per sport with its picture loaded in the header
 PASS today @375x667: the old league sections and chip list rows are gone
 PASS today @375x667: Press Box button, update stamp and the summary line are there
@@ -232,7 +232,7 @@ PASS golf @390x844: the hours run down the right-hand side (21 names; 329 379 37
 PASS golf @390x844: in each column the cards run down by start time
 PASS golf @390x844: every card sits inside its own sport's column
 PASS golf @390x844: no sport column takes more than 3 lanes (3), nhl +1 more, golf +1 more
-PASS golf @390x844: the board fits the window (ends at 828 of 844)
+PASS golf @390x844: the board fits the window (ends at 826 of 844)
 PASS golf @390x844: no two game cards overlap
 PASS golf @390x844: the page itself does not scroll sideways
 PASS golf @390x844: first drawing uses the phone layout (hours 50 px)
