@@ -105,17 +105,17 @@ h2{border-left-color:#33415e}
 .ax .hr{position:absolute;top:0;height:30px;padding:8px 0 0 6px;font:500 12px/1 Oswald,sans-serif;letter-spacing:.06em;color:var(--dim);white-space:nowrap;border-left:1px solid var(--line)}
 .sp{position:relative;display:flex;border-bottom:1px solid var(--line)}
 .sp:last-child{border-bottom:0}
-.lab{position:sticky;left:0;z-index:4;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+.lab{position:sticky;left:0;z-index:4;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:8px;gap:3px;
   background:#0d1526;border-right:1px solid var(--line);box-shadow:6px 0 10px -6px rgba(0,0,0,.6)}
 .lab img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
 .lab .lc{font-size:9.5px;min-width:0;padding:0 4px;justify-self:auto}
-.ax .lab{height:30px;box-shadow:none}
+.ax .lab{height:30px;padding:0;box-shadow:none}
 .ln{position:relative;flex:none}
 .ln .hl{position:absolute;top:0;bottom:0;border-left:1px solid rgba(34,48,74,.55)}
-.b{position:absolute;display:flex;flex-direction:column;justify-content:center;gap:2px;height:46px;padding:4px 8px;overflow:hidden;cursor:pointer;
+.b{position:absolute;display:flex;flex-direction:column;justify-content:center;gap:1px;height:40px;padding:3px 8px;overflow:hidden;overflow:clip;cursor:pointer;
   text-align:left;color:var(--ink);font:inherit;background:var(--card);border:1px solid #2a3a58;border-radius:9px;transition:border-color .15s,background .15s}
 .b:hover,.b:focus-visible{border-color:#6b7ea3;background:#18233a;outline:none}
-.b .m1,.b .m2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .m1,.b .m2{display:block;width:fit-content;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:sticky;left:calc(var(--lab,76px) + 6px)}   /* a game that began off to the left still shows its names */
 .b .m1{font:500 15px/1.15 Oswald,sans-serif;letter-spacing:.03em}
 .b .m1 i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
 .b .m1 em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;margin:0 2px 0 4px}
@@ -134,7 +134,7 @@ h2{border-left-color:#33415e}
 @media (prefers-reduced-motion:reduce){.b.in .m2::before{animation:none}}
 @media (max-width:520px){.lab img{width:36px;height:36px}.b .m1{font-size:14px}.dg{border-radius:12px;margin:0 -4px}}
 /* the game sheet: the full card (scores, situation, players, rivalry), one tap away from the grid */
-.gs{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(3,7,15,.6);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+.gs{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(3,7,15,.82);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
 .gs.on{display:flex}
 @media (min-width:700px){.gs{align-items:center}}
 .gs .bx{width:min(420px,100%);position:relative}
@@ -386,8 +386,9 @@ function render() {
   const day = gridDay(), nowM = dayMin(now, day);
   const today = all.filter(g => (g.state === "in" && (!g.lg.cup || g.fav)) || (ctKey(g.date) === day && keep(g)));
   for (const k in GM) delete GM[k];
-  const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"), phone = dg.clientWidth < 560;
-  const LAB = phone ? 58 : 76, LANE = 50, TOP = 6;
+  const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"); dg.style.display = "";   // shown before it is measured
+  const phone = dg.clientWidth < 560;
+  const LAB = phone ? 58 : 76, LANE = 44, TOP = 6;
   // the hours: from the first start (or now) to the last likely finish (or now), whole hours
   let lo = nowM, hi = nowM + 30;
   const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
@@ -407,14 +408,14 @@ function render() {
       ends[i] = e + 2;
       out.push(block(g, X(s) + 2, Math.max(64, (e - s) * PX / 60 - 4), TOP + i * LANE));
     }
-    const ht = Math.max(64, TOP * 2 + ends.length * LANE - 4);
+    const ht = Math.max(76, TOP * 2 + ends.length * LANE - 4);
     let lines = ""; for (let h = h0 + 1; h < h1; h++) lines += `<i class="hl" style="left:${X(h * 60) - LAB}px"></i>`;
     rows += `<div class="sp" style="height:${ht}px"><div class="lab" style="width:${LAB}px" title="${esc(sp.name)}"><img src="${esc(sp.img)}" alt="${esc(sp.name)}"><span class="lc">${esc(sp.chip)}</span></div>` +
       `<div class="ln" style="width:${W - LAB}px">${lines}</div>${out.join("")}</div>`;
   }
   const inDay = nowM >= h0 * 60 && nowM <= h1 * 60;
   render.busy = true;
-  dgi.style.width = W + "px";
+  dgi.style.width = W + "px"; dg.style.setProperty("--lab", LAB + "px");
   dgi.innerHTML = rows ? `<div class="ax"><span class="lab" style="width:${LAB}px"></span>${hours}</div>${rows}` +
     (inDay ? `<div class="now" style="left:${X(nowM)}px"><span>${esc(ctTime(now))}</span></div>` : "") : "";
   dg.style.display = rows ? "" : "none";
