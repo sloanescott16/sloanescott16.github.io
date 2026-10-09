@@ -15,6 +15,12 @@
    in memory and in localStorage for 30 minutes, so the pass-through service worker never needs to change. */
 (function () {
   "use strict";
+  /* Classic Stars (job 1009-1116-ne2): the Captain wants the classic Stars logo wherever the Stars show.
+     ESPN feeds hand back the current Dallas Stars logo; swap only that one (NHL, Dallas) for the local
+     heritage copy in img/ (source in img/STARS-LOGO-SOURCE.md). Other Dallas teams are left alone. */
+  var STARS_RE = /\/teamlogos\/nhl\/500(?:-dark)?\/(?:scoreboard\/)?dal\.png/i;
+  var STARS_LOGO = (function () { try { return new URL("img/stars-classic-dark.svg", (document.currentScript && document.currentScript.src) || location.href).href; } catch (e) { return "/img/stars-classic-dark.svg"; } })();
+  function fixLogo(u) { return u && STARS_RE.test(u) ? STARS_LOGO : (u || ""); }
   if (window.PBPlayer) return;
   var WEB = "https://site.web.api.espn.com/apis/common/v3/sports/";
   var CORE = "https://sports.core.api.espn.com/v2/sports/";
@@ -88,7 +94,7 @@
     var hs = (a.headshot && a.headshot.href) || "";
     return {
       id: String(a.id || ""), name: a.displayName || a.fullName || "", first: a.firstName || "", last: a.lastName || "",
-      hs: hs, team: t.displayName || "", teamLogo: (t.logos && t.logos[0] && t.logos[0].href) || t.logo || "", teamColor: t.color || "",
+      hs: hs, team: t.displayName || "", teamLogo: fixLogo((t.logos && t.logos[0] && t.logos[0].href) || t.logo || ""), teamColor: t.color || "",
       pos: (a.position && (a.position.displayName || a.position.name)) || "", jersey: a.displayJersey || (a.jersey ? "#" + a.jersey : ""),
       age: a.age || "", dob: dob(a), birth: String(a.displayBirthPlace || "").replace(/\s+/g, " ").trim() || (a.birthPlace && [a.birthPlace.city, a.birthPlace.state, a.birthPlace.country].filter(Boolean).join(", ")) || "",
       ht: a.displayHeight || "", wt: a.displayWeight || "", college: col.name || col.displayName || col.shortName || "",
@@ -112,7 +118,7 @@
     var c0 = cats[0], lab = (c0.labels || []).slice(0, 7);
     var rows = (c0.events || []).map(function (e) {
       var ev = gl.events[e.eventId] || {}, o = ev.opponent || {};
-      return { id: e.eventId, d: ev.gameDate || "", at: ev.atVs || "", opp: o.abbreviation || o.displayName || "", oppLogo: o.logo || "", res: ev.gameResult || "", sc: ev.score || "", s: (e.stats || []).slice(0, 7) };
+      return { id: e.eventId, d: ev.gameDate || "", at: ev.atVs || "", opp: o.abbreviation || o.displayName || "", oppLogo: fixLogo(o.logo), res: ev.gameResult || "", sc: ev.score || "", s: (e.stats || []).slice(0, 7) };
     });
     return { n: gl.displayName || "Recent games", cat: c0.displayName || "", lab: lab, rows: rows };
   }
@@ -217,7 +223,7 @@
       m.next = ov.nextGame || ov.nextTournament ? true : false;
       var aw = (bio.awards || ov.awards || []);
       m.awards = aw.map(function (x) { return { n: x.name || x.displayName || "", c: x.displayCount || "", s: (x.seasons || []).join(", ") }; }).filter(function (x) { return x.n; });
-      m.teams = (bio.teamHistory || []).map(function (t) { return { id: String(t.id || ""), n: t.displayName || "", logo: t.logo || "", s: t.seasons || "" }; });
+      m.teams = (bio.teamHistory || []).map(function (t) { return { id: String(t.id || ""), n: t.displayName || "", logo: fixLogo(t.logo), s: t.seasons || "" }; });
       m.ranks = S.golf && ov.seasonRankings ? { n: ov.seasonRankings.displayName || "", c: (ov.seasonRankings.categories || []).map(function (c) { return { n: c.shortDisplayName || c.displayName, v: c.displayValue, r: c.rankDisplayValue || "" }; }) } : null;
       m.career = careerOf(r[2]);
       var names = {}; m.teams.forEach(function (t) { names[t.id] = t.n; });
