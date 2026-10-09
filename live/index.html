@@ -92,6 +92,57 @@ h2{border-left-color:#33415e}
 .li .m .who>span{margin-right:10px}   /* v8: a list row fits its names on one line and ends in an ellipsis, never a clipped tag */
 @media (pointer:coarse){.who span[data-pbp]{padding:6px 0}}
 </style>
+<style>
+/* v9: the day at a glance. One row per sport (its picture is the row label), the Central day's hours across, each game
+   a block in its time slot as long as a game usually runs, live games in red, a red line at the time now.
+   The hours scroll sideways under the pinned sport pictures and the grid opens scrolled to now. Tap a game for its card. */
+.sum{display:flex;flex-wrap:wrap;gap:6px 16px;margin:-4px 0 12px;font-size:13px;color:var(--dim)}
+.sum b{color:var(--ink);font-weight:600}.sum .lv b{color:var(--live)}
+.dg{position:relative;overflow-x:auto;overflow-y:hidden;border:1px solid var(--line);border-radius:14px;background:#0d1526;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#33415e transparent}
+.dgi{position:relative}
+.ax{display:flex;height:30px;border-bottom:1px solid var(--line);position:relative}
+.ax .hr{position:absolute;top:0;height:30px;padding:8px 0 0 6px;font:500 12px/1 Oswald,sans-serif;letter-spacing:.06em;color:var(--dim);white-space:nowrap;border-left:1px solid var(--line)}
+.sp{position:relative;display:flex;border-bottom:1px solid var(--line)}
+.sp:last-child{border-bottom:0}
+.lab{position:sticky;left:0;z-index:4;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:#0d1526;border-right:1px solid var(--line);box-shadow:6px 0 10px -6px rgba(0,0,0,.6)}
+.lab img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.lab .lc{font-size:9.5px;min-width:0;padding:0 4px;justify-self:auto}
+.ax .lab{height:30px;box-shadow:none}
+.ln{position:relative;flex:none}
+.ln .hl{position:absolute;top:0;bottom:0;border-left:1px solid rgba(34,48,74,.55)}
+.b{position:absolute;display:flex;flex-direction:column;justify-content:center;gap:2px;height:46px;padding:4px 8px;overflow:hidden;cursor:pointer;
+  text-align:left;color:var(--ink);font:inherit;background:var(--card);border:1px solid #2a3a58;border-radius:9px;transition:border-color .15s,background .15s}
+.b:hover,.b:focus-visible{border-color:#6b7ea3;background:#18233a;outline:none}
+.b .m1,.b .m2{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b .m1{font:500 15px/1.15 Oswald,sans-serif;letter-spacing:.03em}
+.b .m1 i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
+.b .m1 em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;margin:0 2px 0 4px}
+.b .m1 .lo{color:var(--dim)}
+.b .m2{font-size:11px;line-height:1.2;color:var(--dim);font-variant-numeric:tabular-nums}
+.b .m2 .k{color:#c9d3e4;font:500 10px/1 Oswald,sans-serif;letter-spacing:.08em;margin-right:5px}
+.b .m2 .rv{color:#c4a8ff;font:500 10px/1 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-right:5px}
+.b.post{background:#101828;border-color:#1f2c45}.b.post .m1{color:#c3cde0}
+.b.in{border-color:var(--live);background:#22161f;box-shadow:0 0 0 1px rgba(239,68,68,.35)}
+.b.in .m2{color:#ff8a8a;font-weight:600}
+.b.in .m2::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--live);margin-right:5px;vertical-align:1px;animation:pulse 1.6s infinite}
+.b.fav{box-shadow:0 0 0 1px #a9b6cc}.b.fav .m1{font-weight:700}.b.in.fav{box-shadow:0 0 0 1px #a9b6cc,0 0 0 3px rgba(239,68,68,.35)}
+.b.rvg{border-left:3px solid #a078ff}
+.now{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--live);z-index:3;pointer-events:none;box-shadow:0 0 8px rgba(239,68,68,.6)}
+.now span{position:absolute;top:5px;left:4px;padding:2px 6px;border-radius:5px;background:var(--live);color:#fff;font:600 11px/1.2 Inter,sans-serif;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.b.in .m2::before{animation:none}}
+@media (max-width:520px){.lab img{width:36px;height:36px}.b .m1{font-size:14px}.dg{border-radius:12px;margin:0 -4px}}
+/* the game sheet: the full card (scores, situation, players, rivalry), one tap away from the grid */
+.gs{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(3,7,15,.6);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+.gs.on{display:flex}
+@media (min-width:700px){.gs{align-items:center}}
+.gs .bx{width:min(420px,100%);position:relative}
+.gs .x{position:absolute;top:-44px;right:0;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 18px/1 Inter,sans-serif;cursor:pointer}
+.gs .lead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--dim)}
+.gs .lead a{color:var(--ink);font-weight:600;border-bottom:1px solid var(--dim)}
+.gs .g{box-shadow:0 18px 50px rgba(0,0,0,.6)}
+</style>
 </head>
 <body>
 <header>
@@ -99,7 +150,8 @@ h2{border-left-color:#33415e}
   <h1 id="ttl"><span class="dot"></span><span id="ttlText">Live</span></h1>
   <div class="meta" id="meta">Loading the boards</div>
 </header>
-<main id="app"></main>
+<main id="app"><div class="sum" id="sum"></div><div class="dg" id="dg"><div class="dgi" id="dgi"></div></div><div id="msg"></div></main>
+<div class="gs" id="gs" role="dialog" aria-modal="true" aria-label="Game"><div class="bx"><button class="x" type="button" aria-label="Close">&times;</button><div id="gsb"></div></div></div>
 <script>
 "use strict";
 const SITE = "https://sloanescott16.github.io/";
@@ -150,7 +202,7 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&am
 /* v6: the day is the Central day. ESPN's undated MLB, NHL and NBA boards keep showing yesterday until about
    midday, so every board is asked for today's Central date by name, and before 6 AM for yesterday's as well,
    so a late West Coast game still running after midnight keeps its card. */
-const CT = new Intl.DateTimeFormat("en-CA", { timeZone:"America/Chicago", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", hourCycle:"h23" });
+const CT = new Intl.DateTimeFormat("en-CA", { timeZone:"America/Chicago", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hourCycle:"h23" });
 function ctParts(d) { const o = {}; for (const x of CT.formatToParts(d)) o[x.type] = x.value; return o; }
 function ctKey(d, off) {     // YYYYMMDD of the Central date of d, moved by off days
   const o = ctParts(d), t = new Date(Date.UTC(+o.year, +o.month - 1, +o.day + (off || 0)));
@@ -286,47 +338,117 @@ function card(g) {
   const top = g.lg.soc ? row(g.home, h < a) + row(g.away, a < h) : row(g.away, a < h) + row(g.home, h < a);   // soccer reads home side first
   return `<a class="g ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${g.rival ? `<span class="rv" title="Rivalry game">${esc(g.rival)}</span>` : ""}${top}${whoHtml(g)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
 }
-function line(g) {
-  const post = g.state === "post", a = +g.away.score || 0, h = +g.home.score || 0;
-  const nm = (t, win) => `${t.rank ? `<i>${t.rank}</i>` : ""}${win ? `<b>${esc(t.ab)}</b>` : esc(t.ab)}`;
-  const mid = g.lg.soc ? (post ? `${nm(g.home, h > a)} ${esc(g.home.score)}, ${nm(g.away, a > h)} ${esc(g.away.score)}` : `${nm(g.home)} v ${nm(g.away)}`)
-    : post ? `${nm(g.away, a > h)} ${esc(g.away.score)}, ${nm(g.home, h > a)} ${esc(g.home.score)}` : `${nm(g.away)} at ${nm(g.home)}`;
-  const t = post ? esc(g.detail) : g.date.toLocaleTimeString([], { hour:"numeric", minute:"2-digit" }) + (g.held ? ` <span class="dl">${esc((g.detail || "Delayed").split(",")[0])}</span>` : "");
-  return `<a class="li ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}"><span class="t">${t}</span><span class="lc" title="${esc(g.lg.label)}">${esc(chipOf(g.lg))}</span><span class="m">${mid}${g.rival ? `<em class="rv" title="Rivalry game">${esc(g.rival)}</em>` : ""}${whoHtml(g)}</span><span class="r">${esc(post ? "" : g.tv)}</span></a>`;
+/* v9: the day grid. One row per sport, the Central day's hours across; the league chips ride under each row's picture. */
+const SPORTS = [
+  { key:"nfl", img:"https://a.espncdn.com/i/teamlogos/nfl/500/dal.png", chip:"NFL", name:"NFL" },
+  { key:"cfb", img:"https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png", chip:"CFB", name:"College football" },
+  { key:"mlb", img:"img/mlb.webp", chip:"MLB", name:"Baseball" },
+  { key:"nhl", img:"img/nhl.webp", chip:"NHL", name:"Hockey" },
+  { key:"nba", img:"img/nba.webp", chip:"NBA", name:"Basketball" },
+  { key:"soc", img:"img/soc.webp", chip:"Soccer", name:"Soccer" }
+];
+const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150, soc:115 };   // how long a game usually runs, minutes
+const sportOf = lg => lg.soc ? "soc" : lg.key;
+const CTT = new Intl.DateTimeFormat("en-US", { timeZone:"America/Chicago", hour:"numeric", minute:"2-digit" });
+const ctTime = d => CTT.format(d).replace(":00", "");
+function gridDay() { const now = new Date(); return ctHour(now) < 6 ? ctKey(now, -1) : ctKey(now); }   // past midnight the night's games stay on until 6 AM
+function dayMin(d, day) {   // minutes from Central midnight of day (YYYYMMDD) to d
+  const o = ctParts(d), a = Date.UTC(+o.year, +o.month - 1, +o.day), b = Date.UTC(+day.slice(0, 4), +day.slice(4, 6) - 1, +day.slice(6));
+  return Math.round((a - b) / 864e5) * 1440 + (+o.hour % 24) * 60 + +o.minute;
 }
+const hourName = h => { const x = ((h % 24) + 24) % 24; return x === 0 ? "12 AM" : x === 12 ? "Noon" : x < 12 ? x + " AM" : (x - 12) + " PM"; };
+const GM = {};
+let opened = "", scrolled = false, userScrolled = false;
+function block(g, x, w, y) {
+  const a = +g.away.score || 0, h = +g.home.score || 0, post = g.state === "post", pre = g.state === "pre";
+  const nm = (t, lose) => `<span${lose ? ' class="lo"' : ""}>${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}${pre ? "" : `<em>${esc(t.score)}</em>`}</span>`;
+  const one = g.lg.soc ? [g.home, h < a && post, g.away, a < h && post] : [g.away, a < h && post, g.home, h < a && post];
+  const m1 = nm(one[0], one[1]) + (pre ? (g.lg.soc ? " v " : " at ") : " ") + nm(one[2], one[3]);
+  const st = pre ? ctTime(g.date) + (g.held ? " · " + (g.detail || "Delayed").split(",")[0] : "") + (g.tv ? " · " + g.tv : "") : esc(g.detail || (post ? "Final" : "Live"));
+  const m2 = (g.lg.soc ? `<span class="k">${esc(chipOf(g.lg))}</span>` : "") + (g.rival ? `<span class="rv">${esc(g.rival)}</span>` : "") + (pre ? esc(st) : st);
+  const k = g.lg.key + ":" + g.id; GM[k] = g;
+  return `<button type="button" class="b ${g.state}${g.fav ? " fav" : ""}${g.rival ? " rvg" : ""}" data-g="${esc(k)}" style="left:${x}px;width:${w}px;top:${y}px" title="${esc(g.away.full || g.away.name)} at ${esc(g.home.full || g.home.name)}"><span class="m1">${m1}</span><span class="m2">${m2}</span></button>`;
+}
+function openSheet(k) {
+  const g = GM[k]; if (!g) return closeSheet();
+  opened = k;
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "pre" ? "starts " + esc(ctTime(g.date)) : g.state === "in" ? "live" : "final"}</span><a href="${gameHref(g)}">Game center &rsaquo;</a></div>${card(g)}`;
+  document.getElementById("gs").classList.add("on");
+}
+function closeSheet() { opened = ""; document.getElementById("gs").classList.remove("on"); }
+document.getElementById("dg").addEventListener("click", e => { const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
+document.getElementById("gs").addEventListener("click", e => { if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && opened && !document.querySelector("#pbpSheet.on")) closeSheet(); });
+document.getElementById("dg").addEventListener("scroll", () => { if (scrolled && !render.busy) userScrolled = true; }, { passive:true });
 function render() {
   const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
   const live = all.filter(g => g.state === "in" && (!g.lg.cup || g.fav));
-  let html = "";
-  for (const lg of LEAGUES) {
-    const gs = live.filter(g => g.lg === lg).sort((x, y) => (y.fav - x.fav) || ((y.away.rank || y.home.rank ? 1 : 0) - (x.away.rank || x.home.rank ? 1 : 0)) || (x.date - y.date));
-    if (!gs.length) continue;
-    html += `<h2 class="${lg.cls || lg.key}"><a href="${lg.href}">${esc(lg.label)}</a><small>${gs.length} live</small></h2><div class="grid">${gs.map(card).join("")}</div>`;
+  const day = gridDay(), nowM = dayMin(now, day);
+  const today = all.filter(g => (g.state === "in" && (!g.lg.cup || g.fav)) || (ctKey(g.date) === day && keep(g)));
+  for (const k in GM) delete GM[k];
+  const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"), phone = dg.clientWidth < 560;
+  const LAB = phone ? 58 : 76, LANE = 50, TOP = 6;
+  // the hours: from the first start (or now) to the last likely finish (or now), whole hours
+  let lo = nowM, hi = nowM + 30;
+  const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
+  for (const g of today) { const [s, e] = span(g); lo = Math.min(lo, s); hi = Math.max(hi, e); }
+  const h0 = Math.max(-6, Math.floor(lo / 60)), h1 = Math.max(h0 + 3, Math.ceil(hi / 60));
+  const PX = Math.max(phone ? 120 : 90, Math.floor((dg.clientWidth - LAB - 2) / (h1 - h0)));
+  const X = m => LAB + (m - h0 * 60) * PX / 60, W = LAB + (h1 - h0) * PX;
+  let rows = "", hours = "";
+  for (let h = h0; h < h1; h++) hours += `<span class="hr" style="left:${X(h * 60)}px;width:${PX}px">${hourName(h)}</span>`;
+  for (const sp of SPORTS) {
+    const gs = today.filter(g => sportOf(g.lg) === sp.key).sort((p, q) => (p.date - q.date) || (q.fav - p.fav));
+    if (!gs.length) continue;   // a sport with nothing today gets no row
+    const ends = [], out = [];
+    for (const g of gs) {   // each game takes the first lane that is free at its start
+      const [s, e] = span(g); let i = ends.findIndex(t => t <= s);
+      if (i < 0) { i = ends.length; ends.push(0); }
+      ends[i] = e + 2;
+      out.push(block(g, X(s) + 2, Math.max(64, (e - s) * PX / 60 - 4), TOP + i * LANE));
+    }
+    const ht = Math.max(64, TOP * 2 + ends.length * LANE - 4);
+    let lines = ""; for (let h = h0 + 1; h < h1; h++) lines += `<i class="hl" style="left:${X(h * 60) - LAB}px"></i>`;
+    rows += `<div class="sp" style="height:${ht}px"><div class="lab" style="width:${LAB}px" title="${esc(sp.name)}"><img src="${esc(sp.img)}" alt="${esc(sp.name)}"><span class="lc">${esc(sp.chip)}</span></div>` +
+      `<div class="ln" style="width:${W - LAB}px">${lines}</div>${out.join("")}</div>`;
   }
-  if (!live.length) html += `<div class="empty"><strong>Nothing live right now</strong>${Object.keys(data).length ? "This page wakes up on its own when a game starts." : "Waiting on the feeds."}</div>`;
-  const today = all.filter(g => sameDay(g.date, now) && keep(g));
-  const order = (x, y) => (y.fav - x.fav) || (x.date - y.date);
-  const next = today.filter(g => g.state === "pre").sort(order), done = today.filter(g => g.state === "post").sort(order);
-  if (next.length) html += `<h2>Later today<small>${next.length}</small></h2><div class="list">${next.map(line).join("")}</div>`;
-  if (done.length) html += `<h2>Finals today<small>${done.length}</small></h2><div class="list">${done.map(line).join("")}</div>`;
-  document.getElementById("app").innerHTML = html;
+  const inDay = nowM >= h0 * 60 && nowM <= h1 * 60;
+  render.busy = true;
+  dgi.style.width = W + "px";
+  dgi.innerHTML = rows ? `<div class="ax"><span class="lab" style="width:${LAB}px"></span>${hours}</div>${rows}` +
+    (inDay ? `<div class="now" style="left:${X(nowM)}px"><span>${esc(ctTime(now))}</span></div>` : "") : "";
+  dg.style.display = rows ? "" : "none";
+  if (rows && !userScrolled) { dg.scrollLeft = Math.max(0, X(nowM) - LAB - (dg.clientWidth - LAB) * .3); scrolled = true; }
+  setTimeout(() => { render.busy = false; }, 50);
+  const n = s => today.filter(g => g.state === s).length;
+  document.getElementById("sum").innerHTML = rows ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
+  document.getElementById("msg").innerHTML = rows ? "" : `<div class="empty"><strong>No games today</strong>${Object.keys(data).length ? "This page fills in on its own when the day's games are posted." : "Waiting on the feeds."}</div>`;
+  if (opened) GM[opened] ? openSheet(opened) : closeSheet();
   document.getElementById("ttl").className = live.length ? "on" : "";
   document.getElementById("ttlText").textContent = live.length ? `Live · ${live.length}` : "Live";
   document.title = (live.length ? `(${live.length}) ` : "") + "Live · Press Box";
   const bad = LEAGUES.filter(l => down[l.key]).map(l => l.label);
   document.getElementById("meta").textContent = (stamp ? "Updated " + new Date(stamp).toLocaleTimeString([], { hour:"numeric", minute:"2-digit", second:"2-digit" }) : "Loading the boards") + (bad.length ? " · no feed: " + bad.join(", ") : "");
 }
-async function pull(lg) {
+/* v9: a game that starts 11 PM to midnight Central sits on the next day's ESPN board (it is past midnight in the East),
+   so from noon on tomorrow's board is read too, once a minute, and only its games still on today's Central date are kept. */
+const LATE = {};
+async function pull(lg, full) {
   try {
-    const got = await Promise.all(ctDays().map(async k => {
+    const ask = async k => {
       const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard${lg.q}${lg.q ? "&" : "?"}dates=${k}`, { cache:"no-store" });
       if (!r.ok) throw new Error(r.status);
       return (await r.json()).events || [];
-    }));
+    };
+    const now = new Date();
+    if (full) LATE[lg.key] = ctHour(now) >= 12 ? (await ask(ctKey(now, 1)).catch(() => [])).filter(e => ctKey(new Date(e.date)) === ctKey(now)) : [];
+    const got = await Promise.all(ctDays().map(ask));
+    got.unshift(LATE[lg.key] || []);
     const seen = {};
     data[lg.key] = [].concat(...got.reverse()).filter(e => !seen[e.id] && (seen[e.id] = 1)).map(e => norm(lg, e)); down[lg.key] = false;
   } catch (e) { down[lg.key] = true; }
 }
+let rsz = 0; window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(render, 150); });
 async function tick() {
   clearTimeout(timer);
   const anyLive = k => (data[k] || []).some(g => g.state === "in");
@@ -336,7 +458,7 @@ async function tick() {
   if (full) await socCups();
   const want = LEAGUES.filter(l => full || anyLive(l.key) || soon(l.key));
   if (full) tick.full = Date.now();
-  await Promise.all(want.map(pull).concat([mlbKeys()]));   // self-throttled, one slate every 15 minutes
+  await Promise.all(want.map(l => pull(l, full)).concat([mlbKeys()]));   // self-throttled, one slate every 15 minutes
   stamp = Date.now(); render();
   const hot = LEAGUES.some(l => anyLive(l.key) || soon(l.key));
   timer = setTimeout(tick, hot && !document.hidden ? FAST : SLOW);

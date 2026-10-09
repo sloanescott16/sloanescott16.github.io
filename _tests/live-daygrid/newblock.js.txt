@@ -1,0 +1,111 @@
+/* v9: the day grid. One row per sport, the Central day's hours across; the league chips ride under each row's picture. */
+const SPORTS = [
+  { key:"nfl", img:"https://a.espncdn.com/i/teamlogos/nfl/500/dal.png", chip:"NFL", name:"NFL" },
+  { key:"cfb", img:"https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png", chip:"CFB", name:"College football" },
+  { key:"mlb", img:"img/mlb.webp", chip:"MLB", name:"Baseball" },
+  { key:"nhl", img:"img/nhl.webp", chip:"NHL", name:"Hockey" },
+  { key:"nba", img:"img/nba.webp", chip:"NBA", name:"Basketball" },
+  { key:"soc", img:"img/soc.webp", chip:"Soccer", name:"Soccer" }
+];
+const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150, soc:115 };   // how long a game usually runs, minutes
+const sportOf = lg => lg.soc ? "soc" : lg.key;
+const CTT = new Intl.DateTimeFormat("en-US", { timeZone:"America/Chicago", hour:"numeric", minute:"2-digit" });
+const ctTime = d => CTT.format(d).replace(":00", "");
+function gridDay() { const now = new Date(); return ctHour(now) < 6 ? ctKey(now, -1) : ctKey(now); }   // past midnight the night's games stay on until 6 AM
+function dayMin(d, day) {   // minutes from Central midnight of day (YYYYMMDD) to d
+  const o = ctParts(d), a = Date.UTC(+o.year, +o.month - 1, +o.day), b = Date.UTC(+day.slice(0, 4), +day.slice(4, 6) - 1, +day.slice(6));
+  return Math.round((a - b) / 864e5) * 1440 + (+o.hour % 24) * 60 + +o.minute;
+}
+const hourName = h => { const x = ((h % 24) + 24) % 24; return x === 0 ? "12 AM" : x === 12 ? "Noon" : x < 12 ? x + " AM" : (x - 12) + " PM"; };
+const GM = {};
+let opened = "", scrolled = false, userScrolled = false;
+function block(g, x, w, y) {
+  const a = +g.away.score || 0, h = +g.home.score || 0, post = g.state === "post", pre = g.state === "pre";
+  const nm = (t, lose) => `<span${lose ? ' class="lo"' : ""}>${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}${pre ? "" : `<em>${esc(t.score)}</em>`}</span>`;
+  const one = g.lg.soc ? [g.home, h < a && post, g.away, a < h && post] : [g.away, a < h && post, g.home, h < a && post];
+  const m1 = nm(one[0], one[1]) + (pre ? (g.lg.soc ? " v " : " at ") : " ") + nm(one[2], one[3]);
+  const st = pre ? ctTime(g.date) + (g.held ? " · " + (g.detail || "Delayed").split(",")[0] : "") + (g.tv ? " · " + g.tv : "") : esc(g.detail || (post ? "Final" : "Live"));
+  const m2 = (g.lg.soc ? `<span class="k">${esc(chipOf(g.lg))}</span>` : "") + (g.rival ? `<span class="rv">${esc(g.rival)}</span>` : "") + (pre ? esc(st) : st);
+  const k = g.lg.key + ":" + g.id; GM[k] = g;
+  return `<button type="button" class="b ${g.state}${g.fav ? " fav" : ""}${g.rival ? " rvg" : ""}" data-g="${esc(k)}" style="left:${x}px;width:${w}px;top:${y}px" title="${esc(g.away.full || g.away.name)} at ${esc(g.home.full || g.home.name)}"><span class="m1">${m1}</span><span class="m2">${m2}</span></button>`;
+}
+function openSheet(k) {
+  const g = GM[k]; if (!g) return closeSheet();
+  opened = k;
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "pre" ? "starts " + esc(ctTime(g.date)) : g.state === "in" ? "live" : "final"}</span><a href="${gameHref(g)}">Game center &rsaquo;</a></div>${card(g)}`;
+  document.getElementById("gs").classList.add("on");
+}
+function closeSheet() { opened = ""; document.getElementById("gs").classList.remove("on"); }
+document.getElementById("dg").addEventListener("click", e => { const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
+document.getElementById("gs").addEventListener("click", e => { if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && opened && !document.querySelector(".pbp-sheet.on")) closeSheet(); });
+document.getElementById("dg").addEventListener("scroll", () => { if (scrolled && !render.busy) userScrolled = true; }, { passive:true });
+function render() {
+  const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
+  const live = all.filter(g => g.state === "in" && (!g.lg.cup || g.fav));
+  const day = gridDay(), nowM = dayMin(now, day);
+  const today = all.filter(g => (g.state === "in" && (!g.lg.cup || g.fav)) || (ctKey(g.date) === day && keep(g)));
+  for (const k in GM) delete GM[k];
+  const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"), phone = dg.clientWidth < 560;
+  const LAB = phone ? 58 : 76, LANE = 50, TOP = 6;
+  // the hours: from the first start (or now) to the last likely finish (or now), whole hours
+  let lo = nowM, hi = nowM + 30;
+  const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
+  for (const g of today) { const [s, e] = span(g); lo = Math.min(lo, s); hi = Math.max(hi, e); }
+  const h0 = Math.max(-6, Math.floor(lo / 60)), h1 = Math.max(h0 + 3, Math.ceil(hi / 60));
+  const PX = Math.max(phone ? 120 : 90, Math.floor((dg.clientWidth - LAB - 2) / (h1 - h0)));
+  const X = m => LAB + (m - h0 * 60) * PX / 60, W = LAB + (h1 - h0) * PX;
+  let rows = "", hours = "";
+  for (let h = h0; h < h1; h++) hours += `<span class="hr" style="left:${X(h * 60)}px;width:${PX}px">${hourName(h)}</span>`;
+  for (const sp of SPORTS) {
+    const gs = today.filter(g => sportOf(g.lg) === sp.key).sort((p, q) => (p.date - q.date) || (q.fav - p.fav));
+    if (!gs.length) continue;   // a sport with nothing today gets no row
+    const ends = [], out = [];
+    for (const g of gs) {   // each game takes the first lane that is free at its start
+      const [s, e] = span(g); let i = ends.findIndex(t => t <= s);
+      if (i < 0) { i = ends.length; ends.push(0); }
+      ends[i] = e + 2;
+      out.push(block(g, X(s) + 2, Math.max(64, (e - s) * PX / 60 - 4), TOP + i * LANE));
+    }
+    const ht = Math.max(64, TOP * 2 + ends.length * LANE - 4);
+    let lines = ""; for (let h = h0 + 1; h < h1; h++) lines += `<i class="hl" style="left:${X(h * 60) - LAB}px"></i>`;
+    rows += `<div class="sp" style="height:${ht}px"><div class="lab" style="width:${LAB}px" title="${esc(sp.name)}"><img src="${esc(sp.img)}" alt="${esc(sp.name)}"><span class="lc">${esc(sp.chip)}</span></div>` +
+      `<div class="ln" style="width:${W - LAB}px">${lines}</div>${out.join("")}</div>`;
+  }
+  const inDay = nowM >= h0 * 60 && nowM <= h1 * 60;
+  render.busy = true;
+  dgi.style.width = W + "px";
+  dgi.innerHTML = rows ? `<div class="ax"><span class="lab" style="width:${LAB}px"></span>${hours}</div>${rows}` +
+    (inDay ? `<div class="now" style="left:${X(nowM)}px"><span>${esc(ctTime(now))}</span></div>` : "") : "";
+  dg.style.display = rows ? "" : "none";
+  if (rows && !userScrolled) { dg.scrollLeft = Math.max(0, X(nowM) - LAB - (dg.clientWidth - LAB) * .3); scrolled = true; }
+  setTimeout(() => { render.busy = false; }, 50);
+  const n = s => today.filter(g => g.state === s).length;
+  document.getElementById("sum").innerHTML = rows ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
+  document.getElementById("msg").innerHTML = rows ? "" : `<div class="empty"><strong>No games today</strong>${Object.keys(data).length ? "This page fills in on its own when the day's games are posted." : "Waiting on the feeds."}</div>`;
+  if (opened) GM[opened] ? openSheet(opened) : closeSheet();
+  document.getElementById("ttl").className = live.length ? "on" : "";
+  document.getElementById("ttlText").textContent = live.length ? `Live · ${live.length}` : "Live";
+  document.title = (live.length ? `(${live.length}) ` : "") + "Live · Press Box";
+  const bad = LEAGUES.filter(l => down[l.key]).map(l => l.label);
+  document.getElementById("meta").textContent = (stamp ? "Updated " + new Date(stamp).toLocaleTimeString([], { hour:"numeric", minute:"2-digit", second:"2-digit" }) : "Loading the boards") + (bad.length ? " · no feed: " + bad.join(", ") : "");
+}
+/* v9: a game that starts 11 PM to midnight Central sits on the next day's ESPN board (it is past midnight in the East),
+   so from noon on tomorrow's board is read too, once a minute, and only its games still on today's Central date are kept. */
+const LATE = {};
+async function pull(lg, full) {
+  try {
+    const ask = async k => {
+      const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard${lg.q}${lg.q ? "&" : "?"}dates=${k}`, { cache:"no-store" });
+      if (!r.ok) throw new Error(r.status);
+      return (await r.json()).events || [];
+    };
+    const now = new Date();
+    if (full) LATE[lg.key] = ctHour(now) >= 12 ? (await ask(ctKey(now, 1)).catch(() => [])).filter(e => ctKey(new Date(e.date)) === ctKey(now)) : [];
+    const got = await Promise.all(ctDays().map(ask));
+    got.unshift(LATE[lg.key] || []);
+    const seen = {};
+    data[lg.key] = [].concat(...got.reverse()).filter(e => !seen[e.id] && (seen[e.id] = 1)).map(e => norm(lg, e)); down[lg.key] = false;
+  } catch (e) { down[lg.key] = true; }
+}
+let rsz = 0; window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(render, 150); });
