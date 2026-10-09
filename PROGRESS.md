@@ -1,3 +1,10 @@
+# PROGRESS - publish-v9 (Live day grid + classic Stars, for the Captain's publish yes)
+
+- Stage 1 (done): worktree hub-publish, branch publish-v9 from main 1f7344b. Merged live-daygrid (50ee15e), then classic-stars (fd49e81). No conflicts: the Stars swap sits in norm(), which feeds both the grid and the game sheet.
+- Stage 2 (done): "+N more" chip was clipped on the phone ("+12 more" in the 58 px label). Phone rule: slimmer sides, wraps rather than clipping. Comments marked Live v9.
+- Stage 3 (done): checks. _tests/live-daygrid/test-page.js now 65/65 (57 old + clip check + Stars block and classic logo in the sheet at 1440 and 390, busy Saturday DAL at PIT). _tests/publish-v9/smoke.js 24/24 (Landing, Players, The Pitch at 1440 and 390). Screenshots preview/publish-*.png.
+- Not pushed, not merged into main.
+
 # PROGRESS - classic-stars (job 1009-1116-ne2)
 
 - Stage 1 (done): classic Stars logo saved in img/ from the NHL logo CDN (see img/STARS-LOGO-SOURCE.md).

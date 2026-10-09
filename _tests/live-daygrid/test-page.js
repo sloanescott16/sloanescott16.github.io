@@ -36,7 +36,7 @@ function lateGame() {   // an 11:15 PM Central kickoff on Saturday sits on Sunda
 }
 const CASES = [
   { tag: 'today', days: ['20261009', '20261010'], clock: 0 },
-  { tag: 'busy-saturday', days: ['20261010', '20261011'], clock: +new Date('2026-10-10T20:30:00Z'), late: true },
+  { tag: 'busy-saturday', days: ['20261010', '20261011'], clock: +new Date('2026-10-10T20:30:00Z'), late: true, stars: true },
 ];
 async function open(b, w, mob, cs, errs) {
   const ctx = await b.newContext({ viewport: { width: w, height: mob ? 844 : 900 }, isMobile: mob, hasTouch: mob }); const p = await ctx.newPage();
@@ -91,6 +91,23 @@ async function open(b, w, mob, cs, errs) {
     ok(r.labW === (mob ? 58 : 76), tag + ': first drawing uses the ' + (mob ? 'phone' : 'desk') + ' layout (label ' + r.labW + ' px)');
     if (cs.late) ok(r.late, tag + ': an 11:15 PM Central game from the next day\'s board shows tonight');
     if (cs.clock) ok(r.live > 0, tag + ': live games marked (' + r.live + ')');
+    {   // publish-v9: the "+N more" chip shows its whole text, never clipped
+      const cl = await p.evaluate(() => [...document.querySelectorAll('.more')].map(m => ({ t: m.textContent, clip: m.scrollWidth > m.clientWidth + 1 || m.getBoundingClientRect().right > m.closest('.lab').getBoundingClientRect().right + 0.5 })));
+      if (cl.length) ok(cl.every(x => !x.clip), tag + ': "+N more" chip text not clipped (' + cl.map(x => x.t + (x.clip ? ' CLIPPED' : '')).join(', ') + ')');
+    }
+    if (cs.stars) {   // publish-v9: the Stars game on the grid, and the classic logo in its sheet
+      const sb = await p.evaluate(() => { const b = [...document.querySelectorAll('.b[data-g^="nhl:"]')].find(x => /\bDAL\b/.test(x.textContent)); if (b) b.scrollIntoView({ inline: 'center', block: 'center' }); return b ? b.dataset.g : ''; });
+      ok(!!sb, tag + ': a Stars game block is on the grid (' + sb + ')');
+      if (sb) {
+        await p.waitForTimeout(200);
+        await p.screenshot({ path: path.join(OUT, 'publish-stars-grid-' + w + '.png') });
+        await p.click('.b[data-g="' + sb + '"]'); await p.waitForTimeout(500);
+        const lg = await p.evaluate(() => [...document.querySelectorAll('#gs .g img')].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
+        ok(lg.some(i => /stars-classic-dark.svg$/.test(i.src) && i.ok), tag + ': game sheet shows the classic Stars logo, loaded (' + lg.map(i => i.src.split('/').pop()).join(', ') + ')');
+        await p.screenshot({ path: path.join(OUT, 'publish-stars-sheet-' + w + '.png') });
+        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      }
+    }
     await p.screenshot({ path: path.join(OUT, 'live-v9-' + cs.tag + '-' + w + '.png') });
     if (mob) {   // the pinned pictures stay put when the hours scroll
       const s = await p.evaluate(() => { const dg = document.getElementById('dg'), l = dg.querySelector('.sp .lab'), x0 = l.getBoundingClientRect().left; dg.scrollLeft += 300; return new Promise(res => setTimeout(() => res([x0, l.getBoundingClientRect().left]), 100)); });
