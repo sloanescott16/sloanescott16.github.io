@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Live">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="pb-version" content="Live v10">
+<meta name="pb-version" content="Live v11">
 <title>Live · Press Box</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23ef4444'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -168,6 +168,21 @@ h2{border-left-color:#33415e}
 .mi .mm i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
 .mi .mm em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums}
 .mi .mm .lo{color:var(--dim)}
+/* v11: golf. A tournament card names its tour and event, then the leader; the column says "No play today" when there is none; the sheet lists the top five */
+.b .m1 .k,.mi .mm i{color:#c9d3e4;font:500 10px/1 Oswald,sans-serif;letter-spacing:.08em;margin-right:5px}
+.b.gf .m1.tn{font-size:13px;color:#c3cde0}
+.ch .nop{margin-top:3px;font:400 10.5px/1.2 Inter,sans-serif;color:var(--dim);text-align:center}
+.mi .mm small{font-size:12px;margin-left:6px}
+.gfc .gt{font:700 20px/1.2 Oswald,sans-serif;letter-spacing:.03em}
+.gfc .gr{margin-top:3px;font-size:12px;color:var(--dim)}
+.gfc .lb{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:2px}
+.gfc .lb li{display:grid;grid-template-columns:34px 1fr auto 46px;gap:8px;align-items:baseline;padding:4px 0;border-top:1px solid var(--line);font-size:14px}
+.gfc .lb li:first-child{border-top:0}
+.gfc .lb .p{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+.gfc .lb .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.gfc .lb .n small{font-weight:400;font-size:11px;color:var(--dim);margin-left:6px}
+.gfc .lb .t{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.gfc .lb .s{font:700 18px/1 Oswald,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
 .mi .mm .rv{display:block;background:none;padding:0;margin:2px 0 0;border-radius:0;color:#c4a8ff;font:500 10px/1.3 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
@@ -196,11 +211,19 @@ const LEAGUES = [
   soc("wc",   "World Cup",               "fifa.world"),
   soc("fri",  "Friendlies",              "fifa.friendly", { slim:true }),
   soc("cnl",  "Concacaf Nations League", "concacaf.nations.league", { slim:true }),
-  soc("unl",  "UEFA Nations League",     "uefa.nations", { slim:true })
+  soc("unl",  "UEFA Nations League",     "uefa.nations", { slim:true }),
+  // v11: golf, one feed per tour; each card is a tournament, not a game, and opens The Green
+  golf("pga",  "PGA Tour",           "pga",            "PGA"),
+  golf("lpga", "LPGA",               "lpga",           "LPGA"),
+  golf("liv",  "LIV Golf",           "liv",            "LIV"),
+  golf("dpwt", "DP World Tour",      "eur",            "DPWT"),
+  golf("pgac", "PGA Tour Champions", "champions-tour", "CHAMP"),
+  golf("kft",  "Korn Ferry Tour",    "ntw",            "KFT")
 ];
+function golf(key, label, slug, chip) { return { key, label, path:"golf/" + slug, q:"", golf:true, chip, href:SITE+"the-green/#home" }; }
 /* league-look: the short league mark shown as a chip on every list row */
 const CHIP = { nfl:"NFL", cfb:"CFB", mlb:"MLB", nhl:"NHL", nba:"NBA", epl:"EPL", liga:"LIGA", ucl:"UCL", mls:"MLS", wc:"WC", fri:"INTL", cnl:"CNL", unl:"UNL" };
-const chipOf = lg => CHIP[lg.key] || String(lg.abbr || lg.label || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 5) || "CUP";
+const chipOf = lg => CHIP[lg.key] || lg.chip || String(lg.abbr || lg.label || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 5) || "CUP";
 function soc(key, label, slug, more) { return Object.assign({ key, label, path:"soccer/" + slug, q:"", soc:true, cls:"soc", href:SITE+"the-pitch/#scores", game:SITE+"the-pitch/#match-" }, more || {}); }
 const MYSOC = { "185":1, "360":1, "86":1, "1068":1, "660":1 };   // FC Dallas, Man United, Real Madrid, Atletico, USA
 /* v9: classic Stars (job 1009-1116-ne2): the Dallas Stars (NHL only) show the classic heritage logo, a local copy in /img/. */
@@ -367,6 +390,129 @@ function card(g) {
   const top = g.lg.soc ? row(g.home, h < a) + row(g.away, a < h) : row(g.away, a < h) + row(g.home, h < a);   // soccer reads home side first
   return `<a class="g ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${g.rival ? `<span class="rv" title="Rivalry game">${esc(g.rival)}</span>` : ""}${top}${whoHtml(g)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
 }
+/* GOLFNOW-START v33 (Press Box) / v9 (The Green): golf is live only while players are on the course.
+   ESPN keeps a tournament "In Progress" all week, overnight too, so the event status alone is not enough.
+   Same code in both pages; _tests/golf-live/test-golfnow.js checks the two copies match. */
+function golfNow(ev, now){
+  now = now == null ? Date.now() : now;
+  var STOP = /suspend|delay|postpon|cancel|halt|weather|rain|dark/i;
+  function ty(x){ return (x && x.status && x.status.type) || {}; }
+  function words(t){ return [t.name, t.description, t.detail, t.shortDetail].join(' '); }
+  function when(iso){
+    var d = new Date(iso), o = {timeZone:'America/Chicago'};
+    var day = function(x){ return x.toLocaleDateString('en-US', {timeZone:'America/Chicago'}); };
+    var t = d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone:o.timeZone});
+    return day(d) === day(new Date(now)) ? t : d.toLocaleDateString('en-US', {weekday:'short', timeZone:o.timeZone}) + ' ' + t;
+  }
+  var out = {live:false, text:'', round:0};
+  if (!ev) return out;
+  var es = ty(ev), cs = [];
+  (ev.competitions || []).forEach(function(c){ if (Array.isArray(c)) c.forEach(function(y){ cs.push(y); }); else cs.push(c); });
+  var c0 = cs[0] || {}, ct = ty(c0);
+  var round = out.round = (c0.status && c0.status.period) || 0;
+  if (es.state === 'post' || es.completed) {
+    out.text = /cancel/i.test(words(es)) ? 'Canceled' : /postpon/i.test(words(es)) ? 'Postponed' : 'Final';
+    return out;
+  }
+  var going = es.state === 'in' || cs.some(function(c){ return ty(c).state === 'in'; });
+  if (!going) return out;                                   // before the week starts: nothing to say here
+  var stopped = cs.filter(function(c){ return STOP.test(words(ty(c))); })[0] || (STOP.test(words(es)) ? ev : null);
+  // per-player status (leaderboard feed, stroke play) is the best evidence; the scoreboard feed has none
+  var players = cs.length === 1 ? (c0.competitors || []).filter(function(p){ return ty(p).state; }) : [];
+  if (!stopped) {
+    if (players.length) {
+      out.live = players.some(function(p){
+        var t = ty(p), tee = p.status.teeTime ? Date.parse(p.status.teeTime) : NaN;
+        return t.state === 'in' && !STOP.test(words(t)) && !(tee > now + 60e3);
+      });
+    } else {
+      out.live = cs.some(function(c){ var t = ty(c); return t.state === 'in' && !/complete|final/i.test(words(t)); });
+    }
+  }
+  if (out.live) { out.text = round ? 'Round ' + round : 'On the course'; return out; }
+  if (stopped) {
+    var w = words(ty(stopped)) + ' ' + words(es), r = (stopped.status && stopped.status.period) || round;
+    out.text = (r ? 'Round ' + r + ' ' : 'Play ') + (/suspend|halt|dark/i.test(w) ? 'suspended' : /postpon/i.test(w) ? 'postponed' : /cancel/i.test(w) ? 'canceled' : 'delayed');
+    return out;
+  }
+  var next = players.filter(function(p){ return ty(p).state === 'pre' && p.status.teeTime && Date.parse(p.status.teeTime) > now; })
+    .sort(function(a, b){ return Date.parse(a.status.teeTime) - Date.parse(b.status.teeTime); })[0];
+  if (next) {
+    var nr = next.status.period || round;
+    out.next = next.status.teeTime;
+    out.text = (nr ? 'R' + nr + ' tees off ' : 'Tees off ') + when(next.status.teeTime);
+    return out;
+  }
+  var allDone = players.length && players.every(function(p){ return ty(p).state === 'post'; });
+  if (round && (/complete/i.test(words(ct)) || allDone)) out.text = 'Round ' + round + ' complete';
+  else out.text = 'Between rounds';
+  return out;
+}
+/* GOLFNOW-END */
+/* v11: golf (the Captain: "golf is missing"). A tournament is a card in the Golf column, placed by the day's play window:
+   first tee time of the round played today to the last group's tee time plus about five hours (ESPN gives every
+   player's tee time for each round). The card names the tournament and tour, the leader and score, then "R3 in progress",
+   the tee-time window, or "R2 complete", and the network. Live (red) only while players are on the course, by the same
+   golfNow rule as the Press Box tile and The Green, and never before the first tee time. */
+const MON = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+const TZO = { PDT:-7, PST:-8, MDT:-6, MST:-7, CDT:-5, CST:-6, EDT:-4, EST:-5, GMT:0, UTC:0, BST:1 };
+function teeTime(l) {   // a round's tee time, from the last stat of its linescore ("Fri Oct 09 08:11:00 PDT 2026"); ms or 0
+  const st = ((((l || {}).statistics || {}).categories || [])[0] || {}).stats || [], s = String((st[st.length - 1] || {}).displayValue || "");
+  const m = /^\w{3} (\w{3}) (\d{1,2}) (\d{1,2}):(\d\d):(\d\d) ([A-Z]{3,4}) (\d{4})$/.exec(s);
+  if (m && MON[m[1]] != null && TZO[m[6]] != null) return Date.UTC(+m[7], MON[m[1]], +m[2], +m[3] - TZO[m[6]], +m[4], +m[5]);
+  const t = Date.parse(s); return isFinite(t) && /\d{4}/.test(s) && /:/.test(s) ? t : 0;
+}
+const etKey = d => new Intl.DateTimeFormat("en-CA", { timeZone:"America/New_York", year:"numeric", month:"2-digit", day:"2-digit" }).format(d).replace(/-/g, "");
+const shortT = n => String(n || "").replace(/\s+(presented|pres\.?|powered|hosted)\b.*$/i, "").replace(/ - Stroke Play$/i, "").trim();
+function normGolf(lg, ev) {
+  const c = (ev.competitions || [])[0] || {}, es = (ev.status || {}).type || {}, ct = (c.status || {}).type || {};
+  if (/cancel|postpon/i.test([es.name, es.description, ct.name].join(" "))) return null;
+  const now = Date.now(), day = gridDay(), gn = golfNow(ev, now), round = (c.status || {}).period || 0, ps = c.competitors || [];
+  const tees = {};
+  for (const x of ps) for (const l of x.linescores || []) { const t = teeTime(l); if (t && l.period) (tees[l.period] = tees[l.period] || []).push(t); }
+  const onDay = Object.keys(tees).map(Number).filter(p => tees[p].some(t => { const m = dayMin(new Date(t), day); return m >= 0 && m < 1440; }));
+  const inRange = etKey(new Date(ev.date)) <= day && day <= etKey(new Date(ev.endDate || ev.date));
+  let p = onDay.length ? Math.max(...onDay) : 0, s, last, guess = false;
+  if (p) { s = Math.min(...tees[p]); last = Math.max(...tees[p]); }
+  else if (inRange && (es.state === "in" || es.state === "pre")) {   // no tee times for today: a usual day's play, 8 AM to 6 PM Central
+    p = round || 1; guess = true;
+    s = +new Date(Date.UTC(+day.slice(0, 4), +day.slice(4, 6) - 1, +day.slice(6), 13)); last = s + 300 * 60e3;
+  } else return null;
+  const end = last + RUN.golf * 60e3, done = /complete|final/i.test([ct.name, ct.detail, ct.shortDetail].join(" "));
+  const a1 = ctTime(new Date(s)), b1 = ctTime(new Date(last)), ap = x => x.slice(-2);   // "9:35–11:36 PM", the first AM/PM dropped when both match
+  const win = guess ? "tee times not posted" : last - s > 5 * 60e3 ? (ap(a1) === ap(b1) ? a1.slice(0, -3) : a1) + "–" + b1 : a1;
+  let state, detail;
+  if (es.state === "post" || es.completed) { state = "post"; detail = "Final"; }
+  else if (round && p < round) { state = "post"; detail = "R" + p + " complete"; }
+  else if (/suspend|delay/i.test(gn.text)) { state = now < s ? "pre" : "post"; detail = gn.text; }
+  else if (now < s - 60e3) { state = "pre"; detail = "R" + p + " tees " + win; }
+  else if (gn.live || (es.state === "pre" && now < end)) { state = "in"; detail = "R" + p + " in progress"; }
+  else if (done || now >= end || es.state === "in") { state = "post"; detail = "R" + p + (done || now >= end ? " complete" : " · " + (gn.text || "between rounds")); }
+  else { state = "pre"; detail = "R" + p + " tees " + win; }
+  const tv = [].concat(...(c.broadcasts || []).map(b => b.names || []))[0] || "";
+  const order = ps.slice().sort((a, b) => (a.order || 999) - (b.order || 999));
+  const top = order.slice(0, 5).map(x => {
+    const same = order.filter(y => y.score === x.score), pos = order.indexOf(same[0]) + 1;
+    const l = (x.linescores || []).find(q => q.period === p) || {}, holes = (l.linescores || []).length;
+    const thru = state === "in" ? (holes >= 18 ? "F" : holes ? "thru " + holes : "") : "";
+    return { pos:(same.length > 1 ? "T" : "") + pos, nm:(x.athlete || {}).shortName || (x.athlete || {}).displayName || "", full:(x.athlete || {}).displayName || "",
+      score:x.score || "", today:l.displayValue || "", thru, flag:(((x.athlete || {}).flag || {}).alt) || "" };
+  });
+  return { lg, golf:true, id:ev.id, name:ev.name || "", short:shortT(ev.shortName || ev.name), date:new Date(s), end:new Date(end), last:new Date(last), win, guess,
+    round:p, state, detail, live:gn.live, tv, top, field:ps.length, fav:false, rival:"", who:[], away:{ rank:0, score:"", ab:"", name:"" }, home:{ rank:0, score:"", ab:"", name:"" } };
+}
+function golfBlock(g, x, w, y, h, col, s) {
+  const k = g.lg.key + ":" + g.id, L = g.top[0];
+  const ld = L ? `<span class="m1"><span>${L.pos.startsWith("T") ? `<small>${esc(L.pos)} </small>` : ""}${esc(L.nm)}</span> <em>${esc(L.score)}</em></span>` : `<span class="m1 lo"><span>${g.field ? esc(g.field) + " in the field" : "Field not posted"}</span></span>`;
+  return `<button type="button" class="b gf ${g.state}" data-g="${esc(k)}" data-col="${esc(col)}" data-s="${s}" style="left:${x}px;width:${w}px;top:${y}px;height:${h}px" title="${esc(g.lg.label)}: ${esc(g.name)}">` +
+    `<span class="m1 tn"><span><span class="k">${esc(chipOf(g.lg))}</span>${esc(g.short)}</span></span>${ld}<span class="m2">${esc(g.detail)}${g.tv ? " · " + esc(g.tv) : ""}</span></button>`;
+}
+function golfCard(g) {   // the sheet: tournament, round and window, top five, status and network
+  const rows = g.top.map(p => `<li><span class="p">${esc(p.pos)}</span><span class="n" title="${esc(p.full)}">${esc(p.nm)}${p.flag ? `<small>${esc(p.flag)}</small>` : ""}</span><span class="t">${esc(p.thru || (p.today ? "rd " + p.today : ""))}</span><span class="s">${esc(p.score)}</span></li>`).join("");
+  return `<a class="g gfc" href="${esc(g.lg.href)}"><div class="gt">${esc(g.name)}</div><div class="gr">${esc(g.lg.label)} · Round ${esc(g.round)} · ${g.guess ? "tee times not posted" : "tees " + esc(g.win) + " CT"}</div>` +
+    (rows ? `<ol class="lb">${rows}</ol>` : `<div class="gr">No leaderboard yet${g.field ? " · " + esc(g.field) + " in the field" : ""}</div>`) +
+    `<div class="foot"><span class="st">${esc(g.detail)}</span>${g.tv ? `<span>${esc(g.tv)}</span>` : ""}</div></a>`;
+}
 /* v10: the day grid. One column per sport, the Central day's hours down the right; the league chip rides under each column's picture. */
 const SPORTS = [
   { key:"nfl", img:"https://a.espncdn.com/i/teamlogos/nfl/500/dal.png", chip:"NFL", name:"NFL" },
@@ -374,10 +520,11 @@ const SPORTS = [
   { key:"mlb", img:"img/mlb.webp", chip:"MLB", name:"Baseball" },
   { key:"nhl", img:"img/nhl.webp", chip:"NHL", name:"Hockey" },
   { key:"nba", img:"img/nba.webp", chip:"NBA", name:"Basketball" },
-  { key:"soc", img:"img/soc.webp", chip:"Soccer", name:"Soccer" }
+  { key:"soc", img:"img/soc.webp", chip:"Soccer", name:"Soccer" },
+  { key:"golf", img:"img/golf.webp", chip:"Golf", name:"Golf", unit:"tournaments" }   // v11
 ];
-const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150, soc:115 };   // how long a game usually runs, minutes
-const sportOf = lg => lg.soc ? "soc" : lg.key;
+const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150, soc:115, golf:300 };   // how long a game usually runs, minutes (golf: the last group's round)
+const sportOf = lg => lg.soc ? "soc" : lg.golf ? "golf" : lg.key;
 const CTT = new Intl.DateTimeFormat("en-US", { timeZone:"America/Chicago", hour:"numeric", minute:"2-digit" });
 const ctTime = d => CTT.format(d).replace(":00", "");
 function gridDay() { const now = new Date(); return ctHour(now) < 6 ? ctKey(now, -1) : ctKey(now); }   // past midnight the night's games stay on until 6 AM
@@ -391,6 +538,7 @@ let opened = "", scrolled = false, userAt = 0;
 /* v10: a game is a card standing in its sport's column: the two sides on their own lines (scores on the right), then the
    clock and period, "Final", or the start time and network; a rivalry's name rides on top. */
 function block(g, x, w, y, h, col, s) {
+  if (g.golf) return golfBlock(g, x, w, y, h, col, s);   // v11
   const a = +g.away.score || 0, hm = +g.home.score || 0, post = g.state === "post", pre = g.state === "pre";
   const nm = (t, lose, pfx) => `<span class="m1${lose ? " lo" : ""}"><span>${pfx ? `<small>${pfx} </small>` : ""}${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}</span>${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
   const one = g.lg.soc ? [g.home, hm < a && post, g.away, a < hm && post] : [g.away, a < hm && post, g.home, hm < a && post];
@@ -403,6 +551,10 @@ function block(g, x, w, y, h, col, s) {
 function openSheet(k) {
   const g = GM[k]; if (!g) return closeSheet();
   opened = k;
+  if (g.golf) {   // v11: a tournament's sheet, its top five
+    document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "in" ? "live" : esc(g.detail)}</span><a href="${esc(g.lg.href)}">The Green &rsaquo;</a></div>${golfCard(g)}`;
+    return document.getElementById("gs").classList.add("on");
+  }
   document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "pre" ? "starts " + esc(ctTime(g.date)) : g.state === "in" ? "live" : "final"}</span><a href="${gameHref(g)}">Game center &rsaquo;</a></div>${card(g)}`;
   document.getElementById("gs").classList.add("on");
 }
@@ -413,12 +565,13 @@ function openMore(key) {
   const m = MORE[key]; if (!m) return closeSheet();
   const old = document.querySelector("#gsb .mlist"), keepTop = opened === "more:" + key && old ? old.scrollTop : 0;
   opened = "more:" + key;
-  const row = g => { const a = +g.away.score || 0, h = +g.home.score || 0, pre = g.state === "pre", post = g.state === "post";
+  const row = g => g.golf ? `<button type="button" class="mi ${g.state}" data-g="${esc(g.lg.key + ":" + g.id)}"><span class="mt">${esc(g.detail)}</span><span class="mm"><i>${esc(chipOf(g.lg))}</i>${esc(g.short)}${g.top[0] ? ` <small class="lo">${esc(g.top[0].nm)} <em>${esc(g.top[0].score)}</em></small>` : ""}</span></button>` : row1(g);
+  const row1 = g => { const a = +g.away.score || 0, h = +g.home.score || 0, pre = g.state === "pre", post = g.state === "post";
     const nm = (t, lose) => `<span${lose ? ' class="lo"' : ""}>${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim || g.lg.soc ? t.name : t.ab)}${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
     const one = g.lg.soc ? [g.home, h < a && post, g.away, a < h && post] : [g.away, a < h && post, g.home, h < a && post];
     return `<button type="button" class="mi ${g.state}${g.fav ? " fav" : ""}" data-g="${esc(g.lg.key + ":" + g.id)}"><span class="mt">${pre ? esc(ctTime(g.date)) : esc(g.detail || (post ? "Final" : "Live"))}</span>` +
       `<span class="mm">${nm(one[0], one[1])}${pre ? (g.lg.soc ? " v " : " at ") : " "}${nm(one[2], one[3])}${g.rival ? `<small class="rv">${esc(g.rival)}</small>` : ""}</span></button>`; };
-  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(m.name)} · ${m.gs.length} games today</span></div><div class="g mlist">${m.gs.map(row).join("")}</div>`;
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(m.name)} · ${m.gs.length} ${esc(m.unit || "games")} today</span></div><div class="g mlist">${m.gs.map(row).join("")}</div>`;
   document.querySelector("#gsb .mlist").scrollTop = keepTop;
   document.getElementById("gs").classList.add("on");
 }
@@ -432,7 +585,8 @@ function render() {
   const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
   const day = gridDay(), nowM = dayMin(now, day);
   // round 2: live games pass the same keep() filter as the rest (college: his teams, ranked, rivalry, Big 12 country)
-  const today = all.filter(g => (!g.lg.cup || g.fav) && keep(g) && (g.state === "in" || ctKey(g.date) === day));
+  const today = all.filter(g => g.golf ? dayMin(g.date, day) < 1440 && dayMin(g.end, day) > 0 :   // v11: a tournament with play on the day
+    (!g.lg.cup || g.fav) && keep(g) && (g.state === "in" || ctKey(g.date) === day));
   const live = today.filter(g => g.state === "in");
   for (const k in GM) delete GM[k];
   for (const k in MORE) delete MORE[k];
@@ -445,7 +599,8 @@ function render() {
   const GUT = phone ? 50 : 62, HH = phone ? 86 : 92, TOP = 8, MAXL = 3, GAP = 3, MINH = phone ? 60 : 58, LW = phone ? 82 : 0;
   // the hours: from the first start (or now) to the last likely finish (or now), whole hours
   let lo = nowM, hi = nowM + 30;
-  const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
+  // v11: golf runs to its last group's finish, at most to midnight
+  const span = g => { const s = dayMin(g.date, day); let e = g.golf ? Math.min(dayMin(g.end, day), Math.max(1440, nowM + 15)) : s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
   for (const g of today) { const [s, e] = span(g); lo = Math.min(lo, s); hi = Math.max(hi, e); }
   const h0 = Math.max(-6, Math.floor(lo / 60)), h1 = Math.max(h0 + 3, Math.ceil(hi / 60));
   // the board fills the window under the header; the PC fits the whole day in that height when it can, the phone scrolls the hours
@@ -458,7 +613,7 @@ function render() {
   const cols = [];
   for (const sp of SPORTS) {
     const gs = today.filter(g => sportOf(g.lg) === sp.key).sort((p, q) => (p.date - q.date) || (q.fav - p.fav));
-    if (!gs.length) continue;   // a sport with nothing today gets no column
+    if (!gs.length && sp.key !== "golf") continue;   // a sport with nothing today gets no column; v11: golf always keeps its column, "No play today"
     const lanes = [], put = [];
     let hid = 0;
     for (const g of gs.slice().sort((p, q) => (pri(q) - pri(p)) || (p.date - q.date))) {   // each game takes the first lane free for its whole card
@@ -469,9 +624,10 @@ function render() {
       lanes[i].push([y, z]);
       put.push({ g, s, y, h, i });
     }
-    if (hid) MORE[sp.key] = { name:sp.name, gs };
-    cols.push({ sp, gs, put, hid, n:Math.max(1, lanes.length) });
+    if (hid) MORE[sp.key] = { name:sp.name, gs, unit:sp.unit };
+    cols.push({ sp, gs, put, hid, n:Math.max(1, lanes.length), none:!gs.length });
   }
+  if (cols.every(c => c.none)) cols.length = 0;   // nothing at all today: the "No games today" note instead
   // column widths: the PC shares the width out by lanes so every sport shows; the phone gives each lane room to read and scrolls sideways if need be
   const avail = dg.clientWidth - GUT;
   let ws = phone ? cols.map(c => Math.max(86, c.n * LW + 6)) : cols.map(c => c.n + 1);
@@ -482,7 +638,7 @@ function render() {
   cols.forEach((c, ci) => {
     const w = ws[ci], lw = (w - 6) / c.n; c.x = x; c.w = w;
     heads += `<div class="ch" data-k="${esc(c.sp.key)}" style="width:${w}px;height:${HH}px" title="${esc(c.sp.name)}"><img src="${esc(c.sp.img)}" alt="${esc(c.sp.name)}"><span class="lc">${esc(c.sp.chip)}</span>` +
-      (c.hid ? `<button type="button" class="more" data-more="${esc(c.sp.key)}" title="All ${c.gs.length} ${esc(c.sp.name)} games today">+${c.hid} more</button>` : "") + `</div>`;
+      (c.hid ? `<button type="button" class="more" data-more="${esc(c.sp.key)}" title="All ${c.gs.length} ${esc(c.sp.name)} ${esc(c.sp.unit || "games")} today">+${c.hid} more</button>` : "") + (c.none ? `<span class="nop">No play today</span>` : "") + `</div>`;
     if (ci) lines += `<i class="cl" style="left:${x}px"></i>`;
     for (const p of c.put) cards += block(p.g, Math.round(x + 3 + p.i * lw), Math.floor(lw - 3), Math.round(p.y), Math.floor(p.h), c.sp.key, p.s);
     x += w;
@@ -527,10 +683,11 @@ const LATE = {};
 async function pull(lg, full) {
   try {
     const ask = async k => {
-      const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard${lg.q}${lg.q ? "&" : "?"}dates=${k}`, { cache:"no-store" });
+      const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard${lg.q}${k ? (lg.q ? "&" : "?") + "dates=" + k : ""}`, { cache:"no-store" });
       if (!r.ok) throw new Error(r.status);
       return (await r.json()).events || [];
     };
+    if (lg.golf) { data[lg.key] = (await ask("")).map(e => normGolf(lg, e)).filter(Boolean); down[lg.key] = false; return; }   // v11: a tour's board holds the week's tournament
     const now = new Date();
     if (full) LATE[lg.key] = ctHour(now) >= 12 ? (await ask(ctKey(now, 1)).catch(() => [])).filter(e => ctKey(new Date(e.date)) === ctKey(now)) : [];
     const got = await Promise.all(ctDays().map(ask));
@@ -547,11 +704,11 @@ async function tick() {
   // while games are on, only the leagues with a live or imminent game are polled fast; the rest ride along once a minute
   const full = !stamp || Date.now() - tick.full >= SLOW;
   if (full) await socCups();
-  const want = LEAGUES.filter(l => full || anyLive(l.key) || soon(l.key));
+  const want = LEAGUES.filter(l => full || (!l.golf && (anyLive(l.key) || soon(l.key))));   // v11: golf boards are big and move slowly, once a minute
   if (full) tick.full = Date.now();
   await Promise.all(want.map(l => pull(l, full)).concat([mlbKeys()]));   // self-throttled, one slate every 15 minutes
   stamp = Date.now(); render();
-  const hot = LEAGUES.some(l => anyLive(l.key) || soon(l.key));
+  const hot = LEAGUES.some(l => !l.golf && (anyLive(l.key) || soon(l.key)));
   timer = setTimeout(tick, hot && !document.hidden ? FAST : SLOW);
 }
 tick.full = 0; render.busy = 0;

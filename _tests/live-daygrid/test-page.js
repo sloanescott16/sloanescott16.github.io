@@ -1,8 +1,11 @@
-/* Page check for Live v10, the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
+/* Page check for Live v11 (v10 plus the golf column), the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
    Serves this worktree on localhost. Every ESPN and MLB feed is answered from samples saved with grab.sh (real feeds);
    team logos and fonts load from the real CDN so the screenshots look right. Screenshots go to preview/.
    Cases: today (9 Oct, real clock), and a busy Saturday (10 Oct, clock held at 3:30 PM Central, game states set by
-   the clock), which also carries a made-up 11:15 PM Central game on the 11 Oct board to prove late games show. */
+   the clock), which also carries a made-up 11:15 PM Central game on the 11 Oct board to prove late games show.
+   v11 golf: today uses today's real golf boards (samples/golf-20261009); busy Saturday is the no-golf fixture (every golf
+   board empty); golf is a busy golf Friday with the clock held at 1 PM Central, the Champions and Korn Ferry rounds set
+   in progress and a made-up fourth tournament on the LIV board, so the golf column fills three lanes and "+1 more". */
 const { chromium } = require('../golf-live/pw-shim.js');
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..'), SMP = path.join(__dirname, 'samples');
@@ -14,6 +17,19 @@ let pass = 0, fail = 0; function ok(c, m) { if (c) { pass++; console.log('PASS',
 const KEY = { 'football/nfl':'nfl', 'football/college-football':'cfb', 'baseball/mlb':'mlb', 'hockey/nhl':'nhl', 'basketball/nba':'nba', 'soccer/eng.1':'epl',
   'soccer/esp.1':'liga', 'soccer/uefa.champions':'ucl', 'soccer/usa.1':'mls', 'soccer/fifa.world':'wc', 'soccer/fifa.friendly':'fri',
   'soccer/concacaf.nations.league':'cnl', 'soccer/uefa.nations':'unl' };
+const GOLF = { 'golf/pga':'pga', 'golf/lpga':'lpga', 'golf/liv':'liv', 'golf/eur':'eur', 'golf/champions-tour':'champions-tour', 'golf/ntw':'ntw' };   // v11
+function golfFeed(cs, k) {
+  if (!cs.golf) return { events: [] };
+  const j = JSON.parse(fs.readFileSync(path.join(SMP, 'golf-20261009', k + '.json'), 'utf8'));
+  if (cs.golf === 'busy') {   // the golf fixture: two rounds under way, and a made-up fourth tournament on the LIV board
+    const on = e => { const s = e.competitions[0].status, t = s.type, d = 'Round ' + s.period + ' - In Progress';
+      Object.assign(t, { name: 'STATUS_IN_PROGRESS', state: 'in', completed: false, description: 'In Progress', detail: d, shortDetail: d }); return e; };
+    if (k === 'champions-tour' || k === 'ntw') j.events.forEach(on);
+    if (k === 'liv') { const c = JSON.parse(fs.readFileSync(path.join(SMP, 'golf-20261009', 'champions-tour.json'), 'utf8')).events[0];
+      c.id = '999000222'; c.name = c.shortName = 'LIV Golf Test Invitational'; j.events = [on(c)]; }
+  }
+  return j;
+}
 const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150 };
 function feed(d, k, clock) {
   const f = path.join(SMP, d, k + '.json'); if (!fs.existsSync(f)) return { events: [] };
@@ -35,8 +51,9 @@ function lateGame() {   // an 11:15 PM Central kickoff on Saturday sits on Sunda
   return e;
 }
 const CASES = [
-  { tag: 'today', days: ['20261009', '20261010'], clock: 0 },
-  { tag: 'busy-saturday', days: ['20261010', '20261011'], clock: +new Date('2026-10-10T20:30:00Z'), late: true, stars: true, rival: true },
+  { tag: 'today', days: ['20261009', '20261010'], clock: 0, golf: 'real' },
+  { tag: 'busy-saturday', days: ['20261010', '20261011'], clock: +new Date('2026-10-10T20:30:00Z'), late: true, stars: true, rival: true, golf: '' },
+  { tag: 'golf', days: ['20261009', '20261010'], clock: +new Date('2026-10-09T18:00:00Z'), golf: 'busy' },
 ];
 async function open(b, w, mob, cs, errs, hgt) {
   const ctx = await b.newContext({ viewport: { width: w, height: hgt || (mob ? 844 : 900) }, isMobile: mob, hasTouch: mob }); const p = await ctx.newPage();
@@ -50,6 +67,7 @@ async function open(b, w, mob, cs, errs, hgt) {
   await p.route(/^https:\/\/site\.api\.espn\.com\/apis\/site\/v2\/sports\//, r => {
     const u = new URL(r.request().url()), m = /sports\/(.+)\/scoreboard/.exec(u.pathname), k = m && KEY[m[1]], d = u.searchParams.get('dates');
     p.hits.push(k + ':' + d);
+    if (m && GOLF[m[1]]) return r.fulfill({ json: golfFeed(cs, GOLF[m[1]]) });
     if (!k || !cs.days.includes(d)) return r.fulfill({ json: { events: [] } });
     const j = feed(d, k, cs.clock);
     if (cs.late && k === 'nba' && d === '20261011') j.events = (j.events || []).concat([lateGame()]);
@@ -64,7 +82,7 @@ async function open(b, w, mob, cs, errs, hgt) {
   // v10: the PC (1440x900) and two phones (390x844, 375x667); screenshots at the PC and the 390 phone
   for (const cs of CASES) for (const [w, mob, hgt] of [[1440, false, 900], [390, true, 844], [375, true, 667]]) {
     const { ctx, p, tag } = await open(b, w, mob, cs, errs, hgt);
-    const shot = (extra) => path.join(OUT, 'live-v10-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'today' ? 'today' : 'busy') + (extra ? '-' + extra : '') + '.png');
+    const shot = (extra) => path.join(OUT, 'live-v11-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'busy-saturday' ? 'busy' : cs.tag) + (extra ? '-' + extra : '') + '.png');
     const shoot = w !== 375;
     await p.goto('http://localhost:' + srv.port + '/live/');
     await p.waitForFunction(() => document.getElementById('meta').textContent.startsWith('Updated'), undefined, { timeout: 20000 });
@@ -119,7 +137,7 @@ async function open(b, w, mob, cs, errs, hgt) {
       if (cl.length) ok(cl.every(x => !x.clip), tag + ': "+N more" chip text not clipped (' + cl.map(x => x.t + (x.clip ? ' CLIPPED' : '')).join(', ') + ')');
     }
     {   // live cards: red outline, clock and period; finals say so; upcoming ones carry time and network
-      const c = await p.evaluate(() => { const one = s => { const e = document.querySelector('.b.' + s); return e ? { m2: e.querySelector('.m2').textContent, bc: getComputedStyle(e).borderRightColor, lines: e.querySelectorAll('.m1').length, clip: e.scrollHeight > e.clientHeight + 1 } : null; };
+      const c = await p.evaluate(() => { const one = s => { const e = document.querySelector('.b.' + s + ':not(.gf)'); return e ? { m2: e.querySelector('.m2').textContent, bc: getComputedStyle(e).borderRightColor, lines: e.querySelectorAll('.m1').length, clip: e.scrollHeight > e.clientHeight + 1 } : null; };
         const ins = [...document.querySelectorAll('.b.in')]; return { allRed: ins.every(e => /239, 68, 68/.test(getComputedStyle(e).borderRightColor)), clock: ins.map(e => e.querySelector('.m2').textContent).find(t => /\d/.test(t)) || '', soon: ins.every(e => /soon$/i.test(e.querySelector('.m2').textContent)), in: one('in'), post: one('post'), pre: one('pre'), clip: [...document.querySelectorAll('.b')].filter(e => e.querySelectorAll('.m1').length !== 2 || e.querySelector('.m2').getBoundingClientRect().bottom > e.getBoundingClientRect().bottom + 0.5).length }; });
       if (c.in) ok(c.allRed && (!!c.clock || c.soon), tag + ': live cards are red-outlined, with clock and period (' + (c.clock || 'only games just past their start: "soon"') + ')');
       if (c.post) ok(/final/i.test(c.post.m2), tag + ': a final card says Final (' + c.post.m2 + ')');
@@ -141,17 +159,57 @@ async function open(b, w, mob, cs, errs, hgt) {
       ok(!!sb, tag + ': a Stars game card is on the grid (' + sb + ')');
       if (sb) {
         await p.waitForTimeout(200);
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v10-stars-grid-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v11-stars-grid-' + w + '.png') });
         await p.click('.b[data-g="' + sb + '"]'); await p.waitForTimeout(500);
         const lg = await p.evaluate(() => [...document.querySelectorAll('#gs .g img')].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
         ok(lg.some(i => /stars-classic-dark.svg$/.test(i.src) && i.ok), tag + ': game sheet shows the classic Stars logo, loaded (' + lg.map(i => i.src.split('/').pop()).join(', ') + ')');
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v10-stars-sheet-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v11-stars-sheet-' + w + '.png') });
         await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       }
     }
     if (cs.rival) {   // a rivalry card keeps its badge
       const rv = await p.evaluate(() => [...document.querySelectorAll('.b.rvg .rv')].map(x => x.textContent));
       ok(rv.length > 0, tag + ': rivalry badge on the card (' + rv.join(', ') + ')');
+    }
+    {   // v11: the golf column, its picture and chip; tournaments placed by their play window; "No play today" when there is none
+      const gc = await p.evaluate(() => { const ch = document.querySelector('.hd .ch[data-k="golf"]'), im = ch && ch.querySelector('img');
+        const bs = [...document.querySelectorAll('.b.gf')];
+        return { col: !!ch, img: !!im && im.complete && im.naturalWidth > 0, chip: ch ? (ch.querySelector('.lc') || {}).textContent : '', nop: ch && ch.querySelector('.nop') ? ch.querySelector('.nop').textContent : '',
+          n: bs.length, more: ch && ch.querySelector('.more') ? ch.querySelector('.more').textContent : '', inCol: bs.every(b => b.dataset.col === 'golf'),
+          cards: bs.map(b => ({ st: ['pre', 'in', 'post'].find(s => b.classList.contains(s)), t: b.querySelector('.m1').textContent, l: b.querySelectorAll('.m1')[1].textContent, m2: b.querySelector('.m2').textContent, red: /239, 68, 68/.test(getComputedStyle(b).borderRightColor) })) }; });
+      console.log('   ' + tag + ': golf ' + gc.cards.map(c => c.st + ' [' + c.t + ' | ' + c.l + ' | ' + c.m2 + ']').join(' ; ') + (gc.nop ? ' | ' + gc.nop : '') + (gc.more ? ' | ' + gc.more : ''));
+      ok(gc.col && gc.img && gc.chip === 'Golf', tag + ': a Golf column with its picture and chip');
+      if (!cs.golf) ok(gc.nop === 'No play today' && gc.n === 0, tag + ': no golf today, the column says "No play today" (' + gc.nop + ')');
+      else ok(gc.n > 0 && !gc.nop && gc.inCol, tag + ': golf tournaments on the board (' + gc.n + ')');
+      if (cs.golf === 'real') ok(gc.cards.some(c => /Baycurrent/.test(c.t) && c.st === 'pre' && /R3 tees 9:35/.test(c.m2) && /Golf Chnl/.test(c.m2)), tag + ': the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown');
+      if (cs.golf === 'busy') {
+        const lv = gc.cards.filter(c => c.st === 'in');
+        ok(lv.length >= 2 && lv.every(c => c.red && /in progress/.test(c.m2)), tag + ': rounds under way are red, "in progress" (' + lv.length + ')');
+        ok(gc.cards.every(c => /(-\d+|E|\+\d+)$/.test(c.l.trim())), tag + ': every tournament card names its leader and score');
+        ok(/^\+1 more$/.test(gc.more), tag + ': five tournaments today, four of them overlapping: three lanes and "+1 more" (' + gc.more + ')');
+        const pos = await p.evaluate(() => { const b = document.querySelector('.b.gf[data-g^="pgac:"]'); return b ? +b.dataset.s : -1; });
+        ok(pos === 600, tag + ': the Champions round sits at its first tee time, 10 AM Central (' + pos + ' min)');
+        await p.evaluate(() => document.querySelector('.hd .ch[data-k="golf"] .more').scrollIntoView({ inline: 'center' })); await p.waitForTimeout(150);
+        await p.click('.hd .ch[data-k="golf"] .more'); await p.waitForTimeout(300);
+        const ml = await p.evaluate(() => ({ lead: (document.querySelector('#gsb .lead') || {}).textContent || '', rows: document.querySelectorAll('#gsb .mi').length, done: [...document.querySelectorAll('#gsb .mi.post .mt')].map(x => x.textContent).join(', ') }));
+        ok(ml.rows === 5 && /5 tournaments today/.test(ml.lead), tag + ': golf "+1 more" lists all five tournaments (' + ml.lead + ')');
+        ok(/R2 complete/.test(ml.done), tag + ': a round done for the day says so (' + ml.done + ')');
+        if (shoot) await p.screenshot({ path: shot('golf-more') });
+        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      }
+      if (shoot && cs.golf) {   // the board with the golf column in view
+        await p.evaluate(() => { const c = document.querySelector('.hd .ch[data-k="golf"]'), dg = document.getElementById('dg'); dg.scrollLeft = Math.max(0, c.offsetLeft - 8); });
+        await p.waitForTimeout(150);
+        await p.screenshot({ path: shot() });
+      }
+      if (gc.n) {
+        await p.evaluate(() => document.querySelector('.b.gf').scrollIntoView({ block: 'center', inline: 'center' })); await p.waitForTimeout(150);
+        await p.click('.b.gf'); await p.waitForTimeout(300);
+        const gs = await p.evaluate(() => { const g = document.querySelector('#gsb .gfc'); return { on: document.getElementById('gs').classList.contains('on'), href: g && g.getAttribute('href'), rows: document.querySelectorAll('#gsb .lb li').length, lead: (document.querySelector('#gsb .lead') || {}).textContent || '' }; });
+        ok(gs.on && /the-green/.test(gs.href || '') && gs.rows === 5, tag + ': tapping a tournament opens its sheet, top five and a link to The Green (' + gs.rows + ' rows; ' + gs.lead + ')');
+        if (shoot) await p.screenshot({ path: shot('golf-sheet') });
+        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      }
     }
     if (await p.evaluate(() => !!document.querySelector('.more'))) {   // "+N more" opens the full list; a row in it opens that game's card
       const n = (await p.evaluate(() => { const m = document.querySelector('.more'), shown = document.querySelectorAll('.b[data-col="' + m.dataset.more + '"]').length; return { n: shown + parseInt(m.textContent.slice(1), 10) }; })).n;
