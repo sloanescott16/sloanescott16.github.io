@@ -9,3 +9,10 @@
   when a game began off to the left, grid measured while shown. Progress note moved into _notes so a merge does not
   collide with the untracked PROGRESS.md in hub.
 - Done. Landing page untouched (see handoff).
+- Fix round 2 (check FAILED on the CFB row): keep() now applies to live games too; each sport row keeps at most 3 lanes
+  (his teams, live, rivalry, ranked get lanes first) and the rest sit behind a "+N more" chip under the sport picture,
+  which opens the full list in the sheet (tap a game for its card). PC squeezes the whole day into 1440 px, no sideways
+  scroll (every other hour named when squeezed). Phone opens at now, or at the first game if nothing is on yet.
+  Page check 57/57 at 1440 and 390, today and busy Saturday; busy Saturday grid ends at 784 of 900 px at 1440.
+  Screenshots refreshed in preview, plus live-v9-*-more.png. Note: one stray stdin python was started by mistake and
+  stopped at once (two processes, killed by id).

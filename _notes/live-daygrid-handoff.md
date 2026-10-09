@@ -29,3 +29,12 @@ Screenshots: preview/live-v9-*.png
   pictures. Either is a one-line CSS change.
 - A busy college Saturday makes the CFB row tall (one lane per game on at once, up to about 20).
 - Game lengths are estimates; ESPN gives no end time.
+
+## Fix round 2
+- Live college games go through the same filter as the rest (his teams, ranked, rivalry, Big 12 country).
+- A sport row has at most 3 lanes. His games, live games, rivalries and ranked games get lanes first; the rest sit behind
+  "+N more" under the sport picture, which opens the sport's full list for the day. Tap a row there for its card.
+- PC: the whole day fits the width at 1440 px, no sideways scroll. Busy Saturday: all 5 sports fit, grid ends at 784 px.
+- Phone: opens at now, or at the first game still to come if nothing is on yet.
+- Check: 57/57 (bun _tests/live-daygrid/test-page.js). New screenshots: preview/live-v9-*-more.png.
+- Unsure: today's NHL also overflows (4 games at 6 PM, one behind "+1 more"). The cap is MAXL in render() if he wants 4.

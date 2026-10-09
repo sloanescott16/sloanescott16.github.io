@@ -1,47 +1,63 @@
-   today @1440: rows College football, Hockey, Basketball, Soccer | blocks 9 | live 0 | 0 live8 still to come1 final | scrollLeft 0
+   today @1440: rows College football, Hockey, Basketball, Soccer | blocks 8 | live 0 | 0 live8 still to come1 final | scrollLeft 0
 PASS today @1440: one row per sport with its picture loaded
 PASS today @1440: the old league sections and chip list rows are gone
-PASS today @1440: the now line is in view on open
+PASS today @1440: opens at now, or at the first game if nothing is on yet
+PASS today @1440: no sport row takes more than 3 lanes (3), nhl +1 more
+PASS today @1440: the whole day fits the width, no sideways scroll
+PASS today @1440: every sport row fits on one screen (grid ends at 536 of 900)
 PASS today @1440: no two game blocks overlap
 PASS today @1440: the page itself does not scroll sideways
 PASS today @1440: first drawing uses the desk layout (label 76 px)
-PASS today @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401858487, 3 player names)
+PASS today @1440: "+N more" opens the full list (4 of 4 games)
+PASS today @1440: a game in the list opens its card
+PASS today @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @1440: Escape closes the card
-   today @390: rows College football, Hockey, Basketball, Soccer | blocks 9 | live 0 | 0 live8 still to come1 final | scrollLeft 423
+   today @390: rows College football, Hockey, Basketball, Soccer | blocks 8 | live 0 | 0 live8 still to come1 final | scrollLeft 810
 PASS today @390: one row per sport with its picture loaded
 PASS today @390: the old league sections and chip list rows are gone
-PASS today @390: the now line is in view on open
+PASS today @390: opens at now, or at the first game if nothing is on yet
+PASS today @390: no sport row takes more than 3 lanes (3), nhl +1 more
 PASS today @390: no two game blocks overlap
 PASS today @390: the page itself does not scroll sideways
 PASS today @390: the hours scroll sideways on a phone
 PASS today @390: first drawing uses the phone layout (label 58 px)
 PASS today @390: sport pictures stay pinned while the hours scroll (11 -> 11)
-PASS today @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401858487, 3 player names)
+PASS today @390: "+N more" opens the full list (4 of 4 games)
+PASS today @390: a game in the list opens its card
+PASS today @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @390: Escape closes the card
-   busy-saturday @1440: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 77 | live 21 | 21 live38 still to come18 final | scrollLeft 466
+   busy-saturday @1440: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 36 | live 6 | 10 live38 still to come18 final | scrollLeft 0
 PASS busy-saturday @1440: one row per sport with its picture loaded
 PASS busy-saturday @1440: the old league sections and chip list rows are gone
-PASS busy-saturday @1440: the now line is in view on open
+PASS busy-saturday @1440: opens at now, or at the first game if nothing is on yet
+PASS busy-saturday @1440: no sport row takes more than 3 lanes (3), cfb +12 more, nhl +6 more, nba +3 more, soc +9 more
+PASS busy-saturday @1440: the whole day fits the width, no sideways scroll
+PASS busy-saturday @1440: every sport row fits on one screen (grid ends at 784 of 900)
 PASS busy-saturday @1440: no two game blocks overlap
 PASS busy-saturday @1440: the page itself does not scroll sideways
 PASS busy-saturday @1440: first drawing uses the desk layout (label 76 px)
 PASS busy-saturday @1440: an 11:15 PM Central game from the next day's board shows tonight
-PASS busy-saturday @1440: live games marked (21)
-PASS busy-saturday @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401866440, 3 player names)
+PASS busy-saturday @1440: live games marked (6)
+PASS busy-saturday @1440: "+N more" opens the full list (19 of 19 games)
+PASS busy-saturday @1440: a game in the list opens its card
+PASS busy-saturday @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
 PASS busy-saturday @1440: Escape closes the card
-   busy-saturday @390: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 77 | live 21 | 21 live38 still to come18 final | scrollLeft 1047
+   busy-saturday @390: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 36 | live 6 | 10 live38 still to come18 final | scrollLeft 1047
 PASS busy-saturday @390: one row per sport with its picture loaded
 PASS busy-saturday @390: the old league sections and chip list rows are gone
-PASS busy-saturday @390: the now line is in view on open
+PASS busy-saturday @390: opens at now, or at the first game if nothing is on yet
+PASS busy-saturday @390: no sport row takes more than 3 lanes (3), cfb +12 more, nhl +6 more, nba +3 more, soc +9 more
 PASS busy-saturday @390: no two game blocks overlap
 PASS busy-saturday @390: the page itself does not scroll sideways
 PASS busy-saturday @390: the hours scroll sideways on a phone
 PASS busy-saturday @390: first drawing uses the phone layout (label 58 px)
 PASS busy-saturday @390: an 11:15 PM Central game from the next day's board shows tonight
-PASS busy-saturday @390: live games marked (21)
+PASS busy-saturday @390: live games marked (6)
 PASS busy-saturday @390: sport pictures stay pinned while the hours scroll (11 -> 11)
-PASS busy-saturday @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401866440, 3 player names)
+PASS busy-saturday @390: "+N more" opens the full list (19 of 19 games)
+PASS busy-saturday @390: a game in the list opens its card
+PASS busy-saturday @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
 PASS busy-saturday @390: Escape closes the card
 PASS no page errors
 
-PASSED 41/41
+PASSED 57/57

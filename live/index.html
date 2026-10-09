@@ -142,6 +142,23 @@ h2{border-left-color:#33415e}
 .gs .lead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--dim)}
 .gs .lead a{color:var(--ink);font-weight:600;border-bottom:1px solid var(--dim)}
 .gs .g{box-shadow:0 18px 50px rgba(0,0,0,.6)}
+/* round 2: "+N more" under a sport's picture, and the full list it opens */
+.lab .more{margin-top:4px;padding:2px 6px;border-radius:999px;border:1px solid #55648a;background:#18233a;color:var(--ink);cursor:pointer;
+  font:600 10px/1.3 Inter,sans-serif;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis}
+.lab .more:hover,.lab .more:focus-visible{border-color:var(--ink);outline:none}
+@media (pointer:coarse){.lab .more{padding:5px 6px}}
+.gs .mlist{max-height:min(70vh,560px);overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
+.mi{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;width:100%;padding:8px 10px;border-radius:9px;border:1px solid transparent;
+  background:#0f1828;color:var(--ink);font:inherit;font-size:14px;text-align:left;cursor:pointer;min-height:40px}
+.mi:hover,.mi:focus-visible{border-color:#6b7ea3;outline:none}
+.mi .mt{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi.in{border-color:rgba(239,68,68,.5)}.mi.in .mt{color:#ff8a8a;font-weight:600}
+.mi.fav .mm{font-weight:700}
+.mi .mm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi .mm i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
+.mi .mm em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums}
+.mi .mm .lo{color:var(--dim)}
+.mi .mm .rv{display:block;background:none;padding:0;margin:2px 0 0;border-radius:0;color:#c4a8ff;font:500 10px/1.3 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -376,41 +393,70 @@ function openSheet(k) {
   document.getElementById("gs").classList.add("on");
 }
 function closeSheet() { opened = ""; document.getElementById("gs").classList.remove("on"); }
-document.getElementById("dg").addEventListener("click", e => { const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
-document.getElementById("gs").addEventListener("click", e => { if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
+/* round 2: a sport row keeps a few lanes; the rest of its games sit behind "+N more", a list in the same sheet */
+const MORE = {};
+function openMore(key) {
+  const m = MORE[key]; if (!m) return closeSheet();
+  const old = document.querySelector("#gsb .mlist"), keepTop = opened === "more:" + key && old ? old.scrollTop : 0;
+  opened = "more:" + key;
+  const row = g => { const a = +g.away.score || 0, h = +g.home.score || 0, pre = g.state === "pre", post = g.state === "post";
+    const nm = (t, lose) => `<span${lose ? ' class="lo"' : ""}>${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim || g.lg.soc ? t.name : t.ab)}${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
+    const one = g.lg.soc ? [g.home, h < a && post, g.away, a < h && post] : [g.away, a < h && post, g.home, h < a && post];
+    return `<button type="button" class="mi ${g.state}${g.fav ? " fav" : ""}" data-g="${esc(g.lg.key + ":" + g.id)}"><span class="mt">${pre ? esc(ctTime(g.date)) : esc(g.detail || (post ? "Final" : "Live"))}</span>` +
+      `<span class="mm">${nm(one[0], one[1])}${pre ? (g.lg.soc ? " v " : " at ") : " "}${nm(one[2], one[3])}${g.rival ? `<small class="rv">${esc(g.rival)}</small>` : ""}</span></button>`; };
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(m.name)} · ${m.gs.length} games today</span></div><div class="g mlist">${m.gs.map(row).join("")}</div>`;
+  document.querySelector("#gsb .mlist").scrollTop = keepTop;
+  document.getElementById("gs").classList.add("on");
+}
+document.getElementById("dg").addEventListener("click", e => { const mo = e.target.closest(".more[data-more]"); if (mo) return openMore(mo.dataset.more);
+  const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
+document.getElementById("gs").addEventListener("click", e => { const mi = e.target.closest(".mi[data-g]"); if (mi) return openSheet(mi.dataset.g);
+  if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && opened && !document.querySelector("#pbpSheet.on")) closeSheet(); });
 document.getElementById("dg").addEventListener("scroll", () => { if (scrolled && !render.busy) userScrolled = true; }, { passive:true });
 function render() {
   const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
-  const live = all.filter(g => g.state === "in" && (!g.lg.cup || g.fav));
   const day = gridDay(), nowM = dayMin(now, day);
-  const today = all.filter(g => (g.state === "in" && (!g.lg.cup || g.fav)) || (ctKey(g.date) === day && keep(g)));
+  // round 2: live games pass the same keep() filter as the rest (college: his teams, ranked, rivalry, Big 12 country)
+  const today = all.filter(g => (!g.lg.cup || g.fav) && keep(g) && (g.state === "in" || ctKey(g.date) === day));
+  const live = today.filter(g => g.state === "in");
   for (const k in GM) delete GM[k];
+  for (const k in MORE) delete MORE[k];
+  for (const g of today) GM[g.lg.key + ":" + g.id] = g;
   const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"); dg.style.display = "";   // shown before it is measured
   const phone = dg.clientWidth < 560;
-  const LAB = phone ? 58 : 76, LANE = 44, TOP = 6;
+  const LAB = phone ? 58 : 76, LANE = 44, TOP = 6, MAXL = 3;   // at most three lanes a sport, so every sport fits on one screen
   // the hours: from the first start (or now) to the last likely finish (or now), whole hours
   let lo = nowM, hi = nowM + 30;
   const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
   for (const g of today) { const [s, e] = span(g); lo = Math.min(lo, s); hi = Math.max(hi, e); }
   const h0 = Math.max(-6, Math.floor(lo / 60)), h1 = Math.max(h0 + 3, Math.ceil(hi / 60));
-  const PX = Math.max(phone ? 120 : 90, Math.floor((dg.clientWidth - LAB - 2) / (h1 - h0)));
-  const X = m => LAB + (m - h0 * 60) * PX / 60, W = LAB + (h1 - h0) * PX;
+  // the phone scrolls the hours sideways; the PC squeezes the whole day into its width, no sideways scroll
+  const PX = phone ? Math.max(120, Math.floor((dg.clientWidth - LAB - 2) / (h1 - h0))) : Math.max(24, (dg.clientWidth - LAB - 2) / (h1 - h0));
+  const X = m => LAB + (m - h0 * 60) * PX / 60, W = Math.floor(LAB + (h1 - h0) * PX);
+  const every = PX < 46 ? 2 : 1;   // a squeezed day names every other hour
   let rows = "", hours = "";
-  for (let h = h0; h < h1; h++) hours += `<span class="hr" style="left:${X(h * 60)}px;width:${PX}px">${hourName(h)}</span>`;
+  for (let h = h0; h < h1; h++) if ((h - h0) % every === 0) hours += `<span class="hr" style="left:${X(h * 60)}px;width:${PX * every}px">${hourName(h)}</span>`;
+  // which games get a lane first: his teams, live ones, rivalries, ranked, then by start time
+  const pri = g => (g.fav ? 1000 : 0) + (g.state === "in" ? 400 : 0) + (g.rival ? 200 : 0) + (g.away.rank || g.home.rank ? 100 - Math.min(g.away.rank || 99, g.home.rank || 99) : 0);
   for (const sp of SPORTS) {
     const gs = today.filter(g => sportOf(g.lg) === sp.key).sort((p, q) => (p.date - q.date) || (q.fav - p.fav));
     if (!gs.length) continue;   // a sport with nothing today gets no row
-    const ends = [], out = [];
-    for (const g of gs) {   // each game takes the first lane that is free at its start
-      const [s, e] = span(g); let i = ends.findIndex(t => t <= s);
-      if (i < 0) { i = ends.length; ends.push(0); }
-      ends[i] = e + 2;
-      out.push(block(g, X(s) + 2, Math.max(64, (e - s) * PX / 60 - 4), TOP + i * LANE));
+    const lanes = [], out = [];
+    let hid = 0;
+    for (const g of gs.slice().sort((p, q) => (pri(q) - pri(p)) || (p.date - q.date))) {   // each game takes the first lane free for its whole run
+      const [s, e] = span(g);
+      let i = lanes.findIndex(L => L.every(([a, b]) => e + 2 <= a || s >= b + 2));
+      if (i < 0 && lanes.length < MAXL) { i = lanes.length; lanes.push([]); }
+      if (i < 0) { hid++; continue; }   // no room: it waits behind "+N more"
+      lanes[i].push([s, e]);
+      out.push(block(g, X(s) + 2, Math.max(phone ? 64 : 40, (e - s) * PX / 60 - 4), TOP + i * LANE));
     }
-    const ht = Math.max(76, TOP * 2 + ends.length * LANE - 4);
+    if (hid) MORE[sp.key] = { name:sp.name, gs };
+    const ht = Math.max(hid ? 96 : 76, TOP * 2 + lanes.length * LANE - 4);
     let lines = ""; for (let h = h0 + 1; h < h1; h++) lines += `<i class="hl" style="left:${X(h * 60) - LAB}px"></i>`;
-    rows += `<div class="sp" style="height:${ht}px"><div class="lab" style="width:${LAB}px" title="${esc(sp.name)}"><img src="${esc(sp.img)}" alt="${esc(sp.name)}"><span class="lc">${esc(sp.chip)}</span></div>` +
+    rows += `<div class="sp" style="height:${ht}px"><div class="lab" style="width:${LAB}px" title="${esc(sp.name)}"><img src="${esc(sp.img)}" alt="${esc(sp.name)}"><span class="lc">${esc(sp.chip)}</span>` +
+      (hid ? `<button type="button" class="more" data-more="${esc(sp.key)}" title="All ${gs.length} ${esc(sp.name)} games today">+${hid} more</button>` : "") + `</div>` +
       `<div class="ln" style="width:${W - LAB}px">${lines}</div>${out.join("")}</div>`;
   }
   const inDay = nowM >= h0 * 60 && nowM <= h1 * 60;
@@ -419,12 +465,17 @@ function render() {
   dgi.innerHTML = rows ? `<div class="ax"><span class="lab" style="width:${LAB}px"></span>${hours}</div>${rows}` +
     (inDay ? `<div class="now" style="left:${X(nowM)}px"><span>${esc(ctTime(now))}</span></div>` : "") : "";
   dg.style.display = rows ? "" : "none";
-  if (rows && !userScrolled) { dg.scrollLeft = Math.max(0, X(nowM) - LAB - (dg.clientWidth - LAB) * .3); scrolled = true; }
+  // the phone opens at now; if nothing is on yet, at the first game still to come (or now, once the day is done)
+  if (rows && !userScrolled) {
+    const next = today.filter(g => g.state === "pre").map(g => dayMin(g.date, day)).sort((p, q) => p - q)[0];
+    const at = live.length || next == null || next <= nowM ? X(nowM) - LAB - (dg.clientWidth - LAB) * .3 : X(next) - LAB - 30;
+    dg.scrollLeft = Math.max(0, at); scrolled = true;
+  }
   setTimeout(() => { render.busy = false; }, 50);
   const n = s => today.filter(g => g.state === s).length;
   document.getElementById("sum").innerHTML = rows ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
   document.getElementById("msg").innerHTML = rows ? "" : `<div class="empty"><strong>No games today</strong>${Object.keys(data).length ? "This page fills in on its own when the day's games are posted." : "Waiting on the feeds."}</div>`;
-  if (opened) GM[opened] ? openSheet(opened) : closeSheet();
+  if (opened) opened.startsWith("more:") ? openMore(opened.slice(5)) : GM[opened] ? openSheet(opened) : closeSheet();
   document.getElementById("ttl").className = live.length ? "on" : "";
   document.getElementById("ttlText").textContent = live.length ? `Live · ${live.length}` : "Live";
   document.title = (live.length ? `(${live.length}) ` : "") + "Live · Press Box";

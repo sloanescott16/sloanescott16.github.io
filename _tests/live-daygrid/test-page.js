@@ -68,7 +68,12 @@ async function open(b, w, mob, cs, errs) {
     const r = await p.evaluate(() => { const dg = document.getElementById('dg'), now = dg.querySelector('.now'), labs = [...dg.querySelectorAll('.sp .lab img')];
       const nr = now && now.getBoundingClientRect(), gr = dg.getBoundingClientRect();
       return { rows: labs.map(i => i.alt), imgs: labs.every(i => i.complete && i.naturalWidth > 0), blocks: dg.querySelectorAll('.b').length, live: dg.querySelectorAll('.b.in').length,
-        nowSeen: !!nr && nr.left >= gr.left && nr.left <= gr.right, scrolls: dg.scrollWidth > dg.clientWidth + 2, scrollLeft: dg.scrollLeft,
+        nowSeen: !!nr && nr.left >= gr.left && nr.left <= gr.right,
+        firstSeen: (() => { const p = [...dg.querySelectorAll('.b.pre')].map(x => x.getBoundingClientRect().left).sort((a, c) => a - c)[0]; return p != null && p >= gr.left && p <= gr.right; })(),
+        anyLive: !!dg.querySelector('.b.in'),
+        lanes: Math.max(0, ...[...dg.querySelectorAll('.sp')].map(sp => new Set([...sp.querySelectorAll('.b')].map(x => x.style.top)).size)),
+        gridBottom: Math.round(dg.getBoundingClientRect().bottom), winH: innerHeight,
+        more: [...dg.querySelectorAll('.more')].map(m => m.dataset.more + ' ' + m.textContent), scrolls: dg.scrollWidth > dg.clientWidth + 2, scrollLeft: dg.scrollLeft,
         pageOverflow: document.documentElement.scrollWidth > innerWidth + 1, tabs: document.querySelectorAll('h2,.li').length,
         late: !!dg.querySelector('.b[data-g="nba:999000111"]'), labW: dg.querySelector('.sp .lab') ? dg.querySelector('.sp .lab').offsetWidth : 0, sum: document.getElementById('sum').textContent,
         overlap: (() => { const bs = [...dg.querySelectorAll('.b')].map(x => x.getBoundingClientRect()); for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) { const a = bs[i], c = bs[j];
@@ -76,7 +81,10 @@ async function open(b, w, mob, cs, errs) {
     console.log('   ' + tag + ': rows ' + r.rows.join(', ') + ' | blocks ' + r.blocks + ' | live ' + r.live + ' | ' + r.sum + ' | scrollLeft ' + r.scrollLeft);
     ok(r.rows.length > 0 && r.imgs, tag + ': one row per sport with its picture loaded');
     ok(r.tabs === 0, tag + ': the old league sections and chip list rows are gone');
-    ok(r.nowSeen, tag + ': the now line is in view on open');
+    ok(r.anyLive ? r.nowSeen : (r.nowSeen || r.firstSeen), tag + ': opens at now, or at the first game if nothing is on yet');
+    ok(r.lanes <= 3, tag + ': no sport row takes more than 3 lanes (' + r.lanes + ')' + (r.more.length ? ', ' + r.more.join(', ') : ''));
+    if (!mob) ok(!r.scrolls, tag + ': the whole day fits the width, no sideways scroll');
+    if (!mob) ok(r.gridBottom <= r.winH, tag + ': every sport row fits on one screen (grid ends at ' + r.gridBottom + ' of ' + r.winH + ')');
     ok(!r.overlap, tag + ': no two game blocks overlap');
     ok(!r.pageOverflow, tag + ': the page itself does not scroll sideways');
     if (mob) ok(r.scrolls, tag + ': the hours scroll sideways on a phone');
@@ -87,6 +95,16 @@ async function open(b, w, mob, cs, errs) {
     if (mob) {   // the pinned pictures stay put when the hours scroll
       const s = await p.evaluate(() => { const dg = document.getElementById('dg'), l = dg.querySelector('.sp .lab'), x0 = l.getBoundingClientRect().left; dg.scrollLeft += 300; return new Promise(res => setTimeout(() => res([x0, l.getBoundingClientRect().left]), 100)); });
       ok(Math.abs(s[0] - s[1]) < 1, tag + ': sport pictures stay pinned while the hours scroll (' + s.map(Math.round).join(' -> ') + ')');
+    }
+    if (await p.evaluate(() => !!document.querySelector('.more'))) {   // "+N more" opens the full list; a row in it opens that game's card
+      const n = (await p.evaluate(() => { const m = document.querySelector('.more'), shown = m.closest('.sp').querySelectorAll('.b').length; return { n: shown + parseInt(m.textContent.slice(1), 10) }; })).n;
+      await p.click('.more'); await p.waitForTimeout(300);
+      const ml = await p.evaluate(() => ({ on: document.getElementById('gs').classList.contains('on'), rows: document.querySelectorAll('#gsb .mi').length }));
+      ok(ml.on && ml.rows === n, tag + ': "+N more" opens the full list (' + ml.rows + ' of ' + n + ' games)');
+      await p.screenshot({ path: path.join(OUT, 'live-v9-' + cs.tag + '-' + w + '-more.png') });
+      await p.click('#gsb .mi:last-child'); await p.waitForTimeout(300);
+      ok(await p.evaluate(() => !!document.querySelector('#gsb .g[href]')), tag + ': a game in the list opens its card');
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
     }
     const pick = cs.clock ? '.b.in' : '.b';
     if (await p.evaluate(s => !!document.querySelector(s), pick)) {
