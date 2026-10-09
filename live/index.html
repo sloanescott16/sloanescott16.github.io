@@ -123,7 +123,7 @@ h2{border-left-color:#33415e}
 .b .m1{display:flex;align-items:baseline;gap:4px;width:100%;font:500 15px/1.2 Oswald,sans-serif;letter-spacing:.03em;white-space:nowrap}
 .b .m1 span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .b .m1 i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
-.b .m1 small{font:400 11px Inter,sans-serif;color:var(--dim);letter-spacing:0;margin-right:3px}
+.b .m1 small{font:400 11px Inter,sans-serif;color:var(--dim);letter-spacing:0}
 .b .m1 em{margin-left:auto;font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
 .b .m1.lo{color:var(--dim)}
 .b .m2{display:block;margin-top:2px;font-size:11px;line-height:1.25;color:var(--dim);font-variant-numeric:tabular-nums;overflow:hidden;
@@ -136,7 +136,7 @@ h2{border-left-color:#33415e}
 .b.in .m2::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--live);margin-right:5px;vertical-align:1px;animation:pulse 1.6s infinite}
 .b.fav{box-shadow:0 0 0 1px #a9b6cc}.b.fav .m1{font-weight:700}.b.in.fav{box-shadow:0 0 0 1px #a9b6cc,0 0 0 3px rgba(239,68,68,.35)}
 .b.rvg{border-top:3px solid #a078ff}
-.now{position:absolute;left:0;height:2px;margin-top:-1px;background:var(--live);z-index:3;pointer-events:none;box-shadow:0 0 8px rgba(239,68,68,.6)}
+.now{position:absolute;left:0;height:2px;margin-top:-1px;background:var(--live);opacity:.8;z-index:3;pointer-events:none;box-shadow:0 0 8px rgba(239,68,68,.6)}
 .gut .nt{position:absolute;left:2px;right:2px;z-index:2;margin-top:-9px;padding:2px 0;border-radius:5px;background:var(--live);color:#fff;text-align:center;
   font:600 11px/14px Inter,sans-serif;white-space:nowrap;box-shadow:0 0 8px rgba(239,68,68,.6)}
 @media (prefers-reduced-motion:reduce){.b.in .m2::before{animation:none}}
@@ -392,13 +392,13 @@ let opened = "", scrolled = false, userAt = 0;
    clock and period, "Final", or the start time and network; a rivalry's name rides on top. */
 function block(g, x, w, y, h, col, s) {
   const a = +g.away.score || 0, hm = +g.home.score || 0, post = g.state === "post", pre = g.state === "pre";
-  const nm = (t, lose, pfx) => `<span class="m1${lose ? " lo" : ""}"><span>${pfx ? `<small>${pfx}</small>` : ""}${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}</span>${pre ? "" : `<em>${esc(t.score)}</em>`}</span>`;
+  const nm = (t, lose, pfx) => `<span class="m1${lose ? " lo" : ""}"><span>${pfx ? `<small>${pfx} </small>` : ""}${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}</span>${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
   const one = g.lg.soc ? [g.home, hm < a && post, g.away, a < hm && post] : [g.away, a < hm && post, g.home, hm < a && post];
   const st = pre ? ctTime(g.date) + (g.held ? " · " + (g.detail || "Delayed").split(",")[0] : "") + (g.tv ? " · " + g.tv : "") : esc(g.detail || (post ? "Final" : "Live"));
   const m2 = (g.lg.soc ? `<span class="k">${esc(chipOf(g.lg))}</span>` : "") + (pre ? esc(st) : st);
   const k = g.lg.key + ":" + g.id; GM[k] = g;
   return `<button type="button" class="b ${g.state}${g.fav ? " fav" : ""}${g.rival ? " rvg" : ""}" data-g="${esc(k)}" data-col="${esc(col)}" data-s="${s}" style="left:${x}px;width:${w}px;top:${y}px;height:${h}px" title="${esc(g.away.full || g.away.name)} at ${esc(g.home.full || g.home.name)}">` +
-    `${g.rival ? `<span class="rv">${esc(g.rival)}</span>` : ""}${nm(one[0], one[1])}${nm(one[2], one[3], pre ? (g.lg.soc ? "v" : "at") : "")}<span class="m2">${m2}</span></button>`;
+    `${g.rival ? `<span class="rv">${esc(g.rival)}</span>` : ""}${nm(one[0], one[1])} ${nm(one[2], one[3], pre ? (g.lg.soc ? "v" : "at") : "")}<span class="m2">${m2}</span></button>`;
 }
 function openSheet(k) {
   const g = GM[k]; if (!g) return closeSheet();
@@ -442,7 +442,7 @@ function render() {
   document.getElementById("sum").innerHTML = today.length ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
   const phone = dg.clientWidth < 560;
   // v10: the sport heads across the top, the hours down the right-hand side, at most three side-by-side lanes a sport
-  const GUT = phone ? 50 : 62, HH = phone ? 86 : 92, TOP = 8, MAXL = 3, GAP = 3, MINH = phone ? 60 : 58, LW = phone ? 92 : 0;
+  const GUT = phone ? 50 : 62, HH = phone ? 86 : 92, TOP = 8, MAXL = 3, GAP = 3, MINH = phone ? 60 : 58, LW = phone ? 82 : 0;
   // the hours: from the first start (or now) to the last likely finish (or now), whole hours
   let lo = nowM, hi = nowM + 30;
   const span = g => { const s = dayMin(g.date, day); let e = s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
@@ -473,10 +473,10 @@ function render() {
     cols.push({ sp, gs, put, hid, n:Math.max(1, lanes.length) });
   }
   // column widths: the PC shares the width out by lanes so every sport shows; the phone gives each lane room to read and scrolls sideways if need be
-  const avail = dg.clientWidth - GUT - 2;
+  const avail = dg.clientWidth - GUT;
   let ws = phone ? cols.map(c => Math.max(86, c.n * LW + 6)) : cols.map(c => c.n + 1);
   const sum = ws.reduce((p, q) => p + q, 0);
-  if (!phone || sum < avail) ws = ws.map(w => Math.floor(w * avail / sum));
+  if ((!phone || sum < avail) && ws.length) { ws = ws.map(w => Math.floor(w * avail / sum)); ws[ws.length - 1] += avail - ws.reduce((p, q) => p + q, 0); }   // flush to the hours
   const CW = ws.reduce((p, q) => p + q, 0), W = CW + GUT;
   let heads = "", cards = "", x = 0, lines = "";
   cols.forEach((c, ci) => {

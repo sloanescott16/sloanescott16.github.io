@@ -83,7 +83,10 @@ async function open(b, w, mob, cs, errs, hgt) {
         lanes: Math.max(0, ...Object.values(byCol).map(l => new Set(l.map(x => x.style.left)).size)),
         byTime: Object.values(byCol).every(l => { const s = l.map(x => [+x.dataset.s, x.offsetTop]).sort((a, c) => a[0] - c[0] || a[1] - c[1]); return s.every((v, i) => !i || v[1] >= s[i - 1][1]); }),
         colOk: bs.every(x => { const c = [...dg.querySelectorAll('.hd .ch')].find(h => h.dataset.k === x.dataset.col); return !!c && x.offsetLeft >= c.offsetLeft - 1 && x.offsetLeft + x.offsetWidth <= c.offsetLeft + c.offsetWidth + 1; }),
-        hoursRight: !!gut && chs.every(c => c.right <= ur.left + 1) && Math.abs(ur.right - (gr.left + dg.clientLeft + dg.clientWidth)) < 2,
+        hrDbg: gut ? [ur.left, ur.right, gr.left + dg.clientLeft + dg.clientWidth, Math.max(...chs.map(c => c.right))].map(Math.round).join(' ') : '',
+        // the hours sit flush on the board's right edge, and every column lies to their left (the columns slide under them on a narrow phone)
+        hoursRight: !!gut && Math.abs(ur.right - (gr.left + dg.clientLeft + dg.clientWidth)) < 1.5 && dg.querySelector('.cols').offsetWidth + gut.offsetWidth === dg.scrollWidth &&
+          (dg.scrollWidth > dg.clientWidth + 2 || chs.every(c => c.right <= ur.left + 1)),
         hourNames: gut ? [...gut.querySelectorAll('.hr')].map(h => h.textContent) : [],
         allColsSeen: chs.every(c => c.left >= gr.left - 1 && c.right <= ur.left + 1),
         gridBottom: Math.round(gr.bottom), winH: innerHeight,
@@ -100,7 +103,7 @@ async function open(b, w, mob, cs, errs, hgt) {
     ok(r.back && r.stamp && /\d+ live.*\d+ still to come.*\d+ final/.test(r.sum), tag + ': Press Box button, update stamp and the summary line are there');
     ok(r.anyLive ? r.nowSeen : (r.nowSeen || r.firstSeen), tag + ': opens at now, or at the first game if nothing is on yet');
     ok(r.nowFlat && r.nowMark, tag + ': the now line runs across the board, its time marked on the right by the hours');
-    ok(r.hoursRight && r.hourNames.length >= 3 && r.hourNames.every(h => /^(\d+ (AM|PM)|Noon)$/.test(h)), tag + ': the hours run down the right-hand side (' + r.hourNames.length + ' names)');
+    ok(r.hoursRight && r.hourNames.length >= 3 && r.hourNames.every(h => /^(\d+ (AM|PM)|Noon)$/.test(h)), tag + ': the hours run down the right-hand side (' + r.hourNames.length + ' names; ' + r.hrDbg + ' ' + r.hourNames.join('/') + ')');
     ok(r.byTime, tag + ': in each column the cards run down by start time');
     ok(r.colOk, tag + ': every card sits inside its own sport\'s column');
     ok(r.lanes <= 3, tag + ': no sport column takes more than 3 lanes (' + r.lanes + ')' + (r.more.length ? ', ' + r.more.join(', ') : ''));
@@ -116,9 +119,9 @@ async function open(b, w, mob, cs, errs, hgt) {
       if (cl.length) ok(cl.every(x => !x.clip), tag + ': "+N more" chip text not clipped (' + cl.map(x => x.t + (x.clip ? ' CLIPPED' : '')).join(', ') + ')');
     }
     {   // live cards: red outline, clock and period; finals say so; upcoming ones carry time and network
-      const c = await p.evaluate(() => { const one = s => { const e = document.querySelector('.b.' + s); return e ? { m2: e.querySelector('.m2').textContent, bc: getComputedStyle(e).borderTopColor, lines: e.querySelectorAll('.m1').length, clip: e.scrollHeight > e.clientHeight + 1 } : null; };
-        return { in: one('in'), post: one('post'), pre: one('pre'), clip: [...document.querySelectorAll('.b')].filter(e => e.querySelectorAll('.m1').length !== 2 || e.querySelector('.m2').getBoundingClientRect().bottom > e.getBoundingClientRect().bottom + 0.5).length }; });
-      if (c.in) ok(/239, 68, 68/.test(c.in.bc) && /\d/.test(c.in.m2), tag + ': a live card is red-outlined with its clock (' + c.in.m2 + ')');
+      const c = await p.evaluate(() => { const one = s => { const e = document.querySelector('.b.' + s); return e ? { m2: e.querySelector('.m2').textContent, bc: getComputedStyle(e).borderRightColor, lines: e.querySelectorAll('.m1').length, clip: e.scrollHeight > e.clientHeight + 1 } : null; };
+        const ins = [...document.querySelectorAll('.b.in')]; return { allRed: ins.every(e => /239, 68, 68/.test(getComputedStyle(e).borderRightColor)), clock: ins.map(e => e.querySelector('.m2').textContent).find(t => /\d/.test(t)) || '', soon: ins.every(e => /soon$/i.test(e.querySelector('.m2').textContent)), in: one('in'), post: one('post'), pre: one('pre'), clip: [...document.querySelectorAll('.b')].filter(e => e.querySelectorAll('.m1').length !== 2 || e.querySelector('.m2').getBoundingClientRect().bottom > e.getBoundingClientRect().bottom + 0.5).length }; });
+      if (c.in) ok(c.allRed && (!!c.clock || c.soon), tag + ': live cards are red-outlined, with clock and period (' + (c.clock || 'only games just past their start: "soon"') + ')');
       if (c.post) ok(/final/i.test(c.post.m2), tag + ': a final card says Final (' + c.post.m2 + ')');
       if (c.pre) ok(/\d+(:\d\d)? (AM|PM)/.test(c.pre.m2), tag + ': an upcoming card shows its start time (' + c.pre.m2 + ')');
       ok(c.clip === 0, tag + ': every card shows both sides and its status line inside the card (' + c.clip + ' short)');

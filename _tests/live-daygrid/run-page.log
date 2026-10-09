@@ -1,63 +1,168 @@
-   today @1440: rows College football, Hockey, Basketball, Soccer | blocks 8 | live 0 | 0 live8 still to come1 final | scrollLeft 0
-PASS today @1440: one row per sport with its picture loaded
-PASS today @1440: the old league sections and chip list rows are gone
-PASS today @1440: opens at now, or at the first game if nothing is on yet
-PASS today @1440: no sport row takes more than 3 lanes (3), nhl +1 more
-PASS today @1440: the whole day fits the width, no sideways scroll
-PASS today @1440: every sport row fits on one screen (grid ends at 536 of 900)
-PASS today @1440: no two game blocks overlap
-PASS today @1440: the page itself does not scroll sideways
-PASS today @1440: first drawing uses the desk layout (label 76 px)
-PASS today @1440: "+N more" opens the full list (4 of 4 games)
-PASS today @1440: a game in the list opens its card
-PASS today @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
-PASS today @1440: Escape closes the card
-   today @390: rows College football, Hockey, Basketball, Soccer | blocks 8 | live 0 | 0 live8 still to come1 final | scrollLeft 810
-PASS today @390: one row per sport with its picture loaded
-PASS today @390: the old league sections and chip list rows are gone
-PASS today @390: opens at now, or at the first game if nothing is on yet
-PASS today @390: no sport row takes more than 3 lanes (3), nhl +1 more
-PASS today @390: no two game blocks overlap
-PASS today @390: the page itself does not scroll sideways
-PASS today @390: the hours scroll sideways on a phone
-PASS today @390: first drawing uses the phone layout (label 58 px)
-PASS today @390: sport pictures stay pinned while the hours scroll (11 -> 11)
-PASS today @390: "+N more" opens the full list (4 of 4 games)
-PASS today @390: a game in the list opens its card
-PASS today @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
-PASS today @390: Escape closes the card
-   busy-saturday @1440: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 36 | live 6 | 10 live38 still to come18 final | scrollLeft 0
-PASS busy-saturday @1440: one row per sport with its picture loaded
-PASS busy-saturday @1440: the old league sections and chip list rows are gone
-PASS busy-saturday @1440: opens at now, or at the first game if nothing is on yet
-PASS busy-saturday @1440: no sport row takes more than 3 lanes (3), cfb +12 more, nhl +6 more, nba +3 more, soc +9 more
-PASS busy-saturday @1440: the whole day fits the width, no sideways scroll
-PASS busy-saturday @1440: every sport row fits on one screen (grid ends at 784 of 900)
-PASS busy-saturday @1440: no two game blocks overlap
-PASS busy-saturday @1440: the page itself does not scroll sideways
-PASS busy-saturday @1440: first drawing uses the desk layout (label 76 px)
-PASS busy-saturday @1440: an 11:15 PM Central game from the next day's board shows tonight
-PASS busy-saturday @1440: live games marked (6)
-PASS busy-saturday @1440: "+N more" opens the full list (19 of 19 games)
-PASS busy-saturday @1440: a game in the list opens its card
-PASS busy-saturday @1440: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
-PASS busy-saturday @1440: Escape closes the card
-   busy-saturday @390: rows College football, Baseball, Hockey, Basketball, Soccer | blocks 36 | live 6 | 10 live38 still to come18 final | scrollLeft 1047
-PASS busy-saturday @390: one row per sport with its picture loaded
-PASS busy-saturday @390: the old league sections and chip list rows are gone
-PASS busy-saturday @390: opens at now, or at the first game if nothing is on yet
-PASS busy-saturday @390: no sport row takes more than 3 lanes (3), cfb +12 more, nhl +6 more, nba +3 more, soc +9 more
-PASS busy-saturday @390: no two game blocks overlap
-PASS busy-saturday @390: the page itself does not scroll sideways
-PASS busy-saturday @390: the hours scroll sideways on a phone
-PASS busy-saturday @390: first drawing uses the phone layout (label 58 px)
-PASS busy-saturday @390: an 11:15 PM Central game from the next day's board shows tonight
-PASS busy-saturday @390: live games marked (6)
-PASS busy-saturday @390: sport pictures stay pinned while the hours scroll (11 -> 11)
-PASS busy-saturday @390: "+N more" opens the full list (19 of 19 games)
-PASS busy-saturday @390: a game in the list opens its card
-PASS busy-saturday @390: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
-PASS busy-saturday @390: Escape closes the card
+   today @1440x900: columns College football, Hockey, Basketball, Soccer | blocks 8 | live 3 | 3 live5 still to come1 final | scroll 0,267 | hours 7 AM..12 AM
+PASS today @1440x900: one column per sport with its picture loaded in the header
+PASS today @1440x900: the old league sections and chip list rows are gone
+PASS today @1440x900: Press Box button, update stamp and the summary line are there
+PASS today @1440x900: opens at now, or at the first game if nothing is on yet
+PASS today @1440x900: the now line runs across the board, its time marked on the right by the hours
+PASS today @1440x900: the hours run down the right-hand side (18 names; 1345 1407 1407 1345 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @1440x900: in each column the cards run down by start time
+PASS today @1440x900: every card sits inside its own sport's column
+PASS today @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS today @1440x900: every sport column shows across the width, no sideways scroll
+PASS today @1440x900: the board fits the window (ends at 896 of 900)
+PASS today @1440x900: no two game cards overlap
+PASS today @1440x900: the page itself does not scroll sideways
+PASS today @1440x900: first drawing uses the desk layout (hours 62 px)
+PASS today @1440x900: "+N more" chip text not clipped (+1 more)
+PASS today @1440x900: live cards are red-outlined, with clock and period (only games just past their start: "soon")
+PASS today @1440x900: a final card says Final (Final)
+PASS today @1440x900: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS today @1440x900: every card shows both sides and its status line inside the card (0 short)
+PASS today @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
+PASS today @1440x900: "+N more" opens the full list (4 of 4 games)
+PASS today @1440x900: a game in the list opens its card
+PASS today @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS today @1440x900: Escape closes the card
+   today @390x844: columns College football, Hockey, Basketball, Soccer | blocks 8 | live 3 | 3 live5 still to come1 final | scroll 170,571 | hours 7 AM..12 AM
+PASS today @390x844: one column per sport with its picture loaded in the header
+PASS today @390x844: the old league sections and chip list rows are gone
+PASS today @390x844: Press Box button, update stamp and the summary line are there
+PASS today @390x844: opens at now, or at the first game if nothing is on yet
+PASS today @390x844: the now line runs across the board, its time marked on the right by the hours
+PASS today @390x844: the hours run down the right-hand side (18 names; 329 379 379 439 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @390x844: in each column the cards run down by start time
+PASS today @390x844: every card sits inside its own sport's column
+PASS today @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS today @390x844: the board fits the window (ends at 828 of 844)
+PASS today @390x844: no two game cards overlap
+PASS today @390x844: the page itself does not scroll sideways
+PASS today @390x844: first drawing uses the phone layout (hours 50 px)
+PASS today @390x844: "+N more" chip text not clipped (+1 more)
+PASS today @390x844: live cards are red-outlined, with clock and period (only games just past their start: "soon")
+PASS today @390x844: a final card says Final (Final)
+PASS today @390x844: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS today @390x844: every card shows both sides and its status line inside the card (0 short)
+PASS today @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS today @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
+PASS today @390x844: "+N more" opens the full list (4 of 4 games)
+PASS today @390x844: a game in the list opens its card
+PASS today @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS today @390x844: Escape closes the card
+   today @375x667: columns College football, Hockey, Basketball, Soccer | blocks 8 | live 3 | 3 live5 still to come1 final | scroll 170,624 | hours 7 AM..12 AM
+PASS today @375x667: one column per sport with its picture loaded in the header
+PASS today @375x667: the old league sections and chip list rows are gone
+PASS today @375x667: Press Box button, update stamp and the summary line are there
+PASS today @375x667: opens at now, or at the first game if nothing is on yet
+PASS today @375x667: the now line runs across the board, its time marked on the right by the hours
+PASS today @375x667: the hours run down the right-hand side (18 names; 314 364 364 439 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @375x667: in each column the cards run down by start time
+PASS today @375x667: every card sits inside its own sport's column
+PASS today @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS today @375x667: the board fits the window (ends at 651 of 667)
+PASS today @375x667: no two game cards overlap
+PASS today @375x667: the page itself does not scroll sideways
+PASS today @375x667: first drawing uses the phone layout (hours 50 px)
+PASS today @375x667: "+N more" chip text not clipped (+1 more)
+PASS today @375x667: live cards are red-outlined, with clock and period (only games just past their start: "soon")
+PASS today @375x667: a final card says Final (Final)
+PASS today @375x667: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS today @375x667: every card shows both sides and its status line inside the card (0 short)
+PASS today @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS today @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
+PASS today @375x667: "+N more" opens the full list (4 of 4 games)
+PASS today @375x667: a game in the list opens its card
+PASS today @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS today @375x667: Escape closes the card
+   busy-saturday @1440x900: columns College football, Baseball, Hockey, Basketball, Soccer | blocks 39 | live 6 | 10 live38 still to come18 final | scroll 0,296 | hours 6 AM..1 AM
+PASS busy-saturday @1440x900: one column per sport with its picture loaded in the header
+PASS busy-saturday @1440x900: the old league sections and chip list rows are gone
+PASS busy-saturday @1440x900: Press Box button, update stamp and the summary line are there
+PASS busy-saturday @1440x900: opens at now, or at the first game if nothing is on yet
+PASS busy-saturday @1440x900: the now line runs across the board, its time marked on the right by the hours
+PASS busy-saturday @1440x900: the hours run down the right-hand side (20 names; 1345 1407 1407 1345 6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM/1 AM)
+PASS busy-saturday @1440x900: in each column the cards run down by start time
+PASS busy-saturday @1440x900: every card sits inside its own sport's column
+PASS busy-saturday @1440x900: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
+PASS busy-saturday @1440x900: every sport column shows across the width, no sideways scroll
+PASS busy-saturday @1440x900: the board fits the window (ends at 896 of 900)
+PASS busy-saturday @1440x900: no two game cards overlap
+PASS busy-saturday @1440x900: the page itself does not scroll sideways
+PASS busy-saturday @1440x900: first drawing uses the desk layout (hours 62 px)
+PASS busy-saturday @1440x900: an 11:15 PM Central game from the next day's board shows tonight
+PASS busy-saturday @1440x900: live games marked (6)
+PASS busy-saturday @1440x900: "+N more" chip text not clipped (+9 more, +6 more, +3 more, +9 more)
+PASS busy-saturday @1440x900: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS busy-saturday @1440x900: a final card says Final (Final)
+PASS busy-saturday @1440x900: an upcoming card shows its start time (6:30 PM · ABC)
+PASS busy-saturday @1440x900: every card shows both sides and its status line inside the card (0 short)
+PASS busy-saturday @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
+PASS busy-saturday @1440x900: a Stars game card is on the grid (nhl:401892475)
+PASS busy-saturday @1440x900: game sheet shows the classic Stars logo, loaded (stars-classic-dark.svg, pit.png)
+PASS busy-saturday @1440x900: rivalry badge on the card (Red River Rivalry)
+PASS busy-saturday @1440x900: "+N more" opens the full list (19 of 19 games)
+PASS busy-saturday @1440x900: a game in the list opens its card
+PASS busy-saturday @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
+PASS busy-saturday @1440x900: Escape closes the card
+   busy-saturday @390x844: columns College football, Baseball, Hockey, Basketball, Soccer | blocks 39 | live 6 | 10 live38 still to come18 final | scroll 0,438 | hours 6 AM..1 AM
+PASS busy-saturday @390x844: one column per sport with its picture loaded in the header
+PASS busy-saturday @390x844: the old league sections and chip list rows are gone
+PASS busy-saturday @390x844: Press Box button, update stamp and the summary line are there
+PASS busy-saturday @390x844: opens at now, or at the first game if nothing is on yet
+PASS busy-saturday @390x844: the now line runs across the board, its time marked on the right by the hours
+PASS busy-saturday @390x844: the hours run down the right-hand side (20 names; 329 379 379 1107 6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM/1 AM)
+PASS busy-saturday @390x844: in each column the cards run down by start time
+PASS busy-saturday @390x844: every card sits inside its own sport's column
+PASS busy-saturday @390x844: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
+PASS busy-saturday @390x844: the board fits the window (ends at 828 of 844)
+PASS busy-saturday @390x844: no two game cards overlap
+PASS busy-saturday @390x844: the page itself does not scroll sideways
+PASS busy-saturday @390x844: first drawing uses the phone layout (hours 50 px)
+PASS busy-saturday @390x844: an 11:15 PM Central game from the next day's board shows tonight
+PASS busy-saturday @390x844: live games marked (6)
+PASS busy-saturday @390x844: "+N more" chip text not clipped (+9 more, +6 more, +3 more, +9 more)
+PASS busy-saturday @390x844: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS busy-saturday @390x844: a final card says Final (Final)
+PASS busy-saturday @390x844: an upcoming card shows its start time (6:30 PM · ABC)
+PASS busy-saturday @390x844: every card shows both sides and its status line inside the card (0 short)
+PASS busy-saturday @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS busy-saturday @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
+PASS busy-saturday @390x844: a Stars game card is on the grid (nhl:401892475)
+PASS busy-saturday @390x844: game sheet shows the classic Stars logo, loaded (stars-classic-dark.svg, pit.png)
+PASS busy-saturday @390x844: rivalry badge on the card (Red River Rivalry)
+PASS busy-saturday @390x844: "+N more" opens the full list (19 of 19 games)
+PASS busy-saturday @390x844: a game in the list opens its card
+PASS busy-saturday @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
+PASS busy-saturday @390x844: Escape closes the card
+   busy-saturday @375x667: columns College football, Baseball, Hockey, Basketball, Soccer | blocks 39 | live 6 | 10 live38 still to come18 final | scroll 0,492 | hours 6 AM..1 AM
+PASS busy-saturday @375x667: one column per sport with its picture loaded in the header
+PASS busy-saturday @375x667: the old league sections and chip list rows are gone
+PASS busy-saturday @375x667: Press Box button, update stamp and the summary line are there
+PASS busy-saturday @375x667: opens at now, or at the first game if nothing is on yet
+PASS busy-saturday @375x667: the now line runs across the board, its time marked on the right by the hours
+PASS busy-saturday @375x667: the hours run down the right-hand side (20 names; 314 364 364 1107 6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM/1 AM)
+PASS busy-saturday @375x667: in each column the cards run down by start time
+PASS busy-saturday @375x667: every card sits inside its own sport's column
+PASS busy-saturday @375x667: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
+PASS busy-saturday @375x667: the board fits the window (ends at 651 of 667)
+PASS busy-saturday @375x667: no two game cards overlap
+PASS busy-saturday @375x667: the page itself does not scroll sideways
+PASS busy-saturday @375x667: first drawing uses the phone layout (hours 50 px)
+PASS busy-saturday @375x667: an 11:15 PM Central game from the next day's board shows tonight
+PASS busy-saturday @375x667: live games marked (6)
+PASS busy-saturday @375x667: "+N more" chip text not clipped (+9 more, +6 more, +3 more, +9 more)
+PASS busy-saturday @375x667: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS busy-saturday @375x667: a final card says Final (Final)
+PASS busy-saturday @375x667: an upcoming card shows its start time (6:30 PM · ABC)
+PASS busy-saturday @375x667: every card shows both sides and its status line inside the card (0 short)
+PASS busy-saturday @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS busy-saturday @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
+PASS busy-saturday @375x667: a Stars game card is on the grid (nhl:401892475)
+PASS busy-saturday @375x667: game sheet shows the classic Stars logo, loaded (stars-classic-dark.svg, pit.png)
+PASS busy-saturday @375x667: rivalry badge on the card (Red River Rivalry)
+PASS busy-saturday @375x667: "+N more" opens the full list (19 of 19 games)
+PASS busy-saturday @375x667: a game in the list opens its card
+PASS busy-saturday @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
+PASS busy-saturday @375x667: Escape closes the card
 PASS no page errors
 
-PASSED 57/57
+PASSED 160/160
