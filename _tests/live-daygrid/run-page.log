@@ -1,10 +1,10 @@
-   today @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live6 still to come4 final | scroll 0,423 | hours 4 AM..12 AM
+   today @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 0,267 | hours 7 AM..12 AM
 PASS today @1440x900: one column per sport with its picture loaded in the header
 PASS today @1440x900: the old league sections and chip list rows are gone
 PASS today @1440x900: Press Box button, update stamp and the summary line are there
 PASS today @1440x900: opens at now, or at the first game if nothing is on yet
 PASS today @1440x900: the now line runs across the board, its time marked on the right by the hours
-PASS today @1440x900: the hours run down the right-hand side (21 names; 1345 1407 1407 1345 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @1440x900: the hours run down the right-hand side (18 names; 1345 1407 1407 1345 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS today @1440x900: in each column the cards run down by start time
 PASS today @1440x900: every card sits inside its own sport's column
 PASS today @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more
@@ -19,22 +19,26 @@ PASS today @1440x900: a final card says Final (Final)
 PASS today @1440x900: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS today @1440x900: every card shows both sides and its status line inside the card (0 short)
 PASS today @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
-   today @1440x900: golf post [DPWTOpen de España | G. Forrest -9 | R2 complete] ; post [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 complete · Golf Chnl] ; post [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 complete · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
+   today @1440x900: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS today @1440x900: a Golf column with its picture and chip
-PASS today @1440x900: golf tournaments on the board (4)
+PASS today @1440x900: golf tournaments on the board (1)
+PASS today @1440x900: golf column holds PGA Tour events and majors only (pga)
+PASS today @1440x900: only the PGA Tour golf feed is read (golf/pga)
+PASS today @1440x900: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
+PASS today @1440x900: majors match by name from any feed, PGA feed events pass, other tours and senior and women majors do not (1111111111111)
 PASS today @1440x900: the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown
-PASS today @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; DP World Tour · R2 completeThe Green ›)
+PASS today @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS today @1440x900: "+N more" opens the full list (4 of 4 games)
 PASS today @1440x900: a game in the list opens its card
 PASS today @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @1440x900: Escape closes the card
-   today @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live6 still to come4 final | scroll 170,767 | hours 4 AM..12 AM
+   today @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,575 | hours 7 AM..12 AM
 PASS today @390x844: one column per sport with its picture loaded in the header
 PASS today @390x844: the old league sections and chip list rows are gone
 PASS today @390x844: Press Box button, update stamp and the summary line are there
 PASS today @390x844: opens at now, or at the first game if nothing is on yet
 PASS today @390x844: the now line runs across the board, its time marked on the right by the hours
-PASS today @390x844: the hours run down the right-hand side (21 names; 329 379 379 691 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @390x844: the hours run down the right-hand side (18 names; 329 379 379 527 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS today @390x844: in each column the cards run down by start time
 PASS today @390x844: every card sits inside its own sport's column
 PASS today @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
@@ -49,22 +53,25 @@ PASS today @390x844: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS today @390x844: every card shows both sides and its status line inside the card (0 short)
 PASS today @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
 PASS today @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
-   today @390x844: golf post [DPWTOpen de España | G. Forrest -9 | R2 complete] ; post [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 complete · Golf Chnl] ; post [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 complete · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
+   today @390x844: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS today @390x844: a Golf column with its picture and chip
-PASS today @390x844: golf tournaments on the board (4)
+PASS today @390x844: golf tournaments on the board (1)
+PASS today @390x844: golf column holds PGA Tour events and majors only (pga)
+PASS today @390x844: only the PGA Tour golf feed is read (golf/pga)
+PASS today @390x844: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
 PASS today @390x844: the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown
-PASS today @390x844: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; DP World Tour · R2 completeThe Green ›)
+PASS today @390x844: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS today @390x844: "+N more" opens the full list (4 of 4 games)
 PASS today @390x844: a game in the list opens its card
 PASS today @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @390x844: Escape closes the card
-   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live6 still to come4 final | scroll 170,840 | hours 4 AM..12 AM
+   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,678 | hours 7 AM..12 AM
 PASS today @375x667: one column per sport with its picture loaded in the header
 PASS today @375x667: the old league sections and chip list rows are gone
 PASS today @375x667: Press Box button, update stamp and the summary line are there
 PASS today @375x667: opens at now, or at the first game if nothing is on yet
 PASS today @375x667: the now line runs across the board, its time marked on the right by the hours
-PASS today @375x667: the hours run down the right-hand side (21 names; 314 364 364 691 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS today @375x667: the hours run down the right-hand side (18 names; 314 364 364 527 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS today @375x667: in each column the cards run down by start time
 PASS today @375x667: every card sits inside its own sport's column
 PASS today @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
@@ -79,11 +86,14 @@ PASS today @375x667: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS today @375x667: every card shows both sides and its status line inside the card (0 short)
 PASS today @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
 PASS today @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
-   today @375x667: golf post [DPWTOpen de España | G. Forrest -9 | R2 complete] ; post [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 complete · Golf Chnl] ; post [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 complete · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
+   today @375x667: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS today @375x667: a Golf column with its picture and chip
-PASS today @375x667: golf tournaments on the board (4)
+PASS today @375x667: golf tournaments on the board (1)
+PASS today @375x667: golf column holds PGA Tour events and majors only (pga)
+PASS today @375x667: only the PGA Tour golf feed is read (golf/pga)
+PASS today @375x667: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
 PASS today @375x667: the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown
-PASS today @375x667: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; DP World Tour · R2 completeThe Green ›)
+PASS today @375x667: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS today @375x667: "+N more" opens the full list (4 of 4 games)
 PASS today @375x667: a game in the list opens its card
 PASS today @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
@@ -116,7 +126,9 @@ PASS busy-saturday @1440x900: game sheet shows the classic Stars logo, loaded (s
 PASS busy-saturday @1440x900: rivalry badge on the card (Red River Rivalry)
    busy-saturday @1440x900: golf  | No play today
 PASS busy-saturday @1440x900: a Golf column with its picture and chip
-PASS busy-saturday @1440x900: no golf today, the column says "No play today" (No play today)
+PASS busy-saturday @1440x900: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS busy-saturday @1440x900: golf column holds PGA Tour events and majors only (none)
+PASS busy-saturday @1440x900: only the PGA Tour golf feed is read (golf/pga)
 PASS busy-saturday @1440x900: "+N more" opens the full list (19 of 19 games)
 PASS busy-saturday @1440x900: a game in the list opens its card
 PASS busy-saturday @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
@@ -131,7 +143,7 @@ PASS busy-saturday @390x844: the hours run down the right-hand side (20 names; 3
 PASS busy-saturday @390x844: in each column the cards run down by start time
 PASS busy-saturday @390x844: every card sits inside its own sport's column
 PASS busy-saturday @390x844: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
-PASS busy-saturday @390x844: the board fits the window (ends at 828 of 844)
+PASS busy-saturday @390x844: the board fits the window (ends at 826 of 844)
 PASS busy-saturday @390x844: no two game cards overlap
 PASS busy-saturday @390x844: the page itself does not scroll sideways
 PASS busy-saturday @390x844: first drawing uses the phone layout (hours 50 px)
@@ -149,7 +161,9 @@ PASS busy-saturday @390x844: game sheet shows the classic Stars logo, loaded (st
 PASS busy-saturday @390x844: rivalry badge on the card (Red River Rivalry)
    busy-saturday @390x844: golf  | No play today
 PASS busy-saturday @390x844: a Golf column with its picture and chip
-PASS busy-saturday @390x844: no golf today, the column says "No play today" (No play today)
+PASS busy-saturday @390x844: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS busy-saturday @390x844: golf column holds PGA Tour events and majors only (none)
+PASS busy-saturday @390x844: only the PGA Tour golf feed is read (golf/pga)
 PASS busy-saturday @390x844: "+N more" opens the full list (19 of 19 games)
 PASS busy-saturday @390x844: a game in the list opens its card
 PASS busy-saturday @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
@@ -182,116 +196,277 @@ PASS busy-saturday @375x667: game sheet shows the classic Stars logo, loaded (st
 PASS busy-saturday @375x667: rivalry badge on the card (Red River Rivalry)
    busy-saturday @375x667: golf  | No play today
 PASS busy-saturday @375x667: a Golf column with its picture and chip
-PASS busy-saturday @375x667: no golf today, the column says "No play today" (No play today)
+PASS busy-saturday @375x667: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS busy-saturday @375x667: golf column holds PGA Tour events and majors only (none)
+PASS busy-saturday @375x667: only the PGA Tour golf feed is read (golf/pga)
 PASS busy-saturday @375x667: "+N more" opens the full list (19 of 19 games)
 PASS busy-saturday @375x667: a game in the list opens its card
 PASS busy-saturday @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856717, 3 player names)
 PASS busy-saturday @375x667: Escape closes the card
-   golf @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live9 still to come2 final | scroll 0,270 | hours 4 AM..12 AM
+   golf @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 0 | 0 live9 still to come1 final | scroll 0,267 | hours 7 AM..12 AM
 PASS golf @1440x900: one column per sport with its picture loaded in the header
 PASS golf @1440x900: the old league sections and chip list rows are gone
 PASS golf @1440x900: Press Box button, update stamp and the summary line are there
 PASS golf @1440x900: opens at now, or at the first game if nothing is on yet
 PASS golf @1440x900: the now line runs across the board, its time marked on the right by the hours
-PASS golf @1440x900: the hours run down the right-hand side (21 names; 1345 1407 1407 1345 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS golf @1440x900: the hours run down the right-hand side (18 names; 1345 1407 1407 1345 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS golf @1440x900: in each column the cards run down by start time
 PASS golf @1440x900: every card sits inside its own sport's column
-PASS golf @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more, golf +1 more
+PASS golf @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more
 PASS golf @1440x900: every sport column shows across the width, no sideways scroll
 PASS golf @1440x900: the board fits the window (ends at 896 of 900)
 PASS golf @1440x900: no two game cards overlap
 PASS golf @1440x900: the page itself does not scroll sideways
 PASS golf @1440x900: first drawing uses the desk layout (hours 62 px)
-PASS golf @1440x900: live games marked (3)
-PASS golf @1440x900: "+N more" chip text not clipped (+1 more, +1 more)
+PASS golf @1440x900: "+N more" chip text not clipped (+1 more)
 PASS golf @1440x900: a final card says Final (Final)
 PASS golf @1440x900: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS golf @1440x900: every card shows both sides and its status line inside the card (0 short)
 PASS golf @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
-   golf @1440x900: golf in [LIVLIV Golf Test Invitational | R. Armour -9 | R1 in progress · Golf Chnl] ; in [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 in progress · Golf Chnl] ; in [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 in progress · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl] | +1 more
+   golf @1440x900: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS golf @1440x900: a Golf column with its picture and chip
-PASS golf @1440x900: golf tournaments on the board (4)
-PASS golf @1440x900: rounds under way are red, "in progress" (3)
-PASS golf @1440x900: every tournament card names its leader and score
-PASS golf @1440x900: five tournaments today, four of them overlapping: three lanes and "+1 more" (+1 more)
-PASS golf @1440x900: the Champions round sits at its first tee time, 10 AM Central (600 min)
-PASS golf @1440x900: golf "+1 more" lists all five tournaments (Golf · 5 tournaments today)
-PASS golf @1440x900: a round done for the day says so (R2 complete)
-PASS golf @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; LIV Golf · liveThe Green ›)
+PASS golf @1440x900: golf tournaments on the board (1)
+PASS golf @1440x900: golf column holds PGA Tour events and majors only (pga)
+PASS golf @1440x900: only the PGA Tour golf feed is read (golf/pga)
+PASS golf @1440x900: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
+PASS golf @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS golf @1440x900: "+N more" opens the full list (4 of 4 games)
 PASS golf @1440x900: a game in the list opens its card
-PASS golf @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/the-green/#home, 0 player names)
-PASS golf @1440x900: Escape closes the card
-   golf @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live9 still to come2 final | scroll 532,406 | hours 4 AM..12 AM
+   golf @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 0 | 0 live9 still to come1 final | scroll 368,432 | hours 7 AM..12 AM
 PASS golf @390x844: one column per sport with its picture loaded in the header
 PASS golf @390x844: the old league sections and chip list rows are gone
 PASS golf @390x844: Press Box button, update stamp and the summary line are there
 PASS golf @390x844: opens at now, or at the first game if nothing is on yet
 PASS golf @390x844: the now line runs across the board, its time marked on the right by the hours
-PASS golf @390x844: the hours run down the right-hand side (21 names; 329 379 379 329 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS golf @390x844: the hours run down the right-hand side (18 names; 329 379 379 329 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS golf @390x844: in each column the cards run down by start time
 PASS golf @390x844: every card sits inside its own sport's column
-PASS golf @390x844: no sport column takes more than 3 lanes (3), nhl +1 more, golf +1 more
-PASS golf @390x844: the board fits the window (ends at 826 of 844)
+PASS golf @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS golf @390x844: the board fits the window (ends at 828 of 844)
 PASS golf @390x844: no two game cards overlap
 PASS golf @390x844: the page itself does not scroll sideways
 PASS golf @390x844: first drawing uses the phone layout (hours 50 px)
-PASS golf @390x844: live games marked (3)
-PASS golf @390x844: "+N more" chip text not clipped (+1 more, +1 more)
+PASS golf @390x844: "+N more" chip text not clipped (+1 more)
 PASS golf @390x844: a final card says Final (Final)
 PASS golf @390x844: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS golf @390x844: every card shows both sides and its status line inside the card (0 short)
 PASS golf @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
 PASS golf @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
-   golf @390x844: golf in [LIVLIV Golf Test Invitational | R. Armour -9 | R1 in progress · Golf Chnl] ; in [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 in progress · Golf Chnl] ; in [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 in progress · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl] | +1 more
+   golf @390x844: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS golf @390x844: a Golf column with its picture and chip
-PASS golf @390x844: golf tournaments on the board (4)
-PASS golf @390x844: rounds under way are red, "in progress" (3)
-PASS golf @390x844: every tournament card names its leader and score
-PASS golf @390x844: five tournaments today, four of them overlapping: three lanes and "+1 more" (+1 more)
-PASS golf @390x844: the Champions round sits at its first tee time, 10 AM Central (600 min)
-PASS golf @390x844: golf "+1 more" lists all five tournaments (Golf · 5 tournaments today)
-PASS golf @390x844: a round done for the day says so (R2 complete)
-PASS golf @390x844: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; LIV Golf · liveThe Green ›)
+PASS golf @390x844: golf tournaments on the board (1)
+PASS golf @390x844: golf column holds PGA Tour events and majors only (pga)
+PASS golf @390x844: only the PGA Tour golf feed is read (golf/pga)
+PASS golf @390x844: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
+PASS golf @390x844: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS golf @390x844: "+N more" opens the full list (4 of 4 games)
 PASS golf @390x844: a game in the list opens its card
-PASS golf @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/the-green/#home, 0 player names)
-PASS golf @390x844: Escape closes the card
-   golf @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 12 | live 3 | 3 live9 still to come2 final | scroll 547,460 | hours 4 AM..12 AM
+   golf @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 0 | 0 live9 still to come1 final | scroll 383,432 | hours 7 AM..12 AM
 PASS golf @375x667: one column per sport with its picture loaded in the header
 PASS golf @375x667: the old league sections and chip list rows are gone
 PASS golf @375x667: Press Box button, update stamp and the summary line are there
 PASS golf @375x667: opens at now, or at the first game if nothing is on yet
 PASS golf @375x667: the now line runs across the board, its time marked on the right by the hours
-PASS golf @375x667: the hours run down the right-hand side (21 names; 314 364 364 314 4 AM/5 AM/6 AM/7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS golf @375x667: the hours run down the right-hand side (18 names; 314 364 364 314 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
 PASS golf @375x667: in each column the cards run down by start time
 PASS golf @375x667: every card sits inside its own sport's column
-PASS golf @375x667: no sport column takes more than 3 lanes (3), nhl +1 more, golf +1 more
-PASS golf @375x667: the board fits the window (ends at 651 of 667)
+PASS golf @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS golf @375x667: the board fits the window (ends at 649 of 667)
 PASS golf @375x667: no two game cards overlap
 PASS golf @375x667: the page itself does not scroll sideways
 PASS golf @375x667: first drawing uses the phone layout (hours 50 px)
-PASS golf @375x667: live games marked (3)
-PASS golf @375x667: "+N more" chip text not clipped (+1 more, +1 more)
+PASS golf @375x667: "+N more" chip text not clipped (+1 more)
 PASS golf @375x667: a final card says Final (Final)
 PASS golf @375x667: an upcoming card shows its start time (9:15 PM · ESPN)
 PASS golf @375x667: every card shows both sides and its status line inside the card (0 short)
 PASS golf @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
 PASS golf @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
-   golf @375x667: golf in [LIVLIV Golf Test Invitational | R. Armour -9 | R1 in progress · Golf Chnl] ; in [CHAMPConstellation FURYK & FRIENDS | R. Armour -9 | R1 in progress · Golf Chnl] ; in [KFTKorn Ferry Tour Championship | B. Brown -13 | R2 in progress · Golf Chnl] ; pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl] | +1 more
+   golf @375x667: golf pre [PGABaycurrent Classic | T1 K. Mitchell -11 | R3 tees 9:35–11:36 PM · Golf Chnl]
 PASS golf @375x667: a Golf column with its picture and chip
-PASS golf @375x667: golf tournaments on the board (4)
-PASS golf @375x667: rounds under way are red, "in progress" (3)
-PASS golf @375x667: every tournament card names its leader and score
-PASS golf @375x667: five tournaments today, four of them overlapping: three lanes and "+1 more" (+1 more)
-PASS golf @375x667: the Champions round sits at its first tee time, 10 AM Central (600 min)
-PASS golf @375x667: golf "+1 more" lists all five tournaments (Golf · 5 tournaments today)
-PASS golf @375x667: a round done for the day says so (R2 complete)
-PASS golf @375x667: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; LIV Golf · liveThe Green ›)
+PASS golf @375x667: golf tournaments on the board (1)
+PASS golf @375x667: golf column holds PGA Tour events and majors only (pga)
+PASS golf @375x667: only the PGA Tour golf feed is read (golf/pga)
+PASS golf @375x667: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
+PASS golf @375x667: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS golf @375x667: "+N more" opens the full list (4 of 4 games)
 PASS golf @375x667: a game in the list opens its card
-PASS golf @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/the-green/#home, 0 player names)
-PASS golf @375x667: Escape closes the card
+   others @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 8 | live 0 | 0 live8 still to come1 final | scroll 0,267 | hours 7 AM..12 AM
+PASS others @1440x900: one column per sport with its picture loaded in the header
+PASS others @1440x900: the old league sections and chip list rows are gone
+PASS others @1440x900: Press Box button, update stamp and the summary line are there
+PASS others @1440x900: opens at now, or at the first game if nothing is on yet
+PASS others @1440x900: the now line runs across the board, its time marked on the right by the hours
+PASS others @1440x900: the hours run down the right-hand side (18 names; 1345 1407 1407 1345 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS others @1440x900: in each column the cards run down by start time
+PASS others @1440x900: every card sits inside its own sport's column
+PASS others @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS others @1440x900: every sport column shows across the width, no sideways scroll
+PASS others @1440x900: the board fits the window (ends at 896 of 900)
+PASS others @1440x900: no two game cards overlap
+PASS others @1440x900: the page itself does not scroll sideways
+PASS others @1440x900: first drawing uses the desk layout (hours 62 px)
+PASS others @1440x900: "+N more" chip text not clipped (+1 more)
+PASS others @1440x900: a final card says Final (Final)
+PASS others @1440x900: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS others @1440x900: every card shows both sides and its status line inside the card (0 short)
+PASS others @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
+   others @1440x900: golf  | No play today
+PASS others @1440x900: a Golf column with its picture and chip
+PASS others @1440x900: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS others @1440x900: golf column holds PGA Tour events and majors only (none)
+PASS others @1440x900: only the PGA Tour golf feed is read (golf/pga)
+PASS others @1440x900: "+N more" opens the full list (4 of 4 games)
+PASS others @1440x900: a game in the list opens its card
+   others @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 8 | live 0 | 0 live8 still to come1 final | scroll 368,432 | hours 7 AM..12 AM
+PASS others @390x844: one column per sport with its picture loaded in the header
+PASS others @390x844: the old league sections and chip list rows are gone
+PASS others @390x844: Press Box button, update stamp and the summary line are there
+PASS others @390x844: opens at now, or at the first game if nothing is on yet
+PASS others @390x844: the now line runs across the board, its time marked on the right by the hours
+PASS others @390x844: the hours run down the right-hand side (18 names; 329 379 379 329 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS others @390x844: in each column the cards run down by start time
+PASS others @390x844: every card sits inside its own sport's column
+PASS others @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS others @390x844: the board fits the window (ends at 828 of 844)
+PASS others @390x844: no two game cards overlap
+PASS others @390x844: the page itself does not scroll sideways
+PASS others @390x844: first drawing uses the phone layout (hours 50 px)
+PASS others @390x844: "+N more" chip text not clipped (+1 more)
+PASS others @390x844: a final card says Final (Final)
+PASS others @390x844: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS others @390x844: every card shows both sides and its status line inside the card (0 short)
+PASS others @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS others @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
+   others @390x844: golf  | No play today
+PASS others @390x844: a Golf column with its picture and chip
+PASS others @390x844: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS others @390x844: golf column holds PGA Tour events and majors only (none)
+PASS others @390x844: only the PGA Tour golf feed is read (golf/pga)
+PASS others @390x844: "+N more" opens the full list (4 of 4 games)
+PASS others @390x844: a game in the list opens its card
+   others @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 8 | live 0 | 0 live8 still to come1 final | scroll 383,432 | hours 7 AM..12 AM
+PASS others @375x667: one column per sport with its picture loaded in the header
+PASS others @375x667: the old league sections and chip list rows are gone
+PASS others @375x667: Press Box button, update stamp and the summary line are there
+PASS others @375x667: opens at now, or at the first game if nothing is on yet
+PASS others @375x667: the now line runs across the board, its time marked on the right by the hours
+PASS others @375x667: the hours run down the right-hand side (18 names; 314 364 364 314 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS others @375x667: in each column the cards run down by start time
+PASS others @375x667: every card sits inside its own sport's column
+PASS others @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS others @375x667: the board fits the window (ends at 651 of 667)
+PASS others @375x667: no two game cards overlap
+PASS others @375x667: the page itself does not scroll sideways
+PASS others @375x667: first drawing uses the phone layout (hours 50 px)
+PASS others @375x667: "+N more" chip text not clipped (+1 more)
+PASS others @375x667: a final card says Final (Final)
+PASS others @375x667: an upcoming card shows its start time (9:15 PM · ESPN)
+PASS others @375x667: every card shows both sides and its status line inside the card (0 short)
+PASS others @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS others @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
+   others @375x667: golf  | No play today
+PASS others @375x667: a Golf column with its picture and chip
+PASS others @375x667: no PGA Tour event or major today, the column says "No play today" (No play today)
+PASS others @375x667: golf column holds PGA Tour events and majors only (none)
+PASS others @375x667: only the PGA Tour golf feed is read (golf/pga)
+PASS others @375x667: "+N more" opens the full list (4 of 4 games)
+PASS others @375x667: a game in the list opens its card
+   major @1440x900: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,267 | hours 7 AM..12 AM
+PASS major @1440x900: one column per sport with its picture loaded in the header
+PASS major @1440x900: the old league sections and chip list rows are gone
+PASS major @1440x900: Press Box button, update stamp and the summary line are there
+PASS major @1440x900: opens at now, or at the first game if nothing is on yet
+PASS major @1440x900: the now line runs across the board, its time marked on the right by the hours
+PASS major @1440x900: the hours run down the right-hand side (18 names; 1345 1407 1407 1345 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS major @1440x900: in each column the cards run down by start time
+PASS major @1440x900: every card sits inside its own sport's column
+PASS major @1440x900: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS major @1440x900: every sport column shows across the width, no sideways scroll
+PASS major @1440x900: the board fits the window (ends at 896 of 900)
+PASS major @1440x900: no two game cards overlap
+PASS major @1440x900: the page itself does not scroll sideways
+PASS major @1440x900: first drawing uses the desk layout (hours 62 px)
+PASS major @1440x900: live games marked (3)
+PASS major @1440x900: "+N more" chip text not clipped (+1 more)
+PASS major @1440x900: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS major @1440x900: a final card says Final (Final)
+PASS major @1440x900: every card shows both sides and its status line inside the card (0 short)
+PASS major @1440x900: sport heads stay pinned on top while the hours scroll (117 -> 117)
+   major @1440x900: golf in [PGAMasters Tournament | T1 K. Mitchell -11 | R3 in progress · Golf Chnl]
+PASS major @1440x900: a Golf column with its picture and chip
+PASS major @1440x900: golf tournaments on the board (1)
+PASS major @1440x900: golf column holds PGA Tour events and majors only (pga)
+PASS major @1440x900: only the PGA Tour golf feed is read (golf/pga)
+PASS major @1440x900: a major week shows the major, live and red (in PGAMasters Tournament)
+PASS major @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · liveThe Green ›)
+PASS major @1440x900: "+N more" opens the full list (4 of 4 games)
+PASS major @1440x900: a game in the list opens its card
+PASS major @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS major @1440x900: Escape closes the card
+   major @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,575 | hours 7 AM..12 AM
+PASS major @390x844: one column per sport with its picture loaded in the header
+PASS major @390x844: the old league sections and chip list rows are gone
+PASS major @390x844: Press Box button, update stamp and the summary line are there
+PASS major @390x844: opens at now, or at the first game if nothing is on yet
+PASS major @390x844: the now line runs across the board, its time marked on the right by the hours
+PASS major @390x844: the hours run down the right-hand side (18 names; 329 379 379 697 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS major @390x844: in each column the cards run down by start time
+PASS major @390x844: every card sits inside its own sport's column
+PASS major @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS major @390x844: the board fits the window (ends at 828 of 844)
+PASS major @390x844: no two game cards overlap
+PASS major @390x844: the page itself does not scroll sideways
+PASS major @390x844: first drawing uses the phone layout (hours 50 px)
+PASS major @390x844: live games marked (3)
+PASS major @390x844: "+N more" chip text not clipped (+1 more)
+PASS major @390x844: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS major @390x844: a final card says Final (Final)
+PASS major @390x844: every card shows both sides and its status line inside the card (0 short)
+PASS major @390x844: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS major @390x844: hours stay pinned on the right while the columns scroll sideways (330 -> 330)
+   major @390x844: golf in [PGAMasters Tournament | T1 K. Mitchell -11 | R3 in progress · Golf Chnl]
+PASS major @390x844: a Golf column with its picture and chip
+PASS major @390x844: golf tournaments on the board (1)
+PASS major @390x844: golf column holds PGA Tour events and majors only (pga)
+PASS major @390x844: only the PGA Tour golf feed is read (golf/pga)
+PASS major @390x844: a major week shows the major, live and red (in PGAMasters Tournament)
+PASS major @390x844: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · liveThe Green ›)
+PASS major @390x844: "+N more" opens the full list (4 of 4 games)
+PASS major @390x844: a game in the list opens its card
+PASS major @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS major @390x844: Escape closes the card
+   major @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,752 | hours 7 AM..12 AM
+PASS major @375x667: one column per sport with its picture loaded in the header
+PASS major @375x667: the old league sections and chip list rows are gone
+PASS major @375x667: Press Box button, update stamp and the summary line are there
+PASS major @375x667: opens at now, or at the first game if nothing is on yet
+PASS major @375x667: the now line runs across the board, its time marked on the right by the hours
+PASS major @375x667: the hours run down the right-hand side (18 names; 314 364 364 697 7 AM/8 AM/9 AM/10 AM/11 AM/Noon/1 PM/2 PM/3 PM/4 PM/5 PM/6 PM/7 PM/8 PM/9 PM/10 PM/11 PM/12 AM)
+PASS major @375x667: in each column the cards run down by start time
+PASS major @375x667: every card sits inside its own sport's column
+PASS major @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
+PASS major @375x667: the board fits the window (ends at 651 of 667)
+PASS major @375x667: no two game cards overlap
+PASS major @375x667: the page itself does not scroll sideways
+PASS major @375x667: first drawing uses the phone layout (hours 50 px)
+PASS major @375x667: live games marked (3)
+PASS major @375x667: "+N more" chip text not clipped (+1 more)
+PASS major @375x667: live cards are red-outlined, with clock and period (Q3 6:12)
+PASS major @375x667: a final card says Final (Final)
+PASS major @375x667: every card shows both sides and its status line inside the card (0 short)
+PASS major @375x667: sport heads stay pinned on top while the hours scroll (147 -> 147)
+PASS major @375x667: hours stay pinned on the right while the columns scroll sideways (315 -> 315)
+   major @375x667: golf in [PGAMasters Tournament | T1 K. Mitchell -11 | R3 in progress · Golf Chnl]
+PASS major @375x667: a Golf column with its picture and chip
+PASS major @375x667: golf tournaments on the board (1)
+PASS major @375x667: golf column holds PGA Tour events and majors only (pga)
+PASS major @375x667: only the PGA Tour golf feed is read (golf/pga)
+PASS major @375x667: a major week shows the major, live and red (in PGAMasters Tournament)
+PASS major @375x667: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · liveThe Green ›)
+PASS major @375x667: "+N more" opens the full list (4 of 4 games)
+PASS major @375x667: a game in the list opens its card
+PASS major @375x667: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
+PASS major @375x667: Escape closes the card
 PASS no page errors
 
-PASSED 277/277
+PASSED 440/440

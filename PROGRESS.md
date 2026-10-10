@@ -25,3 +25,9 @@ The golf live fix (1f7344b / 7747a5c) changed only the Press Box golf tile and T
 ## Stage 3 - checked and handed off
 - Golf sheet card edge made neutral like the others. Checks rerun: 277/277 and 27/27, no console or page errors.
 - Handoff: _notes/live-golf-handoff.md. Old v10 progress kept in _notes/live-vertical-progress.md.
+
+## Live v12 - PGA Tour and majors only (2026-10-09)
+- The Captain: "only pga tournaments and majors should get that treatment, don't care about other tours".
+- live/index.html: only the PGA Tour golf feed is read (LPGA, LIV, DP World, Champions, Korn Ferry feeds removed). golfKeep() keeps an event when its name is a men's major (Masters, PGA Championship, U.S. Open, The Open Championship) or it is on the PGA feed, and drops any name that says another tour, senior, women's or amateur. No PGA event or major: "No play today".
+- Tests (_tests/live-daygrid/test-page.js): new cases others (only other tours playing) and major (Masters on the PGA board, live); today and golf prove PGA plus other tours shows only the PGA event, no "+N more", only golf/pga requested; matcher unit check. 440/440, no console or page errors; test-golfnow.js 27/27. Screenshots preview/live-v12-*.png.
+- Not pushed or merged. Older preview/live-v11-*.png were re-rendered by an earlier test run and are left uncommitted.

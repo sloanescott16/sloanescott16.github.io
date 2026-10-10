@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Live">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="pb-version" content="Live v11">
+<meta name="pb-version" content="Live v12">
 <title>Live · Press Box</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23ef4444'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -213,14 +213,20 @@ const LEAGUES = [
   soc("fri",  "Friendlies",              "fifa.friendly", { slim:true }),
   soc("cnl",  "Concacaf Nations League", "concacaf.nations.league", { slim:true }),
   soc("unl",  "UEFA Nations League",     "uefa.nations", { slim:true }),
-  // v11: golf, one feed per tour; each card is a tournament, not a game, and opens The Green
-  golf("pga",  "PGA Tour",           "pga",            "PGA"),
-  golf("lpga", "LPGA",               "lpga",           "LPGA"),
-  golf("liv",  "LIV Golf",           "liv",            "LIV"),
-  golf("dpwt", "DP World Tour",      "eur",            "DPWT"),
-  golf("pgac", "PGA Tour Champions", "champions-tour", "CHAMP"),
-  golf("kft",  "Korn Ferry Tour",    "ntw",            "KFT")
+  // v11: golf; each card is a tournament, not a game, and opens The Green
+  // v12 (the Captain: "only pga tournaments and majors should get that treatment, don't care about other tours"): the PGA Tour feed only,
+  // which also carries the four men's majors; LPGA, LIV, DP World, Champions and Korn Ferry are not read at all
+  golf("pga",  "PGA Tour",           "pga",            "PGA")
 ];
+/* v12: which tournaments the Golf column shows. A major by name, from any feed; otherwise only the PGA Tour feed, and
+   never an event whose name says it belongs to another tour (in case one ever rides on the PGA board). */
+const MAJOR = /\b(masters tournament|pga championship|u\.?\s?s\.? open( championship)?|open championship)\b|^(the )?masters$|^the open$/i;
+const OTHER_TOUR = /\b(lpga|liv golf|dp world|korn ferry|champions tour|pga tour champions|senior|women'?s|ladies|amateur|challenge tour|asian tour|sunshine tour)\b/i;
+function golfKeep(lg, ev) {
+  const ns = [(ev || {}).name, (ev || {}).shortName].map(x => String(x || "").trim()).filter(Boolean);
+  if (ns.some(n => OTHER_TOUR.test(n))) return false;
+  return ns.some(n => MAJOR.test(n)) || (lg || {}).key === "pga";
+}
 function golf(key, label, slug, chip) { return { key, label, path:"golf/" + slug, q:"", golf:true, chip, href:SITE+"the-green/#home" }; }
 /* league-look: the short league mark shown as a chip on every list row */
 const CHIP = { nfl:"NFL", cfb:"CFB", mlb:"MLB", nhl:"NHL", nba:"NBA", epl:"EPL", liga:"LIGA", ucl:"UCL", mls:"MLS", wc:"WC", fri:"INTL", cnl:"CNL", unl:"UNL" };
@@ -688,7 +694,7 @@ async function pull(lg, full) {
       if (!r.ok) throw new Error(r.status);
       return (await r.json()).events || [];
     };
-    if (lg.golf) { data[lg.key] = (await ask("")).map(e => normGolf(lg, e)).filter(Boolean); down[lg.key] = false; return; }   // v11: a tour's board holds the week's tournament
+    if (lg.golf) { data[lg.key] = (await ask("")).filter(e => golfKeep(lg, e)).map(e => normGolf(lg, e)).filter(Boolean); down[lg.key] = false; return; }   // v11: a tour's board holds the week's tournament
     const now = new Date();
     if (full) LATE[lg.key] = ctHour(now) >= 12 ? (await ask(ctKey(now, 1)).catch(() => [])).filter(e => ctKey(new Date(e.date)) === ctKey(now)) : [];
     const got = await Promise.all(ctDays().map(ask));

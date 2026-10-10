@@ -1,11 +1,15 @@
-/* Page check for Live v11 (v10 plus the golf column), the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
+/* Page check for Live v12 (v11 with the golf column cut to the PGA Tour and the majors), the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
    Serves this worktree on localhost. Every ESPN and MLB feed is answered from samples saved with grab.sh (real feeds);
    team logos and fonts load from the real CDN so the screenshots look right. Screenshots go to preview/.
    Cases: today (9 Oct, real clock), and a busy Saturday (10 Oct, clock held at 3:30 PM Central, game states set by
    the clock), which also carries a made-up 11:15 PM Central game on the 11 Oct board to prove late games show.
    v11 golf: today uses today's real golf boards (samples/golf-20261009); busy Saturday is the no-golf fixture (every golf
    board empty); golf is a busy golf Friday with the clock held at 1 PM Central, the Champions and Korn Ferry rounds set
-   in progress and a made-up fourth tournament on the LIV board, so the golf column fills three lanes and "+1 more". */
+   in progress and a made-up fourth tournament on the LIV board.
+   v12 (the Captain: "only pga tournaments and majors"): the page reads the PGA Tour feed only. today and golf are days with
+   PGA plus other tours (golf also slips an LPGA event onto the PGA board): only the PGA event shows, no "+N more", and no
+   other tour's feed is asked for. others is a day with only other tours under way: "No play today". major is a major week:
+   the PGA board's event is the Masters Tournament, in progress at 11 PM Central, and it shows, red. */
 const { chromium } = require('../golf-live/pw-shim.js');
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..'), SMP = path.join(__dirname, 'samples');
@@ -27,6 +31,17 @@ function golfFeed(cs, k) {
     if (k === 'champions-tour' || k === 'ntw') j.events.forEach(on);
     if (k === 'liv') { const c = JSON.parse(fs.readFileSync(path.join(SMP, 'golf-20261009', 'champions-tour.json'), 'utf8')).events[0];
       c.id = '999000222'; c.name = c.shortName = 'LIV Golf Test Invitational'; j.events = [on(c)]; }
+    if (k === 'pga') { const c = JSON.parse(fs.readFileSync(path.join(SMP, 'golf-20261009', 'lpga.json'), 'utf8')).events[0];   // v12: another tour on the PGA board
+      c.id = '999000333'; j.events.push(on(c)); }
+  }
+  if (cs.golf === 'others') {   // v12: only other tours are playing; the PGA board is empty
+    const on = e => { Object.assign(e.competitions[0].status.type, { name: 'STATUS_IN_PROGRESS', state: 'in', completed: false }); return e; };
+    if (k === 'pga') j.events = []; else j.events.forEach(on);
+  }
+  if (cs.golf === 'major' && k === 'pga') {   // v12: a major week, the Masters on the PGA board, under way
+    for (const e of j.events) { e.id = '999000444'; e.name = 'Masters Tournament'; e.shortName = 'Masters Tournament';
+      const s = e.competitions[0].status, d = 'Round ' + s.period + ' - In Progress';
+      Object.assign(s.type, { name: 'STATUS_IN_PROGRESS', state: 'in', completed: false, description: 'In Progress', detail: d, shortDetail: d }); }
   }
   return j;
 }
@@ -54,6 +69,8 @@ const CASES = [
   { tag: 'today', days: ['20261009', '20261010'], clock: 0, golf: 'real' },
   { tag: 'busy-saturday', days: ['20261010', '20261011'], clock: +new Date('2026-10-10T20:30:00Z'), late: true, stars: true, rival: true, golf: '' },
   { tag: 'golf', days: ['20261009', '20261010'], clock: +new Date('2026-10-09T18:00:00Z'), golf: 'busy' },
+  { tag: 'others', days: ['20261009', '20261010'], clock: +new Date('2026-10-09T18:00:00Z'), golf: 'others' },   // v12
+  { tag: 'major', days: ['20261009', '20261010'], clock: +new Date('2026-10-10T04:00:00Z'), golf: 'major' },    // v12
 ];
 async function open(b, w, mob, cs, errs, hgt) {
   const ctx = await b.newContext({ viewport: { width: w, height: hgt || (mob ? 844 : 900) }, isMobile: mob, hasTouch: mob }); const p = await ctx.newPage();
@@ -66,7 +83,7 @@ async function open(b, w, mob, cs, errs, hgt) {
   p.hits = [];
   await p.route(/^https:\/\/site\.api\.espn\.com\/apis\/site\/v2\/sports\//, r => {
     const u = new URL(r.request().url()), m = /sports\/(.+)\/scoreboard/.exec(u.pathname), k = m && KEY[m[1]], d = u.searchParams.get('dates');
-    p.hits.push(k + ':' + d);
+    p.hits.push((k || (m && m[1])) + ':' + d);
     if (m && GOLF[m[1]]) return r.fulfill({ json: golfFeed(cs, GOLF[m[1]]) });
     if (!k || !cs.days.includes(d)) return r.fulfill({ json: { events: [] } });
     const j = feed(d, k, cs.clock);
@@ -82,7 +99,7 @@ async function open(b, w, mob, cs, errs, hgt) {
   // v10: the PC (1440x900) and two phones (390x844, 375x667); screenshots at the PC and the 390 phone
   for (const cs of CASES) for (const [w, mob, hgt] of [[1440, false, 900], [390, true, 844], [375, true, 667]]) {
     const { ctx, p, tag } = await open(b, w, mob, cs, errs, hgt);
-    const shot = (extra) => path.join(OUT, 'live-v11-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'busy-saturday' ? 'busy' : cs.tag) + (extra ? '-' + extra : '') + '.png');
+    const shot = (extra) => path.join(OUT, 'live-v12-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'busy-saturday' ? 'busy' : cs.tag) + (extra ? '-' + extra : '') + '.png');
     const shoot = w !== 375;
     await p.goto('http://localhost:' + srv.port + '/live/');
     await p.waitForFunction(() => document.getElementById('meta').textContent.startsWith('Updated'), undefined, { timeout: 20000 });
@@ -131,7 +148,7 @@ async function open(b, w, mob, cs, errs, hgt) {
     ok(!r.pageOverflow, tag + ': the page itself does not scroll sideways');
     ok(r.gutW === (mob ? 50 : 62), tag + ': first drawing uses the ' + (mob ? 'phone' : 'desk') + ' layout (hours ' + r.gutW + ' px)');
     if (cs.late) ok(r.late, tag + ': an 11:15 PM Central game from the next day\'s board shows tonight');
-    if (cs.clock) ok(r.live > 0, tag + ': live games marked (' + r.live + ')');
+    if (cs.clock && cs.golf !== 'busy' && cs.golf !== 'others') ok(r.live > 0, tag + ': live games marked (' + r.live + ')');
     {   // publish-v9: the "+N more" chip shows its whole text, never clipped
       const cl = await p.evaluate(() => [...document.querySelectorAll('.more')].map(m => ({ t: m.textContent, clip: m.scrollWidth > m.clientWidth + 1 || m.getBoundingClientRect().right > m.closest('.ch').getBoundingClientRect().right + 0.5 || m.getBoundingClientRect().bottom > m.closest('.ch').getBoundingClientRect().bottom + 0.5 })));
       if (cl.length) ok(cl.every(x => !x.clip), tag + ': "+N more" chip text not clipped (' + cl.map(x => x.t + (x.clip ? ' CLIPPED' : '')).join(', ') + ')');
@@ -159,11 +176,11 @@ async function open(b, w, mob, cs, errs, hgt) {
       ok(!!sb, tag + ': a Stars game card is on the grid (' + sb + ')');
       if (sb) {
         await p.waitForTimeout(200);
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v11-stars-grid-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v12-stars-grid-' + w + '.png') });
         await p.click('.b[data-g="' + sb + '"]'); await p.waitForTimeout(500);
         const lg = await p.evaluate(() => [...document.querySelectorAll('#gs .g img')].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
         ok(lg.some(i => /stars-classic-dark.svg$/.test(i.src) && i.ok), tag + ': game sheet shows the classic Stars logo, loaded (' + lg.map(i => i.src.split('/').pop()).join(', ') + ')');
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v11-stars-sheet-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v12-stars-sheet-' + w + '.png') });
         await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       }
     }
@@ -179,24 +196,24 @@ async function open(b, w, mob, cs, errs, hgt) {
           cards: bs.map(b => ({ st: ['pre', 'in', 'post'].find(s => b.classList.contains(s)), t: b.querySelector('.m1').textContent, l: b.querySelectorAll('.m1')[1].textContent, m2: b.querySelector('.m2').textContent, red: /239, 68, 68/.test(getComputedStyle(b).borderRightColor) })) }; });
       console.log('   ' + tag + ': golf ' + gc.cards.map(c => c.st + ' [' + c.t + ' | ' + c.l + ' | ' + c.m2 + ']').join(' ; ') + (gc.nop ? ' | ' + gc.nop : '') + (gc.more ? ' | ' + gc.more : ''));
       ok(gc.col && gc.img && gc.chip === 'Golf', tag + ': a Golf column with its picture and chip');
-      if (!cs.golf) ok(gc.nop === 'No play today' && gc.n === 0, tag + ': no golf today, the column says "No play today" (' + gc.nop + ')');
+      if (!cs.golf || cs.golf === 'others') ok(gc.nop === 'No play today' && gc.n === 0 && !gc.more, tag + ': no PGA Tour event or major today, the column says "No play today" (' + gc.nop + ')');
       else ok(gc.n > 0 && !gc.nop && gc.inCol, tag + ': golf tournaments on the board (' + gc.n + ')');
-      if (cs.golf === 'real') ok(gc.cards.some(c => /Baycurrent/.test(c.t) && c.st === 'pre' && /R3 tees 9:35/.test(c.m2) && /Golf Chnl/.test(c.m2)), tag + ': the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown');
-      if (cs.golf === 'busy') {
-        const lv = gc.cards.filter(c => c.st === 'in');
-        ok(lv.length >= 2 && lv.every(c => c.red && /in progress/.test(c.m2)), tag + ': rounds under way are red, "in progress" (' + lv.length + ')');
-        ok(gc.cards.every(c => /(-\d+|E|\+\d+)$/.test(c.l.trim())), tag + ': every tournament card names its leader and score');
-        ok(/^\+1 more$/.test(gc.more), tag + ': five tournaments today, four of them overlapping: three lanes and "+1 more" (' + gc.more + ')');
-        const pos = await p.evaluate(() => { const b = document.querySelector('.b.gf[data-g^="pgac:"]'); return b ? +b.dataset.s : -1; });
-        ok(pos === 600, tag + ': the Champions round sits at its first tee time, 10 AM Central (' + pos + ' min)');
-        await p.evaluate(() => document.querySelector('.hd .ch[data-k="golf"] .more').scrollIntoView({ inline: 'center' })); await p.waitForTimeout(150);
-        await p.click('.hd .ch[data-k="golf"] .more'); await p.waitForTimeout(300);
-        const ml = await p.evaluate(() => ({ lead: (document.querySelector('#gsb .lead') || {}).textContent || '', rows: document.querySelectorAll('#gsb .mi').length, done: [...document.querySelectorAll('#gsb .mi.post .mt')].map(x => x.textContent).join(', ') }));
-        ok(ml.rows === 5 && /5 tournaments today/.test(ml.lead), tag + ': golf "+1 more" lists all five tournaments (' + ml.lead + ')');
-        ok(/R2 complete/.test(ml.done), tag + ': a round done for the day says so (' + ml.done + ')');
-        if (shoot) await p.screenshot({ path: shot('golf-more') });
-        await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      {   // v12: PGA Tour and majors only; no other tour's lane, chip or "+N more", and no other tour's feed asked for
+        const gk = await p.evaluate(() => ({ keys: [...document.querySelectorAll('.b.gf')].map(b => b.dataset.g.split(':')[0]), other: [...document.querySelectorAll('.b.gf')].filter(b => /LPGA|LIV|DP World|Champions|Korn Ferry|FURYK|Shanghai|Espa/i.test(b.textContent)).length }));
+        ok(gk.keys.every(x => x === 'pga') && gk.other === 0 && !gc.more, tag + ': golf column holds PGA Tour events and majors only (' + (gk.keys.join(',') || 'none') + ')');
+        const asked = p.hits.filter(h => h.startsWith("golf/")).map(h => h.split(':')[0]);
+        ok(asked.length > 0 && asked.every(h => h === 'golf/pga'), tag + ': only the PGA Tour golf feed is read (' + [...new Set(asked)].join(', ') + ')');
       }
+      if (cs.golf === 'real' || cs.golf === 'busy') ok(gc.n === 1 && /Baycurrent/.test(gc.cards[0].t), tag + ': a day with PGA plus other tours shows only the PGA event (' + gc.cards.map(c => c.t).join(', ') + ')');
+      if (cs.golf === 'major') ok(gc.n === 1 && /Masters/.test(gc.cards[0].t) && gc.cards[0].st === 'in' && gc.cards[0].red, tag + ': a major week shows the major, live and red (' + gc.cards.map(c => c.st + ' ' + c.t).join(', ') + ')');
+      if (tag.endsWith('@1440x900') && cs.tag === 'today') {   // v12: the matcher itself
+        const mk = await p.evaluate(() => { const P = { key: 'pga' }, X = { key: 'lpga' }, E = n => ({ name: n });
+          return [golfKeep(X, E('Masters Tournament')), golfKeep(X, E('PGA Championship')), golfKeep(X, E('U.S. Open')), golfKeep(X, E('The Open Championship')), golfKeep(X, E('The Open')),
+            golfKeep(P, E('Baycurrent Classic')), !golfKeep(X, E('Buick LPGA Shanghai')), !golfKeep(P, E('Buick LPGA Shanghai')), !golfKeep(P, E("KPMG Women's PGA Championship")),
+            !golfKeep(P, E('U.S. Senior Open')), !golfKeep(X, E('Open de Espana')), !golfKeep(P, E('LIV Golf Michigan')), !golfKeep(X, E('Korn Ferry Tour Championship'))]; });
+        ok(mk.every(Boolean), tag + ': majors match by name from any feed, PGA feed events pass, other tours and senior and women majors do not (' + mk.map(x => x ? 1 : 0).join('') + ')');
+      }
+      if (cs.golf === 'real') ok(gc.cards.some(c => /Baycurrent/.test(c.t) && c.st === 'pre' && /R3 tees 9:35/.test(c.m2) && /Golf Chnl/.test(c.m2)), tag + ': the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown');
       if (shoot && cs.golf) {   // the board with the golf column in view
         await p.evaluate(() => { const c = document.querySelector('.hd .ch[data-k="golf"]'), dg = document.getElementById('dg'); dg.scrollLeft = Math.max(0, c.offsetLeft - 8); });
         await p.waitForTimeout(150);
