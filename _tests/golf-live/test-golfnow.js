@@ -11,7 +11,7 @@ const land = grab('index.html'), green = grab('the-green/index.html');
 let pass = 0, fail = 0;
 function ok(c, msg) { if (c) { pass++; console.log('PASS', msg); } else { fail++; console.log('FAIL', msg); } }
 ok(land === green, 'golfNow is the same code in index.html and the-green/index.html');
-ok(land === grab('live/index.html'), 'golfNow is the same code in live/index.html (Live v11 golf column)');
+ok(land === grab('schedule/index.html'), 'golfNow is the same code in schedule/index.html (the day grid golf column, Live v11, now Schedule v1)');   // live-split: the classic Live page has no golf
 const golfNow = new Function(land + '\nreturn golfNow;')();
 const clone = o => JSON.parse(JSON.stringify(o)), ev = f => clone(S(f).events[0]);
 const T = s => Date.parse(s), NOW = T('2026-10-08T21:24:00Z');   // when the samples were fetched (4:24 PM Central)

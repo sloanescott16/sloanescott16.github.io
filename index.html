@@ -31,6 +31,8 @@ h1{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.14em;text-trans
 .live:hover,.live:focus-visible{transform:translateY(-2px);border-color:#ef4444;box-shadow:0 8px 24px rgba(239,68,68,.25);outline:none}
 .live.pl{margin-left:8px}.live.pl:hover,.live.pl:focus-visible{border-color:#3b82f6;box-shadow:0 8px 24px rgba(59,130,246,.25)}   /* v33 */
 .live.sch:hover,.live.sch:focus-visible{border-color:#8a98b3;box-shadow:0 8px 24px rgba(138,152,179,.22)}   /* v34: Schedule pill */
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px}.pills .live{margin:0}   /* v34: the pills in one row */
+@media (max-width:420px){.pills .live{padding:8px 13px;gap:7px;font-size:14px;letter-spacing:.12em}}
 @keyframes lp{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
 @media (prefers-reduced-motion:reduce){.live.on i{animation:none}}
 .sub{color:var(--dim);font-size:14px;margin-bottom:28px;letter-spacing:.04em}
@@ -126,9 +128,11 @@ a.tile.gf:hover .cup,a.tile.gf:focus-visible .cup{box-shadow:0 0 0 3px #4a5b80,0
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="cut"><feComponentTransfer><feFuncA type="linear" slope="1.6" intercept="-0.45"/></feComponentTransfer></filter></svg>
 <h1>Press Box</h1>
+<div class="pills"><!-- v34: Live, Schedule and Players side by side -->
 <a class="live" id="live" href="https://sloanescott16.github.io/live/"><i></i><span id="liveT">Live</span></a>
 <a class="live pl sch" href="https://sloanescott16.github.io/schedule/" aria-label="Schedule, every game today by time">Schedule</a><!-- v34: the by-time day grid; Live is the in-progress scoreboard -->
 <a class="live pl" href="https://sloanescott16.github.io/player/" aria-label="Find a player">Players</a><!-- v33: player search, career and bio for any player -->
+</div>
 <main class="grid">
   <div class="tile fb split" id="tFb"><span class="lv"><i></i>Live</span>
     <span class="pair"><img src="https://a.espncdn.com/i/teamlogos/nfl/500/dal.png" alt=""><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt=""></span>

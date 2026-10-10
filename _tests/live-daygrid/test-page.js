@@ -1,4 +1,5 @@
-/* Page check for Live v12 (v11 with the golf column cut to the PGA Tour and the majors), the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
+/* live-split (job 1010-1240-nml): this page is now /schedule/ (Schedule v1) and this check runs the desk grid at 1440x900; the phone list has its own check.
+   Page check for Live v12 (v11 with the golf column cut to the PGA Tour and the majors), the day grid turned on its side (sport columns, hours down the right).  bun _tests/live-daygrid/test-page.js
    Serves this worktree on localhost. Every ESPN and MLB feed is answered from samples saved with grab.sh (real feeds);
    team logos and fonts load from the real CDN so the screenshots look right. Screenshots go to preview/.
    Cases: today (9 Oct, real clock), and a busy Saturday (10 Oct, clock held at 3:30 PM Central, game states set by
@@ -97,11 +98,11 @@ async function open(b, w, mob, cs, errs, hgt) {
 (async () => {
   const b = await chromium.launch(); const errs = [];
   // v10: the PC (1440x900) and two phones (390x844, 375x667); screenshots at the PC and the 390 phone
-  for (const cs of CASES) for (const [w, mob, hgt] of [[1440, false, 900], [390, true, 844], [375, true, 667]]) {
+  for (const cs of CASES) for (const [w, mob, hgt] of [[1440, false, 900]]) {   // live-split: the grid is the desk layout; phones get the by-time list, checked by _tests/live-split/test-phone.js
     const { ctx, p, tag } = await open(b, w, mob, cs, errs, hgt);
-    const shot = (extra) => path.join(OUT, 'live-v12-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'busy-saturday' ? 'busy' : cs.tag) + (extra ? '-' + extra : '') + '.png');
+    const shot = (extra) => path.join(OUT, 'schedule-v1-' + (mob ? 'phone' : 'pc') + '-' + (cs.tag === 'busy-saturday' ? 'busy' : cs.tag) + (extra ? '-' + extra : '') + '.png');
     const shoot = w !== 375;
-    await p.goto('http://localhost:' + srv.port + '/live/');
+    await p.goto('http://localhost:' + srv.port + '/schedule/');
     await p.waitForFunction(() => document.getElementById('meta').textContent.startsWith('Updated'), undefined, { timeout: 20000 });
     await p.waitForTimeout(400);
     const r = await p.evaluate(() => { const dg = document.getElementById('dg'), now = dg.querySelector('.now'), hd = dg.querySelector('.hd'), gut = dg.querySelector('.gut'), labs = [...dg.querySelectorAll('.hd .ch img')];
@@ -176,11 +177,11 @@ async function open(b, w, mob, cs, errs, hgt) {
       ok(!!sb, tag + ': a Stars game card is on the grid (' + sb + ')');
       if (sb) {
         await p.waitForTimeout(200);
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v12-stars-grid-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'schedule-v1-stars-grid-' + w + '.png') });
         await p.click('.b[data-g="' + sb + '"]'); await p.waitForTimeout(500);
         const lg = await p.evaluate(() => [...document.querySelectorAll('#gs .g img')].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })));
         ok(lg.some(i => /stars-classic-dark.svg$/.test(i.src) && i.ok), tag + ': game sheet shows the classic Stars logo, loaded (' + lg.map(i => i.src.split('/').pop()).join(', ') + ')');
-        if (shoot) await p.screenshot({ path: path.join(OUT, 'live-v12-stars-sheet-' + w + '.png') });
+        if (shoot) await p.screenshot({ path: path.join(OUT, 'schedule-v1-stars-sheet-' + w + '.png') });
         await p.keyboard.press('Escape'); await p.waitForTimeout(200);
       }
     }

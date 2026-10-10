@@ -1,0 +1,58 @@
+PASS landing @375: pills Live (to /live/), Schedule (to /schedule/), Players (Live https://sloanescott16.github.io/live/ | Schedule https://sloanescott16.github.io/schedule/ | Players https://sloanescott16.github.io/player/)
+PASS landing @375: the pills sit inside the screen, no sideways scroll (375 of 375, one row)
+PASS landing @390: pills Live (to /live/), Schedule (to /schedule/), Players (Live https://sloanescott16.github.io/live/ | Schedule https://sloanescott16.github.io/schedule/ | Players https://sloanescott16.github.io/player/)
+PASS landing @390: the pills sit inside the screen, no sideways scroll (390 of 390, one row)
+PASS landing @1440: pills Live (to /live/), Schedule (to /schedule/), Players (Live https://sloanescott16.github.io/live/ | Schedule https://sloanescott16.github.io/schedule/ | Players https://sloanescott16.github.io/player/)
+PASS landing @1440: the pills sit inside the screen, no sideways scroll (1440 of 1440, one row)
+PASS schedule today @375x667: Schedule is the day grid (Schedule v1, 19 cards, title "(11) Schedule · Press Box")
+PASS schedule today @375x667: the board does not scroll sideways (357 of 357)
+PASS schedule today @375x667: the page does not scroll sideways (375 of 375)
+schedule today @375x667: page 375x667 in 375x667 | board content 357x719 in 357x562
+PASS schedule today @390x844: Schedule is the day grid (Schedule v1, 19 cards, title "(11) Schedule · Press Box")
+PASS schedule today @390x844: the board does not scroll sideways (372 of 372)
+PASS schedule today @390x844: the page does not scroll sideways (390 of 390)
+schedule today @390x844: page 390x844 in 390x844 | board content 372x719 in 372x719
+PASS schedule today @1440x900: Schedule is the day grid (Schedule v1, 41 cards, title "(11) Schedule · Press Box")
+PASS schedule today @1440x900: the page does not scroll sideways (1440 of 1440)
+schedule today @1440x900: page 1440x924 in 1440x900 | board content 1374x1097 in 1374x778
+PASS schedule busy @375x667: Schedule is the day grid (Schedule v1, 18 cards, title "(10) Schedule · Press Box")
+PASS schedule busy @375x667: the board does not scroll sideways (357 of 357)
+PASS schedule busy @375x667: the page does not scroll sideways (375 of 375)
+schedule busy @375x667: page 375x667 in 375x667 | board content 357x695 in 357x562
+PASS schedule busy @390x844: Schedule is the day grid (Schedule v1, 18 cards, title "(10) Schedule · Press Box")
+PASS schedule busy @390x844: the board does not scroll sideways (372 of 372)
+PASS schedule busy @390x844: the page does not scroll sideways (390 of 390)
+schedule busy @390x844: page 390x844 in 390x844 | board content 372x695 in 372x695
+PASS schedule busy @1440x900: Schedule is the day grid (Schedule v1, 38 cards, title "(10) Schedule · Press Box")
+PASS schedule busy @1440x900: the page does not scroll sideways (1440 of 1440)
+schedule busy @1440x900: page 1440x924 in 1440x900 | board content 1374x1097 in 1374x778
+PASS live today @375x667: Live is the classic scoreboard (Live v13, no day grid)
+PASS live today @375x667: Later today and Finals today lists below, as in the classic page
+PASS live today @375x667: the page does not scroll sideways (375 of 375)
+live today @375x667: page 375x6101 in 375x667 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
+PASS live today @390x844: Live is the classic scoreboard (Live v13, no day grid)
+PASS live today @390x844: Later today and Finals today lists below, as in the classic page
+PASS live today @390x844: the page does not scroll sideways (390 of 390)
+live today @390x844: page 390x6082 in 390x844 | past the edge: SPAN. SMALL. SPAN. SPAN. SMALL.
+PASS live today @1440x900: Live is the classic scoreboard (Live v13, no day grid)
+PASS live today @1440x900: Later today and Finals today lists below, as in the classic page
+PASS live today @1440x900: the page does not scroll sideways (1440 of 1440)
+live today @1440x900: page 1440x2375 in 1440x900 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
+PASS live busy @375x667: Live is the classic scoreboard (Live v13, no day grid)
+PASS live busy @375x667: live games as cards under their league heads (21 cards; College football18 live, NHL2 live, LALIGA1 live)
+PASS live busy @375x667: Later today and Finals today lists below, as in the classic page
+PASS live busy @375x667: the page does not scroll sideways (375 of 375)
+live busy @375x667: page 375x7160 in 375x667 | past the edge: SPAN. SMALL. SPAN. SPAN. SMALL.
+PASS live busy @390x844: Live is the classic scoreboard (Live v13, no day grid)
+PASS live busy @390x844: live games as cards under their league heads (21 cards; College football18 live, NHL2 live, LALIGA1 live)
+PASS live busy @390x844: Later today and Finals today lists below, as in the classic page
+PASS live busy @390x844: the page does not scroll sideways (390 of 390)
+live busy @390x844: page 390x7141 in 390x844 | past the edge: SPAN. SMALL. SPAN. SPAN. SMALL.
+PASS live busy @1440x900: Live is the classic scoreboard (Live v13, no day grid)
+PASS live busy @1440x900: live games as cards under their league heads (21 cards; College football18 live, NHL2 live, LALIGA1 live)
+PASS live busy @1440x900: Later today and Finals today lists below, as in the classic page
+PASS live busy @1440x900: the page does not scroll sideways (1440 of 1440)
+live busy @1440x900: page 1440x2466 in 1440x900 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
+PASS no page errors
+
+PASSED 44/44
