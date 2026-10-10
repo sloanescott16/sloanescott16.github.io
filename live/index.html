@@ -218,14 +218,18 @@ const LEAGUES = [
   // which also carries the four men's majors; LPGA, LIV, DP World, Champions and Korn Ferry are not read at all
   golf("pga",  "PGA Tour",           "pga",            "PGA")
 ];
-/* v12: which tournaments the Golf column shows. A major by name, from any feed; otherwise only the PGA Tour feed, and
-   never an event whose name says it belongs to another tour (in case one ever rides on the PGA board). */
-const MAJOR = /\b(masters tournament|pga championship|u\.?\s?s\.? open( championship)?|open championship)\b|^(the )?masters$|^the open$/i;
-const OTHER_TOUR = /\b(lpga|liv golf|dp world|korn ferry|champions tour|pga tour champions|senior|women'?s|ladies|amateur|challenge tour|asian tour|sunshine tour)\b/i;
+/* v12: which tournaments the Golf column shows. Names are normalised first (curly quotes made straight, dots dropped, spaces
+   collapsed, lower case, any "presented by" tail cut). A name that says another tour or field (women, ladies, girls, junior,
+   senior, amateur, champions, LPGA, LIV, DP World, Korn Ferry) is dropped, from any feed; "Tournament of Champions" is a
+   PGA Tour event and stays. Then a major by its whole name, from any feed; otherwise only the PGA Tour feed. */
+const golfName = n => String(n || "").replace(/[\u2018\u2019\u201A\u201B\u2032]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\./g, "")
+  .replace(/\s+/g, " ").trim().toLowerCase().replace(/\s+(presented|pres|powered|hosted)\b.*$/, "").trim();
+const OTHER_TOUR = /\b(women|womens|women's|ladies|girls|junior|juniors|senior|seniors|amateur|amateurs|champions|lpga|liv|dp world|korn ferry)\b/;
+const MAJORS = { "masters tournament":1, "the masters":1, "masters":1, "pga championship":1, "us open":1, "the open championship":1, "the open":1 };
 function golfKeep(lg, ev) {
-  const ns = [(ev || {}).name, (ev || {}).shortName].map(x => String(x || "").trim()).filter(Boolean);
-  if (ns.some(n => OTHER_TOUR.test(n))) return false;
-  return ns.some(n => MAJOR.test(n)) || (lg || {}).key === "pga";
+  const ns = [(ev || {}).name, (ev || {}).shortName].map(golfName).filter(Boolean);
+  if (ns.some(n => OTHER_TOUR.test(n.replace(/\btournament of champions\b/g, "")))) return false;
+  return ns.some(n => MAJORS[n]) || (lg || {}).key === "pga";
 }
 function golf(key, label, slug, chip) { return { key, label, path:"golf/" + slug, q:"", golf:true, chip, href:SITE+"the-green/#home" }; }
 /* league-look: the short league mark shown as a chip on every list row */

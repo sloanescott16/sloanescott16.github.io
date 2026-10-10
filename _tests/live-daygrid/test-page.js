@@ -210,7 +210,10 @@ async function open(b, w, mob, cs, errs, hgt) {
         const mk = await p.evaluate(() => { const P = { key: 'pga' }, X = { key: 'lpga' }, E = n => ({ name: n });
           return [golfKeep(X, E('Masters Tournament')), golfKeep(X, E('PGA Championship')), golfKeep(X, E('U.S. Open')), golfKeep(X, E('The Open Championship')), golfKeep(X, E('The Open')),
             golfKeep(P, E('Baycurrent Classic')), !golfKeep(X, E('Buick LPGA Shanghai')), !golfKeep(P, E('Buick LPGA Shanghai')), !golfKeep(P, E("KPMG Women's PGA Championship")),
-            !golfKeep(P, E('U.S. Senior Open')), !golfKeep(X, E('Open de Espana')), !golfKeep(P, E('LIV Golf Michigan')), !golfKeep(X, E('Korn Ferry Tour Championship'))]; });
+            !golfKeep(P, E('U.S. Senior Open')), !golfKeep(X, E('Open de Espana')), !golfKeep(P, E('LIV Golf Michigan')), !golfKeep(X, E('Korn Ferry Tour Championship')),
+            !golfKeep(P, E('Women’s PGA Championship')), !golfKeep(X, E('Women’s PGA Championship')), !golfKeep(P, E('U.S. Women’s Open Championship')), !golfKeep(X, E('U.S. Women’s Open Championship')),
+            !golfKeep(P, E('Junior PGA Championship')), !golfKeep(X, E('Junior PGA Championship')), !golfKeep(X, E('Senior PGA Championship')), !golfKeep(X, E('U.S. Amateur')), !golfKeep(X, E('Girls Junior PGA Championship')),
+            !golfKeep(X, E('PGA Championship Qualifier')), golfKeep(X, E('  The   Masters ')), golfKeep(P, E('The Sentry Tournament of Champions')), golfKeep(X, E('PGA Championship presented by Acme')), golfName('Shriners’ 2032 Open') === "shriners' 2032 open"]; });
         ok(mk.every(Boolean), tag + ': majors match by name from any feed, PGA feed events pass, other tours and senior and women majors do not (' + mk.map(x => x ? 1 : 0).join('') + ')');
       }
       if (cs.golf === 'real') ok(gc.cards.some(c => /Baycurrent/.test(c.t) && c.st === 'pre' && /R3 tees 9:35/.test(c.m2) && /Golf Chnl/.test(c.m2)), tag + ': the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown');

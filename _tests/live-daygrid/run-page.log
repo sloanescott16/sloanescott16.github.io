@@ -25,14 +25,14 @@ PASS today @1440x900: golf tournaments on the board (1)
 PASS today @1440x900: golf column holds PGA Tour events and majors only (pga)
 PASS today @1440x900: only the PGA Tour golf feed is read (golf/pga)
 PASS today @1440x900: a day with PGA plus other tours shows only the PGA event (PGABaycurrent Classic)
-PASS today @1440x900: majors match by name from any feed, PGA feed events pass, other tours and senior and women majors do not (1111111111111)
+PASS today @1440x900: majors match by name from any feed, PGA feed events pass, other tours and senior and women majors do not (111111111111111111111111111)
 PASS today @1440x900: the Baycurrent Classic waits for its 9:35 PM Central tee times, network shown
 PASS today @1440x900: tapping a tournament opens its sheet, top five and a link to The Green (5 rows; PGA Tour · R3 tees 9:35–11:36 PMThe Green ›)
 PASS today @1440x900: "+N more" opens the full list (4 of 4 games)
 PASS today @1440x900: a game in the list opens its card
 PASS today @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @1440x900: Escape closes the card
-   today @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,575 | hours 7 AM..12 AM
+   today @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,577 | hours 7 AM..12 AM
 PASS today @390x844: one column per sport with its picture loaded in the header
 PASS today @390x844: the old league sections and chip list rows are gone
 PASS today @390x844: Press Box button, update stamp and the summary line are there
@@ -42,7 +42,7 @@ PASS today @390x844: the hours run down the right-hand side (18 names; 329 379 3
 PASS today @390x844: in each column the cards run down by start time
 PASS today @390x844: every card sits inside its own sport's column
 PASS today @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS today @390x844: the board fits the window (ends at 828 of 844)
+PASS today @390x844: the board fits the window (ends at 826 of 844)
 PASS today @390x844: no two game cards overlap
 PASS today @390x844: the page itself does not scroll sideways
 PASS today @390x844: first drawing uses the phone layout (hours 50 px)
@@ -65,7 +65,7 @@ PASS today @390x844: "+N more" opens the full list (4 of 4 games)
 PASS today @390x844: a game in the list opens its card
 PASS today @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS today @390x844: Escape closes the card
-   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,678 | hours 7 AM..12 AM
+   today @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 4 | 5 live4 still to come1 final | scroll 170,684 | hours 7 AM..12 AM
 PASS today @375x667: one column per sport with its picture loaded in the header
 PASS today @375x667: the old league sections and chip list rows are gone
 PASS today @375x667: Press Box button, update stamp and the summary line are there
@@ -75,7 +75,7 @@ PASS today @375x667: the hours run down the right-hand side (18 names; 314 364 3
 PASS today @375x667: in each column the cards run down by start time
 PASS today @375x667: every card sits inside its own sport's column
 PASS today @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS today @375x667: the board fits the window (ends at 651 of 667)
+PASS today @375x667: the board fits the window (ends at 649 of 667)
 PASS today @375x667: no two game cards overlap
 PASS today @375x667: the page itself does not scroll sideways
 PASS today @375x667: first drawing uses the phone layout (hours 50 px)
@@ -143,7 +143,7 @@ PASS busy-saturday @390x844: the hours run down the right-hand side (20 names; 3
 PASS busy-saturday @390x844: in each column the cards run down by start time
 PASS busy-saturday @390x844: every card sits inside its own sport's column
 PASS busy-saturday @390x844: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
-PASS busy-saturday @390x844: the board fits the window (ends at 826 of 844)
+PASS busy-saturday @390x844: the board fits the window (ends at 828 of 844)
 PASS busy-saturday @390x844: no two game cards overlap
 PASS busy-saturday @390x844: the page itself does not scroll sideways
 PASS busy-saturday @390x844: first drawing uses the phone layout (hours 50 px)
@@ -178,7 +178,7 @@ PASS busy-saturday @375x667: the hours run down the right-hand side (20 names; 3
 PASS busy-saturday @375x667: in each column the cards run down by start time
 PASS busy-saturday @375x667: every card sits inside its own sport's column
 PASS busy-saturday @375x667: no sport column takes more than 3 lanes (3), cfb +9 more, nhl +6 more, nba +3 more, soc +9 more
-PASS busy-saturday @375x667: the board fits the window (ends at 651 of 667)
+PASS busy-saturday @375x667: the board fits the window (ends at 649 of 667)
 PASS busy-saturday @375x667: no two game cards overlap
 PASS busy-saturday @375x667: the page itself does not scroll sideways
 PASS busy-saturday @375x667: first drawing uses the phone layout (hours 50 px)
@@ -242,7 +242,7 @@ PASS golf @390x844: the hours run down the right-hand side (18 names; 329 379 37
 PASS golf @390x844: in each column the cards run down by start time
 PASS golf @390x844: every card sits inside its own sport's column
 PASS golf @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS golf @390x844: the board fits the window (ends at 828 of 844)
+PASS golf @390x844: the board fits the window (ends at 826 of 844)
 PASS golf @390x844: no two game cards overlap
 PASS golf @390x844: the page itself does not scroll sideways
 PASS golf @390x844: first drawing uses the phone layout (hours 50 px)
@@ -271,7 +271,7 @@ PASS golf @375x667: the hours run down the right-hand side (18 names; 314 364 36
 PASS golf @375x667: in each column the cards run down by start time
 PASS golf @375x667: every card sits inside its own sport's column
 PASS golf @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS golf @375x667: the board fits the window (ends at 649 of 667)
+PASS golf @375x667: the board fits the window (ends at 651 of 667)
 PASS golf @375x667: no two game cards overlap
 PASS golf @375x667: the page itself does not scroll sideways
 PASS golf @375x667: first drawing uses the phone layout (hours 50 px)
@@ -354,7 +354,7 @@ PASS others @375x667: the hours run down the right-hand side (18 names; 314 364 
 PASS others @375x667: in each column the cards run down by start time
 PASS others @375x667: every card sits inside its own sport's column
 PASS others @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS others @375x667: the board fits the window (ends at 651 of 667)
+PASS others @375x667: the board fits the window (ends at 649 of 667)
 PASS others @375x667: no two game cards overlap
 PASS others @375x667: the page itself does not scroll sideways
 PASS others @375x667: first drawing uses the phone layout (hours 50 px)
@@ -403,7 +403,7 @@ PASS major @1440x900: "+N more" opens the full list (4 of 4 games)
 PASS major @1440x900: a game in the list opens its card
 PASS major @1440x900: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS major @1440x900: Escape closes the card
-   major @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,575 | hours 7 AM..12 AM
+   major @390x844: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,577 | hours 7 AM..12 AM
 PASS major @390x844: one column per sport with its picture loaded in the header
 PASS major @390x844: the old league sections and chip list rows are gone
 PASS major @390x844: Press Box button, update stamp and the summary line are there
@@ -413,7 +413,7 @@ PASS major @390x844: the hours run down the right-hand side (18 names; 329 379 3
 PASS major @390x844: in each column the cards run down by start time
 PASS major @390x844: every card sits inside its own sport's column
 PASS major @390x844: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS major @390x844: the board fits the window (ends at 828 of 844)
+PASS major @390x844: the board fits the window (ends at 826 of 844)
 PASS major @390x844: no two game cards overlap
 PASS major @390x844: the page itself does not scroll sideways
 PASS major @390x844: first drawing uses the phone layout (hours 50 px)
@@ -435,7 +435,7 @@ PASS major @390x844: "+N more" opens the full list (4 of 4 games)
 PASS major @390x844: a game in the list opens its card
 PASS major @390x844: tapping a game opens its card (links to https://sloanescott16.github.io/lone-star-board/?lg=cfb#game-401856826, 3 player names)
 PASS major @390x844: Escape closes the card
-   major @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,752 | hours 7 AM..12 AM
+   major @375x667: columns College football, Hockey, Basketball, Soccer, Golf | blocks 9 | live 3 | 3 live0 still to come7 final | scroll 0,754 | hours 7 AM..12 AM
 PASS major @375x667: one column per sport with its picture loaded in the header
 PASS major @375x667: the old league sections and chip list rows are gone
 PASS major @375x667: Press Box button, update stamp and the summary line are there
@@ -445,7 +445,7 @@ PASS major @375x667: the hours run down the right-hand side (18 names; 314 364 3
 PASS major @375x667: in each column the cards run down by start time
 PASS major @375x667: every card sits inside its own sport's column
 PASS major @375x667: no sport column takes more than 3 lanes (3), nhl +1 more
-PASS major @375x667: the board fits the window (ends at 651 of 667)
+PASS major @375x667: the board fits the window (ends at 649 of 667)
 PASS major @375x667: no two game cards overlap
 PASS major @375x667: the page itself does not scroll sideways
 PASS major @375x667: first drawing uses the phone layout (hours 50 px)
