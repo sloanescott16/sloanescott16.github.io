@@ -196,10 +196,11 @@ h2{border-left-color:#33415e}
   .meta{width:100%;margin-left:0;text-align:left;font-size:12px}
   .sum{margin:0 0 6px;gap:4px 12px;font-size:13px}
   .dg{margin:0;border-radius:10px}
+  .row .ph{font-size:11px}   /* a missing team logo shows its letters, readable on the phone too */
 }
 .dg.pl{overflow-x:hidden;overflow-y:auto}
 .dg.pl .dgi{width:auto}
-.ph{position:sticky;top:0;z-index:2;padding:4px 10px;background:#0d1526;border-bottom:1px solid var(--line);
+.lh{position:sticky;top:0;z-index:2;padding:4px 10px;background:#0d1526;border-bottom:1px solid var(--line);
   font:500 12px/16px Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 .pb{display:flex;flex-direction:column}
 .pr{display:grid;grid-template-columns:62px 42px minmax(0,1fr);align-items:center;gap:0 8px;width:100%;padding:6px 10px;border:0;border-bottom:1px solid rgba(34,48,74,.6);
@@ -583,7 +584,7 @@ function listView(today, live, day, nowM, dg, dgi) {
   let html = "", cur = null;
   for (const g of gs) {
     const h = hr(at(g));
-    if (h !== cur) { if (cur !== null) html += "</div>"; cur = h; html += `<div class="ph" data-h="${h}">${h < 0 ? "Earlier" : hourName(h)}</div><div class="pb">`; }
+    if (h !== cur) { if (cur !== null) html += "</div>"; cur = h; html += `<div class="lh" data-h="${h}">${h < 0 ? "Earlier" : hourName(h)}</div><div class="pb">`; }
     html += listRow(g);
   }
   if (cur !== null) html += "</div>";

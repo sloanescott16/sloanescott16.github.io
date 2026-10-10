@@ -22,3 +22,13 @@ Old v11 golf progress kept in _notes/live-golf-progress.md.
 - _tests/live-split/measure.js (split check plus width and height numbers): 44/44.
 - golfNow 27/27 (now compares schedule/index.html), publish-v9 smoke 24/24.
 - Handoff: _notes/live-split-handoff.md
+
+## Round 3 (checker fail, round 2 of 2) - rebase onto golf v12, phone list
+- Rebased live-split onto live-golf 643c581 (Live v12, PGA Tour and men's majors only). live/index.html stays the classic
+  page (Live v13); the golf hunks were applied to schedule/index.html, which now carries the v12 golf rules (Schedule v1).
+  test-page.js: the golf v12 version, pointed at /schedule/, runs the desk grid at 1440x900.
+- Phone (board under 560 px): the grid is replaced by a by-time list. Hour headings (sticky), one full-width row a game:
+  time or live clock, league chip, teams and score, network for games to come, rivalry line, golf rows. Live rows red.
+  Every game shown, nothing behind "+N", nothing under 11 px, no clipped text, no sideways scroll. Rows open the same sheet.
+- Fixed a class clash: the hour heading is .lh (the sheet's missing-logo letters use .ph, now 11 px on the phone).
+- Checks: split and phone 74/74 (375, 390, 1440), grid 146/147 at 1440 (Baycurrent clock-bound check), golfNow 27/27, smoke 24/24.

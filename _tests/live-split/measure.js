@@ -88,9 +88,9 @@ const CASES = [
           const clip = [...document.querySelectorAll('.pr, .pr *')].filter(e => e.scrollWidth > e.clientWidth + 1 && e.clientWidth || getComputedStyle(e).textOverflow === 'ellipsis')
             .map(e => e.className + ' "' + e.textContent.trim().slice(0, 16) + '"');
           const ins = rows.filter(r => r.classList.contains('in'));
-          return { sum, rows: rows.length, heads: document.querySelectorAll('.ph').length, more: document.querySelectorAll('.more').length, grid: document.querySelectorAll('.b').length, small, clip,
+          return { sum, rows: rows.length, heads: document.querySelectorAll('.lh').length, more: document.querySelectorAll('.more').length, grid: document.querySelectorAll('.b').length, small, clip,
             live: ins.length, liveSum: +((document.querySelector('#sum .lv b') || {}).textContent || 0), red: ins.every(r => /239, 68, 68/.test(getComputedStyle(r).borderLeftColor)),
-            byTime: [...document.querySelectorAll('.ph')].every((h, i, a) => !i || +h.dataset.h > +a[i - 1].dataset.h),
+            byTime: [...document.querySelectorAll('.lh')].every((h, i, a) => !i || +h.dataset.h > +a[i - 1].dataset.h),
             golf: rows.filter(r => r.classList.contains('gf')).map(r => r.querySelector('.pc').textContent + ' ' + r.querySelector('.pg').textContent),
             rival: document.querySelectorAll('.pr.rvg .prv').length, tallest: Math.max(...rows.map(r => r.offsetHeight)), rowH: Math.round(rows.reduce((a, r) => a + r.offsetHeight, 0) / (rows.length || 1)) }; });
         r.list = L;

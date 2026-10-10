@@ -37,3 +37,12 @@ Unsure
 - The pending golf branch live-golf (Live v12, 643c581) edits live/index.html, which here is the classic page. Merging it
   conflicts in live/index.html, test-page.js and run-page.log; its changes belong in schedule/index.html instead. Version
   marks: this branch uses Live v13 so as not to clash with that Live v12.
+
+## Round 3 update (supersedes the phone grid notes above)
+- Branch now sits on live-golf 643c581: golf v12 rules are in schedule/index.html; live/index.html is the classic page.
+- Phone: by-time list instead of the grid. 375x667 busy Saturday: 65 rows, 13 hour headings, rows 32 px on average,
+  list 2430 px tall in a 568 px board (the phone grid was 695 px but hid most games behind "+N"; v11 was 1234x1319 with sideways scroll).
+  Today sample: 66 rows, 2630 px. Width equals the board at 375 and 390.
+- Checks: bun _tests/live-split/measure.js r3 (74/74, includes the phone list checks: all games, under-11 px text, clipping,
+  live marking, PGA-only golf rows, Stars row opens its sheet). Grid: bun _tests/live-daygrid/test-page.js (146/147 at 1440).
+- Unsure: "Kickoff soon" wraps to two lines in the time column; golf rows sit at the round's first tee hour.
