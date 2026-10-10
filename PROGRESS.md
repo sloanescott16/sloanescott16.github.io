@@ -1,34 +1,24 @@
-# PROGRESS - Live v11, golf column (job 1009-1847-a28)
+# PROGRESS - Live split: Live and Schedule (job 1010-1240-nml)
 
-Branch live-golf in worktree hub-golf, from origin/main 161008b. Not pushed, not merged.
+Branch live-split in worktree hub-split, from origin/main 48cc4d4 (Live v11). Not pushed, not merged.
+Old v11 golf progress kept in _notes/live-golf-progress.md.
 
-## Stage 1 (19:00) - cause found
-Golf is not on Live because the Live page never had golf. Its LEAGUES list (the feeds it reads) and its SPORTS list
-(the columns) hold only NFL, CFB, MLB, NHL, NBA and soccer. Not keep(), not the lane cap, not a rendering fault.
-The golf live fix (1f7344b / 7747a5c) changed only the Press Box golf tile and The Green; its handoff says
-"The Live page has no golf". There is golf today: Baycurrent Classic R3 (PGA, tees 9:35 PM Central), Open de Espana R2
-(DP World, done), Korn Ferry Tour Championship R2 (done), Furyk & Friends R1 (Champions, done).
-- live/img/golf.webp: the golf tile's picture, copied out of the landing page by extract-icons.js.
-- _tests/live-daygrid/samples/golf-20261009: today's real ESPN golf scoreboards (pga, lpga, liv, eur, champions-tour, ntw).
+## Stage 1 - split
+- live/index.html: the classic in-progress scoreboard, restored from Live v8 at 1f7344b (the last Live before the day grid;
+  it already holds 693d436, the list-row ellipsis), plus the classic Stars logo hunk from 7329d22. Marked Live v13.
+- schedule/index.html: the day grid (Live v11) moved here, with its pictures in schedule/img. Marked Schedule v1, heading "Schedule".
+  live/img kept as it was (nothing removed).
+- Landing (Press Box v34): Live, Schedule and Players pills, side by side in one row.
 
-## Stage 2 - golf column built (Live v11)
-- live/index.html: six golf tours read (PGA, LPGA, LIV, DP World, Champions, Korn Ferry), once a minute. Each tournament is
-  a card in a Golf column (picture and chip like the others), placed from the first tee time of the round played today to
-  the last tee time plus five hours (ESPN gives every player's tee time; if none for today, 8 AM to 6 PM is assumed and said).
-  Card: tour chip and name, leader and score, then "R3 in progress" (red, live), "R3 tees 9:35–11:36 PM" or "R2 complete", and
-  the network. Live uses the shared golfNow rule (third identical copy, checked by test-golfnow.js) and never before the
-  first tee. Up to three lanes, then "+N more" (lists tournaments). Tap: sheet with round, tee window, top five, The Green link.
-  No golf today: the column stays, its head says "No play today".
-- Checks: test-page.js 277/277 (today real feeds, busy Saturday as the no-golf fixture, golf fixture at 1 PM with rounds
-  in progress); test-golfnow.js 27/27.
+## Stage 2 - Schedule on the phone
+- Phone (board under 560 px): every sport shares the width, hours 40 px wide, so nothing scrolls sideways.
+- Cards as tall as their text (52 px), 1 to 3 lanes a sport as the width allows, the rest behind "+N".
+- An hour with a game starting in it (or now) is 40 px; empty hours fold to 16 px. Slim header, network left to the game sheet.
+- Desktop untouched.
 
-## Stage 3 - checked and handed off
-- Golf sheet card edge made neutral like the others. Checks rerun: 277/277 and 27/27, no console or page errors.
-- Handoff: _notes/live-golf-handoff.md. Old v10 progress kept in _notes/live-vertical-progress.md.
-
-## Live v12 - PGA Tour and majors only (2026-10-09)
-- The Captain: "only pga tournaments and majors should get that treatment, don't care about other tours".
-- live/index.html: only the PGA Tour golf feed is read (LPGA, LIV, DP World, Champions, Korn Ferry feeds removed). golfKeep() keeps an event when its name is a men's major (Masters, PGA Championship, U.S. Open, The Open Championship) or it is on the PGA feed, and drops any name that says another tour, senior, women's or amateur. No PGA event or major: "No play today".
-- Tests (_tests/live-daygrid/test-page.js): new cases others (only other tours playing) and major (Masters on the PGA board, live); today and golf prove PGA plus other tours shows only the PGA event, no "+N more", only golf/pga requested; matcher unit check. 440/440, no console or page errors; test-golfnow.js 27/27. Screenshots preview/live-v12-*.png.
-- Not pushed or merged. Older preview/live-v11-*.png were re-rendered by an earlier test run and are left uncommitted.
-- Fix after check: golfKeep now normalises names (curly quotes, dots, spaces, case, "presented by" tail), drops women, ladies, girls, junior, senior, amateur, champions (not "Tournament of Champions"), LPGA, LIV, DP World, Korn Ferry, and matches majors by whole name only. Matcher check now 27 names. 440/440, golfNow 27/27.
+## Stage 3 - checks
+- _tests/live-daygrid/test-page.js now opens /schedule/ and also asserts no sideways board scroll on the phone: 274/277.
+  The 3 fails are the Baycurrent "waits for 9:35 PM tee" check, which reads the real clock against 9 Oct feeds; the same 3 fail on origin/main.
+- _tests/live-split/measure.js (split check plus width and height numbers): 44/44.
+- golfNow 27/27 (now compares schedule/index.html), publish-v9 smoke 24/24.
+- Handoff: _notes/live-split-handoff.md
