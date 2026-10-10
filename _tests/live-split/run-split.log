@@ -4,40 +4,74 @@ PASS landing @390: pills Live (to /live/), Schedule (to /schedule/), Players (Li
 PASS landing @390: the pills sit inside the screen, no sideways scroll (390 of 390, one row)
 PASS landing @1440: pills Live (to /live/), Schedule (to /schedule/), Players (Live https://sloanescott16.github.io/live/ | Schedule https://sloanescott16.github.io/schedule/ | Players https://sloanescott16.github.io/player/)
 PASS landing @1440: the pills sit inside the screen, no sideways scroll (1440 of 1440, one row)
-PASS schedule today @375x667: Schedule is the day grid (Schedule v1, 19 cards, title "(11) Schedule · Press Box")
+PASS schedule today @375x667: Schedule is the day view (Schedule v1, 0 cards, title "(11) Schedule · Press Box")
 PASS schedule today @375x667: the board does not scroll sideways (357 of 357)
+   schedule today @375x667: 66 rows under 14 hour heads, average row 34 px, tallest 61 | golf: PGA Baycurrent Classic
+PASS schedule today @375x667: phone shows the day as a list, every game a row, nothing behind "+N" (66 rows of 66)
+PASS schedule today @375x667: rows run by start time under hour headings
+PASS schedule today @375x667: no text under 11 px
+PASS schedule today @375x667: no clipped or cut-off text in the rows
+PASS schedule today @375x667: live games marked red (11 of 11)
+PASS schedule today @375x667: golf tournaments as rows, PGA Tour only (PGA Baycurrent Classic)
 PASS schedule today @375x667: the page does not scroll sideways (375 of 375)
-schedule today @375x667: page 375x667 in 375x667 | board content 357x719 in 357x562
-PASS schedule today @390x844: Schedule is the day grid (Schedule v1, 19 cards, title "(11) Schedule · Press Box")
+schedule today @375x667: page 375x667 in 375x667 | board content 357x2630 in 357x568
+PASS schedule today @390x844: Schedule is the day view (Schedule v1, 0 cards, title "(11) Schedule · Press Box")
 PASS schedule today @390x844: the board does not scroll sideways (372 of 372)
+   schedule today @390x844: 66 rows under 14 hour heads, average row 34 px, tallest 61 | golf: PGA Baycurrent Classic
+PASS schedule today @390x844: phone shows the day as a list, every game a row, nothing behind "+N" (66 rows of 66)
+PASS schedule today @390x844: rows run by start time under hour headings
+PASS schedule today @390x844: no text under 11 px
+PASS schedule today @390x844: no clipped or cut-off text in the rows
+PASS schedule today @390x844: live games marked red (11 of 11)
+PASS schedule today @390x844: golf tournaments as rows, PGA Tour only (PGA Baycurrent Classic)
 PASS schedule today @390x844: the page does not scroll sideways (390 of 390)
-schedule today @390x844: page 390x844 in 390x844 | board content 372x719 in 372x719
-PASS schedule today @1440x900: Schedule is the day grid (Schedule v1, 41 cards, title "(11) Schedule · Press Box")
+schedule today @390x844: page 390x844 in 390x844 | board content 372x2630 in 372x745
+PASS schedule today @1440x900: Schedule is the day view (Schedule v1, 39 cards, title "(11) Schedule · Press Box")
 PASS schedule today @1440x900: the page does not scroll sideways (1440 of 1440)
 schedule today @1440x900: page 1440x924 in 1440x900 | board content 1374x1097 in 1374x778
-PASS schedule busy @375x667: Schedule is the day grid (Schedule v1, 18 cards, title "(10) Schedule · Press Box")
+PASS schedule busy @375x667: Schedule is the day view (Schedule v1, 0 cards, title "(10) Schedule · Press Box")
 PASS schedule busy @375x667: the board does not scroll sideways (357 of 357)
+   schedule busy @375x667: 65 rows under 13 hour heads, average row 32 px, tallest 47 | golf: none
+PASS schedule busy @375x667: phone shows the day as a list, every game a row, nothing behind "+N" (65 rows of 65)
+PASS schedule busy @375x667: rows run by start time under hour headings
+PASS schedule busy @375x667: no text under 11 px
+PASS schedule busy @375x667: no clipped or cut-off text in the rows
+PASS schedule busy @375x667: live games marked red (10 of 10)
+PASS schedule busy @375x667: rivalry named on its row
+PASS schedule busy @375x667: a Stars game row is in the list (nhl:401892475)
+PASS schedule busy @375x667: tapping the row opens its card, classic Stars logo loaded
+PASS schedule busy @375x667: Escape closes the card
 PASS schedule busy @375x667: the page does not scroll sideways (375 of 375)
-schedule busy @375x667: page 375x667 in 375x667 | board content 357x695 in 357x562
-PASS schedule busy @390x844: Schedule is the day grid (Schedule v1, 18 cards, title "(10) Schedule · Press Box")
+schedule busy @375x667: page 375x667 in 375x667 | board content 357x2430 in 357x568
+PASS schedule busy @390x844: Schedule is the day view (Schedule v1, 0 cards, title "(10) Schedule · Press Box")
 PASS schedule busy @390x844: the board does not scroll sideways (372 of 372)
+   schedule busy @390x844: 65 rows under 13 hour heads, average row 32 px, tallest 47 | golf: none
+PASS schedule busy @390x844: phone shows the day as a list, every game a row, nothing behind "+N" (65 rows of 65)
+PASS schedule busy @390x844: rows run by start time under hour headings
+PASS schedule busy @390x844: no text under 11 px
+PASS schedule busy @390x844: no clipped or cut-off text in the rows
+PASS schedule busy @390x844: live games marked red (10 of 10)
+PASS schedule busy @390x844: rivalry named on its row
+PASS schedule busy @390x844: a Stars game row is in the list (nhl:401892475)
+PASS schedule busy @390x844: tapping the row opens its card, classic Stars logo loaded
+PASS schedule busy @390x844: Escape closes the card
 PASS schedule busy @390x844: the page does not scroll sideways (390 of 390)
-schedule busy @390x844: page 390x844 in 390x844 | board content 372x695 in 372x695
-PASS schedule busy @1440x900: Schedule is the day grid (Schedule v1, 38 cards, title "(10) Schedule · Press Box")
+schedule busy @390x844: page 390x844 in 390x844 | board content 372x2430 in 372x745
+PASS schedule busy @1440x900: Schedule is the day view (Schedule v1, 38 cards, title "(10) Schedule · Press Box")
 PASS schedule busy @1440x900: the page does not scroll sideways (1440 of 1440)
 schedule busy @1440x900: page 1440x924 in 1440x900 | board content 1374x1097 in 1374x778
 PASS live today @375x667: Live is the classic scoreboard (Live v13, no day grid)
 PASS live today @375x667: Later today and Finals today lists below, as in the classic page
 PASS live today @375x667: the page does not scroll sideways (375 of 375)
-live today @375x667: page 375x6101 in 375x667 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
+live today @375x667: page 375x6309 in 375x667 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
 PASS live today @390x844: Live is the classic scoreboard (Live v13, no day grid)
 PASS live today @390x844: Later today and Finals today lists below, as in the classic page
 PASS live today @390x844: the page does not scroll sideways (390 of 390)
-live today @390x844: page 390x6082 in 390x844 | past the edge: SPAN. SMALL. SPAN. SPAN. SMALL.
+live today @390x844: page 390x6290 in 390x844 | past the edge: SPAN. SMALL. SPAN. SPAN. SMALL.
 PASS live today @1440x900: Live is the classic scoreboard (Live v13, no day grid)
 PASS live today @1440x900: Later today and Finals today lists below, as in the classic page
 PASS live today @1440x900: the page does not scroll sideways (1440 of 1440)
-live today @1440x900: page 1440x2375 in 1440x900 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
+live today @1440x900: page 1440x2583 in 1440x900 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
 PASS live busy @375x667: Live is the classic scoreboard (Live v13, no day grid)
 PASS live busy @375x667: live games as cards under their league heads (21 cards; College football18 live, NHL2 live, LALIGA1 live)
 PASS live busy @375x667: Later today and Finals today lists below, as in the classic page
@@ -55,4 +89,4 @@ PASS live busy @1440x900: the page does not scroll sideways (1440 of 1440)
 live busy @1440x900: page 1440x2466 in 1440x900 | past the edge: SPAN. SPAN. SMALL. SPAN. SPAN.
 PASS no page errors
 
-PASSED 44/44
+PASSED 74/74

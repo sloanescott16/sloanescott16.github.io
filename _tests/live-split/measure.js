@@ -77,8 +77,42 @@ const CASES = [
       if (cs.clock) ok(c.cards > 0 && c.heads.some(t => /[0-9]+ live$/.test(t)), tag + ': live games as cards under their league heads (' + c.cards + ' cards; ' + c.heads.filter(t => /live$/.test(t)).join(', ') + ')');
       ok(c.heads.some(t => /^Later today/.test(t)) || c.heads.some(t => /^Finals today/.test(t)), tag + ': Later today and Finals today lists below, as in the classic page');
     } else {
-      ok(c.ver === 'Schedule v1' && c.dg && c.blocks > 0 && /Schedule · Press Box$/.test(c.title), tag + ': Schedule is the day grid (' + c.ver + ', ' + c.blocks + ' cards, title "' + c.title + '")');
+      ok(c.ver === 'Schedule v1' && c.dg && (w < 560 || c.blocks > 0) && /Schedule · Press Box$/.test(c.title), tag + ': Schedule is the day view (' + c.ver + ', ' + c.blocks + ' cards, title "' + c.title + '")');
       if (w < 560) ok(r.boardW <= r.boardClientW, tag + ': the board does not scroll sideways (' + r.boardW + ' of ' + r.boardClientW + ')');
+      if (w < 560) {   // round 3: the phone list
+        const L = await p.evaluate(() => {
+          const sum = [...document.querySelectorAll('#sum b')].reduce((a, b) => a + (+b.textContent || 0), 0), rows = [...document.querySelectorAll('.pr')];
+          const vis = e => { const q = e.getBoundingClientRect(); return q.width > 0 && q.height > 0 && getComputedStyle(e).visibility !== 'hidden'; };
+          const small = [...document.querySelectorAll('body *')].filter(e => vis(e) && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && parseFloat(getComputedStyle(e).fontSize) < 11)
+            .map(e => e.className + ' ' + getComputedStyle(e).fontSize + ' "' + e.textContent.trim().slice(0, 12) + '"');
+          const clip = [...document.querySelectorAll('.pr, .pr *')].filter(e => e.scrollWidth > e.clientWidth + 1 && e.clientWidth || getComputedStyle(e).textOverflow === 'ellipsis')
+            .map(e => e.className + ' "' + e.textContent.trim().slice(0, 16) + '"');
+          const ins = rows.filter(r => r.classList.contains('in'));
+          return { sum, rows: rows.length, heads: document.querySelectorAll('.ph').length, more: document.querySelectorAll('.more').length, grid: document.querySelectorAll('.b').length, small, clip,
+            live: ins.length, liveSum: +((document.querySelector('#sum .lv b') || {}).textContent || 0), red: ins.every(r => /239, 68, 68/.test(getComputedStyle(r).borderLeftColor)),
+            byTime: [...document.querySelectorAll('.ph')].every((h, i, a) => !i || +h.dataset.h > +a[i - 1].dataset.h),
+            golf: rows.filter(r => r.classList.contains('gf')).map(r => r.querySelector('.pc').textContent + ' ' + r.querySelector('.pg').textContent),
+            rival: document.querySelectorAll('.pr.rvg .prv').length, tallest: Math.max(...rows.map(r => r.offsetHeight)), rowH: Math.round(rows.reduce((a, r) => a + r.offsetHeight, 0) / (rows.length || 1)) }; });
+        r.list = L;
+        console.log('   ' + tag + ': ' + L.rows + ' rows under ' + L.heads + ' hour heads, average row ' + L.rowH + ' px, tallest ' + L.tallest + ' | golf: ' + (L.golf.join(', ') || 'none'));
+        ok(L.rows > 0 && L.rows === L.sum && !L.more && !L.grid, tag + ': phone shows the day as a list, every game a row, nothing behind "+N" (' + L.rows + ' rows of ' + L.sum + ')');
+        ok(L.byTime && L.heads > 0, tag + ': rows run by start time under hour headings');
+        ok(!L.small.length, tag + ': no text under 11 px' + (L.small.length ? ' (' + L.small.slice(0, 6).join('; ') + ')' : ''));
+        ok(!L.clip.length, tag + ': no clipped or cut-off text in the rows' + (L.clip.length ? ' (' + L.clip.slice(0, 6).join('; ') + ')' : ''));
+        ok(L.live === L.liveSum && L.red, tag + ': live games marked red (' + L.live + ' of ' + L.liveSum + ')');
+        if (cs.golf) ok(L.golf.length > 0 && L.golf.every(x => /^PGA /.test(x)), tag + ': golf tournaments as rows, PGA Tour only (' + L.golf.join(', ') + ')');
+        if (cs.tag === 'busy') {
+          ok(L.rival > 0, tag + ': rivalry named on its row');
+          const sb = await p.evaluate(() => { const b = [...document.querySelectorAll('.pr[data-g^="nhl:"]')].find(x => [...x.querySelectorAll('.ps')].some(s => /^DAL\b/.test(s.textContent))); if (b) b.scrollIntoView({ block: 'center' }); return b ? b.dataset.g : ''; });
+          ok(!!sb, tag + ': a Stars game row is in the list (' + sb + ')');
+          if (sb) { await p.waitForTimeout(200); await p.click('.pr[data-g="' + sb + '"]'); await p.waitForTimeout(500);
+            const lg = await p.evaluate(() => ({ on: document.getElementById('gs').classList.contains('on'), imgs: [...document.querySelectorAll('#gs .g img')].map(i => ({ src: i.getAttribute('src'), ok: i.complete && i.naturalWidth > 0 })) }));
+            ok(lg.on && lg.imgs.some(i => /stars-classic-dark.svg$/.test(i.src) && i.ok), tag + ': tapping the row opens its card, classic Stars logo loaded');
+            await p.screenshot({ path: path.join(OUT, 'split-' + LABEL + '-schedule-sheet-' + w + '.png') });
+            await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+            ok(await p.evaluate(() => !document.getElementById('gs').classList.contains('on')), tag + ': Escape closes the card'); }
+        }
+      }
     }
     ok(r.docW <= r.vw, tag + ': the page does not scroll sideways (' + r.docW + ' of ' + r.vw + ')');
     console.log(tag + ': page ' + r.docW + 'x' + r.docH + ' in ' + r.vw + 'x' + r.vh + (r.page === 'schedule' ? ' | board content ' + r.boardW + 'x' + r.boardH + ' in ' + r.boardClientW + 'x' + r.boardClientH : '') + (r.wide.length ? ' | past the edge: ' + r.wide.join(' ') : ''));

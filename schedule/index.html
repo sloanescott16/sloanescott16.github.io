@@ -186,33 +186,40 @@ h2{border-left-color:#33415e}
 .gfc .lb .t{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
 .gfc .lb .s{font:700 18px/1 Oswald,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
 .mi .mm .rv{display:block;background:none;padding:0;margin:2px 0 0;border-radius:0;color:#c4a8ff;font:500 10px/1.3 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase}
-/* Schedule v1 (job 1010-1240-nml): the phone. A slim header on two short rows, every sport across the screen, compact cards */
+/* Schedule v1 (job 1010-1240-nml): the phone. A slim header on two short rows, then the day as a by-time list (.dg.pl).
+   Nothing on the phone is set under 11 px. */
 @media (max-width:560px){
   body{padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom))}
   header{gap:4px 10px;margin-bottom:4px}
-  .back{min-height:34px;padding:0 12px;font-size:12px;letter-spacing:.1em}
-  h1{font-size:19px;letter-spacing:.1em;gap:8px}
-  .meta{width:100%;margin-left:0;text-align:left;font-size:11.5px}
-  .sum{margin:0 0 6px;gap:4px 12px;font-size:12px}
+  .back{min-height:36px;padding:0 12px;font-size:12px;letter-spacing:.1em}
+  h1{font-size:20px;letter-spacing:.1em;gap:8px}
+  .meta{width:100%;margin-left:0;text-align:left;font-size:12px}
+  .sum{margin:0 0 6px;gap:4px 12px;font-size:13px}
   .dg{margin:0;border-radius:10px}
-  .ch{padding-top:5px;gap:2px}
-  .ch img{width:22px;height:22px}
-  .ch .lc{font-size:9px;padding:0 3px}
-  .ch .more{margin-top:1px;padding:2px 5px;font-size:10px;line-height:1.1;white-space:nowrap}
-  .ch .nop{margin-top:1px;font-size:9px;line-height:1.15}
-  .gut .hr{padding-left:4px;font-size:10px;line-height:14px;letter-spacing:.02em}
-  .gut .hr::before{width:3px}
-  .gut .nt{font-size:9px;letter-spacing:-.03em;left:1px;right:1px}
-  .b{padding:3px 4px;gap:0;border-radius:6px}
-  .b .m1{font-size:12.5px;line-height:1.15;gap:2px;letter-spacing:.01em}
-  .b .m1 i{font-size:9px;margin-right:1px}
-  .b .m1 small{display:none}
-  .b .m2{margin-top:1px;font:500 10px/1.2 Oswald,sans-serif;letter-spacing:.02em;white-space:nowrap;text-overflow:ellipsis}
-  .b .m2 .k{font-size:9px;margin-right:3px}
-  .b .rv{font-size:8.5px;letter-spacing:.04em;margin-bottom:0}
-  .b.in .m2::before{display:none}   /* the red edge says live; the room goes to the clock */
-  .b.gf .m1.tn{font-size:11px}
 }
+.dg.pl{overflow-x:hidden;overflow-y:auto}
+.dg.pl .dgi{width:auto}
+.ph{position:sticky;top:0;z-index:2;padding:4px 10px;background:#0d1526;border-bottom:1px solid var(--line);
+  font:500 12px/16px Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.pb{display:flex;flex-direction:column}
+.pr{display:grid;grid-template-columns:62px 42px minmax(0,1fr);align-items:center;gap:0 8px;width:100%;padding:6px 10px;border:0;border-bottom:1px solid rgba(34,48,74,.6);
+  border-left:3px solid transparent;background:none;color:var(--ink);text-align:left;font:inherit;cursor:pointer}
+.pr:hover,.pr:focus-visible{background:#18233a;outline:none}
+.pt{font:500 13px/1.15 Oswald,sans-serif;letter-spacing:.02em;color:var(--dim);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pt small{display:block;font:400 11px/1.2 Inter,sans-serif;color:#f5b971}
+.pc{justify-self:start;padding:1px 5px;border:1px solid var(--line);border-radius:5px;font:500 11px/1.3 Oswald,sans-serif;letter-spacing:.06em;color:#c9d3e4;white-space:nowrap}
+.pm{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 7px;min-width:0;font:500 15px/1.25 Oswald,sans-serif;letter-spacing:.03em}
+.ps{white-space:nowrap}.ps i{font:400 11px Inter,sans-serif;font-style:normal;color:var(--dim);margin-right:3px}
+.ps em{font-style:normal;font-weight:700;margin-left:3px;font-variant-numeric:tabular-nums}
+.ps.lo{color:var(--dim)}
+.pv{font:400 12px Inter,sans-serif;color:var(--dim)}
+.pn{margin-left:auto;font:400 11px/1.3 Inter,sans-serif;color:var(--dim)}
+.prv{flex-basis:100%;font:500 11px/1.2 Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#c4a8ff}
+.pr.in{border-left-color:var(--live);background:#22161f}.pr.in .pt{color:#ff8a8a;font-weight:700}
+.pr.post .pm{color:#c3cde0}.pr.post .ps.lo{color:var(--dim)}
+.pr.fav .pm{font-weight:700}
+.pr.gf .pm{display:block;font-size:14px}.pr.gf .pg,.pr.gf .pl1{display:block}.pr.gf .pl1{font-size:13px;color:#c3cde0}.pr.gf .pl1 em{font-style:normal;font-weight:700}
+.pr.gf .pd{display:block;font:400 11px/1.3 Inter,sans-serif;color:var(--dim);letter-spacing:0}.pr.gf.in .pd{color:#ff8a8a}
 </style>
 </head>
 <body>
@@ -552,6 +559,47 @@ function golfCard(g) {   // the sheet: tournament, round and window, top five, s
     (rows ? `<ol class="lb">${rows}</ol>` : `<div class="gr">No leaderboard yet${g.field ? " · " + esc(g.field) + " in the field" : ""}</div>`) +
     `<div class="foot"><span class="st">${esc(g.detail)}</span>${g.tv ? `<span>${esc(g.tv)}</span>` : ""}</div></a>`;
 }
+/* Schedule v1 round 3: the phone list. Rows run by start time (Central) under hour headings; live rows are red and say the clock,
+   finals are dimmed in place; golf tournaments are rows of their own. Every row opens the same sheet as a grid card. */
+function listRow(g) {
+  const k = g.lg.key + ":" + g.id; GM[k] = g;
+  const post = g.state === "post", pre = g.state === "pre";
+  if (g.golf) {
+    const L = g.top[0], t = pre ? ctTime(g.date) : g.state === "in" ? "Live" : "Done";
+    return `<button type="button" class="pr gf ${g.state}" data-g="${esc(k)}" title="${esc(g.lg.label)}: ${esc(g.name)}"><span class="pt">${esc(t)}</span><span class="pc">${esc(chipOf(g.lg))}</span>` +
+      `<span class="pm"><span class="pg">${esc(g.short || g.name)}</span>${L ? `<span class="pl1">${esc(L.pos)} ${esc(L.nm)} <em>${esc(L.score)}</em></span>` : ""}<span class="pd">${esc(g.detail)}${g.tv ? " · " + esc(g.tv) : ""}</span></span></button>`;
+  }
+  const a = +g.away.score || 0, hm = +g.home.score || 0;
+  const side = (t, lose) => `<span class="ps${lose ? " lo" : ""}">${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
+  const one = g.lg.soc ? [g.home, hm < a && post, g.away, a < hm && post] : [g.away, a < hm && post, g.home, hm < a && post];
+  const t = pre ? ctTime(g.date) : esc(g.detail || (post ? "Final" : "Live"));
+  return `<button type="button" class="pr ${g.state}${g.fav ? " fav" : ""}${g.rival ? " rvg" : ""}" data-g="${esc(k)}" title="${esc(g.away.full || g.away.name)} at ${esc(g.home.full || g.home.name)}">` +
+    `<span class="pt">${pre ? esc(t) : t}${pre && g.held ? `<small>${esc((g.detail || "Delayed").split(",")[0])}</small>` : ""}</span><span class="pc">${esc(chipOf(g.lg))}</span>` +
+    `<span class="pm">${side(one[0], one[1])}<span class="pv">${g.lg.soc ? "v" : "at"}</span>${side(one[2], one[3])}${pre && g.tv ? `<span class="pn">${esc(g.tv)}</span>` : ""}${g.rival ? `<span class="prv">${esc(g.rival)}</span>` : ""}</span></button>`;
+}
+function listView(today, live, day, nowM, dg, dgi) {
+  const at = g => dayMin(g.date, day), hr = m => m < 0 ? -1 : Math.floor(m / 60);
+  const gs = today.slice().sort((p, q) => (at(p) - at(q)) || (q.fav - p.fav) || String(p.lg.key).localeCompare(q.lg.key));
+  let html = "", cur = null;
+  for (const g of gs) {
+    const h = hr(at(g));
+    if (h !== cur) { if (cur !== null) html += "</div>"; cur = h; html += `<div class="ph" data-h="${h}">${h < 0 ? "Earlier" : hourName(h)}</div><div class="pb">`; }
+    html += listRow(g);
+  }
+  if (cur !== null) html += "</div>";
+  render.busy = Date.now() + 900;
+  dgi.style.width = ""; dgi.innerHTML = html;
+  dg.style.display = gs.length ? "" : "none";
+  const topDoc = dg.getBoundingClientRect().top + scrollY;
+  dg.style.maxHeight = Math.max(300, Math.floor(innerHeight - topDoc - 8)) + "px";
+  // it opens at the first live game, else the next one to start, else the last final; then stays where he puts it
+  if (gs.length && !scrolled) {
+    const tgt = dgi.querySelector(".pr.in") || dgi.querySelector(".pr.pre") || [...dgi.querySelectorAll(".pr")].pop();
+    const head = tgt && tgt.parentElement.previousElementSibling;
+    dg.scrollTop = Math.max(0, (head ? head.offsetTop : 0));
+    scrolled = true;
+  }
+}
 /* v10: the day grid. One column per sport, the Central day's hours down the right; the league chip rides under each column's picture. */
 const SPORTS = [
   { key:"nfl", img:"https://a.espncdn.com/i/teamlogos/nfl/500/dal.png", chip:"NFL", name:"NFL" },
@@ -616,7 +664,7 @@ function openMore(key) {
   document.getElementById("gs").classList.add("on");
 }
 document.getElementById("dg").addEventListener("click", e => { const mo = e.target.closest(".more[data-more]"); if (mo) return openMore(mo.dataset.more);
-  const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
+  const b = e.target.closest(".b[data-g], .pr[data-g]"); if (b) openSheet(b.dataset.g); });   // Schedule v1: phone list rows too
 document.getElementById("gs").addEventListener("click", e => { const mi = e.target.closest(".mi[data-g]"); if (mi) return openSheet(mi.dataset.g);
   if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && opened && !document.querySelector("#pbpSheet.on")) closeSheet(); });
@@ -634,7 +682,12 @@ function render() {
   const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"); dg.style.display = "";   // shown before it is measured
   const n = s => today.filter(g => g.state === s).length;
   document.getElementById("sum").innerHTML = today.length ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
-  const phone = dg.clientWidth < 560; block.phone = phone;   // Schedule v1: phone cards leave the network to the game sheet
+  const phone = dg.clientWidth < 560; block.phone = phone;
+  // Schedule v1 round 3: on the phone the day is a by-time list (hour headings, one full-width row a game), every game shown;
+  // seven sport columns cannot be read in 357 px. The PC keeps the grid below.
+  dg.classList.toggle("pl", phone);
+  if (phone) listView(today, live, day, nowM, dg, dgi);
+  else {
   // v10: the sport heads across the top, the hours down the right-hand side, at most three side-by-side lanes a sport
   // Schedule v1: on the phone every sport fits across the screen (no sideways scroll), cards are compact and as tall as their text,
   // and hours with nothing starting fold down to a thin band, so the day takes far less scrolling
@@ -717,6 +770,7 @@ function render() {
     }
     scrolled = true;
   }
+  }   // end of the PC grid
   document.getElementById("msg").innerHTML = today.length ? "" : `<div class="empty"><strong>No games today</strong>${Object.keys(data).length ? "This page fills in on its own when the day's games are posted." : "Waiting on the feeds."}</div>`;
   if (opened) opened.startsWith("more:") ? openMore(opened.slice(5)) : GM[opened] ? openSheet(opened) : closeSheet();
   document.getElementById("ttl").className = live.length ? "on" : "";
