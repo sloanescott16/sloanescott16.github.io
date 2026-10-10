@@ -108,12 +108,14 @@ class Browser {
   async newContext(opts) { const r = await this.send('Target.createBrowserContext', { disposeOnDetach: true }); return new Context(this, r.browserContextId, opts || {}); }
   newPage(opts) { return this._newPage(null, opts || {}); }
   async close() { try { await this.send('Browser.close'); } catch (e) {} try { this.ws.close(); } catch (e) {} await sleep(300); try { this.proc.kill(); } catch (e) {}
-    await sleep(200); try { fs.rmSync(this.dir, { recursive: true, force: true }); } catch (e) {} }
+    await sleep(200); if (!this.keep) try { fs.rmSync(this.dir, { recursive: true, force: true }); } catch (e) {} }
 }
 const chromium = { async launch() {
   if (!CHROME) throw new Error('No Chrome or Edge found; set CHROME to the browser exe');
   const b = new Browser(); b.pops = {}; b.popups = [];
-  b.dir = fs.mkdtempSync(path.join(process.env.PW_TMP || os.tmpdir(), 'pc-test-chrome-'));
+  /* live-split: PW_PROFILE names one profile folder that every run reuses and nothing removes (the Captain's rule: one profile, no new one per run) */
+  if (process.env.PW_PROFILE) { b.dir = process.env.PW_PROFILE; b.keep = true; fs.mkdirSync(b.dir, { recursive: true }); try { fs.writeFileSync(path.join(b.dir, 'DevToolsActivePort'), ''); } catch (e) {} }
+  else b.dir = fs.mkdtempSync(path.join(process.env.PW_TMP || os.tmpdir(), 'pc-test-chrome-'));
   b.proc = spawn(CHROME, ['--headless=new', '--remote-debugging-port=0', '--user-data-dir=' + b.dir, '--no-first-run', '--no-default-browser-check', '--disable-gpu', '--hide-scrollbars', '--disable-extensions',
     '--disable-background-networking', '--disable-component-update', '--disable-sync', '--disable-popup-blocking', 'about:blank'], { stdio: 'ignore' });
   const f = path.join(b.dir, 'DevToolsActivePort'); let txt = '';

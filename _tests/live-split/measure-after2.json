@@ -1,0 +1,80 @@
+[
+ {
+  "vw": 375,
+  "vh": 667,
+  "docW": 375,
+  "docH": 667,
+  "boardW": 357,
+  "boardClientW": 357,
+  "boardH": 767,
+  "boardClientH": 564,
+  "wide": [],
+  "page": "schedule",
+  "case": "today"
+ },
+ {
+  "vw": 390,
+  "vh": 844,
+  "docW": 390,
+  "docH": 844,
+  "boardW": 372,
+  "boardClientW": 372,
+  "boardH": 767,
+  "boardClientH": 741,
+  "wide": [],
+  "page": "schedule",
+  "case": "today"
+ },
+ {
+  "vw": 1440,
+  "vh": 900,
+  "docW": 1440,
+  "docH": 924,
+  "boardW": 1374,
+  "boardClientW": 1374,
+  "boardH": 1097,
+  "boardClientH": 778,
+  "wide": [],
+  "page": "schedule",
+  "case": "today"
+ },
+ {
+  "vw": 375,
+  "vh": 667,
+  "docW": 375,
+  "docH": 667,
+  "boardW": 357,
+  "boardClientW": 357,
+  "boardH": 719,
+  "boardClientH": 564,
+  "wide": [],
+  "page": "schedule",
+  "case": "busy"
+ },
+ {
+  "vw": 390,
+  "vh": 844,
+  "docW": 390,
+  "docH": 844,
+  "boardW": 372,
+  "boardClientW": 372,
+  "boardH": 719,
+  "boardClientH": 719,
+  "wide": [],
+  "page": "schedule",
+  "case": "busy"
+ },
+ {
+  "vw": 1440,
+  "vh": 900,
+  "docW": 1440,
+  "docH": 924,
+  "boardW": 1374,
+  "boardClientW": 1374,
+  "boardH": 1097,
+  "boardClientH": 778,
+  "wide": [],
+  "page": "schedule",
+  "case": "busy"
+ }
+]
