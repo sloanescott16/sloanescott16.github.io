@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Schedule">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="pb-version" content="Schedule v1">
+<!-- Schedule v1 (job 1010-1240-nml): the by-time day grid, Live v12 (v11 plus the golf rules: PGA Tour and the four men's majors only) moved here from /live/ when Live went back to the classic scoreboard. -->
+<title>Schedule · Press Box</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23ef4444'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;600&display=swap">
+<style>
+:root{--bg:#0b1220;--card:#131c2e;--line:#22304a;--ink:#e8eef8;--dim:#8a98b3;--live:#ef4444}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;min-height:100dvh;
+  padding:calc(18px + env(safe-area-inset-top)) clamp(14px,2.5vw,32px) calc(28px + env(safe-area-inset-bottom))}
+@media (max-width:520px){body{padding-top:calc(30px + env(safe-area-inset-top))}}
+a{color:inherit;text-decoration:none}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.back{font-family:Oswald,sans-serif;font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--dim);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-height:36px;display:inline-flex;align-items:center}
+@media (pointer:coarse){.back{min-height:44px;padding:0 18px;font-size:14px}}
+.back:hover{color:var(--ink);border-color:var(--dim)}
+h1{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:clamp(24px,3.4vw,38px);
+  display:flex;align-items:center;gap:12px}
+.dot{width:.42em;height:.42em;border-radius:50%;background:var(--dim);flex:none}
+.on .dot{background:var(--live);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 .5em rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+@media (prefers-reduced-motion:reduce){.on .dot{animation:none}}
+.meta{margin-left:auto;color:var(--dim);font-size:13px;font-variant-numeric:tabular-nums;text-align:right}
+h2{font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:clamp(15px,1.6vw,19px);
+  display:flex;align-items:center;gap:10px;margin:22px 0 10px;padding-left:10px;border-left:4px solid var(--c,#3b82f6)}
+h2 small{font-family:Inter,sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;color:var(--dim)}
+h2 a:hover{text-decoration:underline;text-underline-offset:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.g{position:relative;display:block;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c,#3b82f6);border-radius:14px;
+  padding:12px 14px 10px;transition:transform .15s,border-color .15s}
+.g:hover{transform:translateY(-2px);border-color:var(--c)}
+.g.fav{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 8px 26px color-mix(in srgb,var(--c) 28%,transparent)}
+.row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:4px 0}
+.row img,.row .ph{width:34px;height:34px;object-fit:contain;filter:drop-shadow(0 0 1px rgba(255,255,255,.5))}
+.row .ph{display:grid;place-items:center;border-radius:8px;background:var(--line);font:600 10px Inter,sans-serif;filter:none}
+.tm{font-family:Oswald,sans-serif;font-weight:500;font-size:18px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm i{font-style:normal;font-size:12px;color:var(--dim);margin-right:5px}
+.tm b{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink);margin-left:7px;vertical-align:middle}
+.tm small{font-family:Inter,sans-serif;font-size:11px;color:var(--dim);margin-left:7px;letter-spacing:0}
+.sc{font-family:Oswald,sans-serif;font-weight:700;font-size:28px;font-variant-numeric:tabular-nums;line-height:1}
+.row.trail .sc,.row.trail .tm{color:var(--dim)}
+.foot{display:flex;justify-content:space-between;gap:10px;margin-top:6px;padding-top:7px;border-top:1px solid var(--line);font-size:12px;color:var(--dim)}
+.foot .st{color:var(--live);font-weight:600;letter-spacing:.03em}
+.foot .rz{color:var(--live);font-weight:600}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:6px 16px}
+.li{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--card) 60%,transparent);
+  border-left:3px solid var(--c,#3b82f6);font-size:14px}
+.li:hover{background:var(--card)}
+.li.fav{background:var(--card);box-shadow:inset 0 0 0 1px var(--c)}
+.li .t{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+.li .t .dl{color:var(--live);font-weight:600;font-variant-numeric:normal}
+.li .m{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .m i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
+.li .m b{font-weight:600}
+.li .r{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+/* v7: the rivalry badge, a small violet pill over a card's teams, and a second line under a list row's matchup */
+.g .rv{display:inline-block;max-width:100%;margin:0 0 4px;padding:2px 9px;border-radius:999px;background:rgba(160,120,255,.17);color:#c4a8ff;
+  font:500 11px/1.35 Oswald,sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
+.li .m .rv{display:block;overflow:hidden;text-overflow:ellipsis;margin-top:2px;font:500 10.5px/1.3 Oswald,sans-serif;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#c4a8ff}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:28px 16px;text-align:center;color:var(--dim)}
+.empty strong{display:block;font-family:Oswald,sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);font-size:20px;margin-bottom:6px}
+.nfl,.cfb{--c:#3b82f6}.cfb{--c:#e8232a}.mlb{--c:#c0111f}.nhl{--c:#00843d}.nba{--c:#0064b1}.soc{--c:#e0a526}
+@media (max-width:520px){.meta{width:100%;margin-left:0;text-align:left}.sc{font-size:24px}}
+/* league-look: leagues are told apart by a small neutral league chip (NFL, NHL, NBA...) in its own column, not by colour.
+   Colour is kept for state only (live red). Every league edge and section bar is one calm neutral; his own team's game
+   gets a soft light ring and a bold matchup, the same in every league. */
+.nfl,.cfb,.mlb,.nhl,.nba,.soc{--c:#33415e}
+h2{border-left-color:#33415e}
+.g.fav,.li.fav{--c:#a9b6cc}
+.g.fav{box-shadow:0 0 0 1px var(--c),0 8px 26px rgba(0,0,0,.35)}
+.li{grid-template-columns:62px 40px 1fr auto;border-left-color:transparent}
+.li.fav .m{font-weight:600}
+.lc{justify-self:start;min-width:36px;text-align:center;padding:1px 5px;border-radius:5px;border:1px solid #2c3a56;background:#0e1626;
+  color:#c9d3e4;font:500 11px/1.2 Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.li.fav .lc{border-color:#55648a;color:var(--ink)}
+@media (max-width:420px){.li{grid-template-columns:56px 38px 1fr auto;gap:8px;padding:8px 9px}}
+/* v8: players. Each card and list row names its leading players (or the probable starters before a game); one tap opens the shared player sheet */
+.who{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--dim)}
+.who span[data-pbp]{color:var(--ink);font-weight:600;border-bottom:1px dotted var(--dim);padding:2px 0}
+.who span[data-pbp]:hover{border-bottom-color:var(--ink)}
+.who small{font-size:11px;margin-left:4px;color:var(--dim)}
+.li .m .who{display:block;margin-top:2px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .m .who>span{margin-right:10px}   /* v8: a list row fits its names on one line and ends in an ellipsis, never a clipped tag */
+@media (pointer:coarse){.who span[data-pbp]{padding:6px 0}}
+</style>
+<style>
+/* v10: the day at a glance, turned on its side (the Captain: "flip this 90 degrees with the time on the right and leagues up top").
+   One column per sport (its picture and chip head the column), the Central day's hours run down the board with the hour
+   names on the right, each game a card in its sport's column from its start time for as long as a game usually runs,
+   live games in red, a red line across the board at the time now. The sport heads stay pinned at the top and the hours
+   stay pinned on the right while the board scrolls; it opens at now and follows it. Tap a game for its card. */
+.sum{display:flex;flex-wrap:wrap;gap:6px 16px;margin:-4px 0 12px;font-size:13px;color:var(--dim)}
+.sum b{color:var(--ink);font-weight:600}.sum .lv b{color:var(--live)}
+.dg{position:relative;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#0d1526;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#33415e transparent}
+.dgi{position:relative}
+.hd{position:sticky;top:0;z-index:6;display:flex;background:#0d1526;border-bottom:1px solid var(--line);box-shadow:0 6px 10px -6px rgba(0,0,0,.6)}
+.ch{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:8px;gap:3px;border-left:1px solid var(--line)}
+.ch:first-child{border-left:0}
+.ch img{width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.ch .lc{font-size:9.5px;min-width:0;padding:0 4px;justify-self:auto}
+.cn{position:sticky;right:0;z-index:2;flex:none;margin-left:auto;background:#0d1526;border-left:1px solid var(--line)}
+.bd{position:relative;display:flex}
+.cols{position:relative;flex:none}
+.cols .hl{position:absolute;left:0;right:0;border-top:1px solid rgba(34,48,74,.55)}
+.cols .cl{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
+.gut{position:sticky;right:0;z-index:5;flex:none;margin-left:auto;background:#0d1526;border-left:1px solid var(--line);box-shadow:-6px 0 10px -6px rgba(0,0,0,.6)}
+.gut .hr{position:absolute;left:0;right:0;padding-left:7px;font:500 12px/14px Oswald,sans-serif;letter-spacing:.06em;color:var(--dim);white-space:nowrap}
+.gut .hr::before{content:"";position:absolute;left:0;top:7px;width:4px;border-top:1px solid var(--line)}
+.b{position:absolute;display:flex;flex-direction:column;justify-content:flex-start;gap:1px;padding:5px 7px;overflow:hidden;overflow:clip;cursor:pointer;
+  text-align:left;color:var(--ink);font:inherit;background:var(--card);border:1px solid #2a3a58;border-radius:9px;transition:border-color .15s,background .15s}
+.b:hover,.b:focus-visible{border-color:#6b7ea3;background:#18233a;outline:none}
+.b .m1{display:flex;align-items:baseline;gap:4px;width:100%;font:500 15px/1.2 Oswald,sans-serif;letter-spacing:.03em;white-space:nowrap}
+.b .m1 span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.b .m1 i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
+.b .m1 small{font:400 11px Inter,sans-serif;color:var(--dim);letter-spacing:0}
+.b .m1 em{margin-left:auto;font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.b .m1.lo{color:var(--dim)}
+.b .m2{display:block;margin-top:2px;font-size:11px;line-height:1.25;color:var(--dim);font-variant-numeric:tabular-nums;overflow:hidden;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;word-break:break-word}
+.b .m2 .k{color:#c9d3e4;font:500 10px/1 Oswald,sans-serif;letter-spacing:.08em;margin-right:5px}
+.b .rv{display:block;color:#c4a8ff;font:500 10px/1.2 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.b.post{background:#101828;border-color:#1f2c45}.b.post .m1{color:#c3cde0}.b.post .m1.lo{color:var(--dim)}
+.b.in{border-color:var(--live);background:#22161f;box-shadow:0 0 0 1px rgba(239,68,68,.35)}
+.b.in .m2{color:#ff8a8a;font-weight:600}
+.b.in .m2::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--live);margin-right:5px;vertical-align:1px;animation:pulse 1.6s infinite}
+.b.fav{box-shadow:0 0 0 1px #a9b6cc}.b.fav .m1{font-weight:700}.b.in.fav{box-shadow:0 0 0 1px #a9b6cc,0 0 0 3px rgba(239,68,68,.35)}
+.b.rvg{border-top:3px solid #a078ff}
+.now{position:absolute;left:0;height:2px;margin-top:-1px;background:var(--live);opacity:.8;z-index:3;pointer-events:none;box-shadow:0 0 8px rgba(239,68,68,.6)}
+.gut .nt{position:absolute;left:2px;right:2px;z-index:2;margin-top:-9px;padding:2px 0;border-radius:5px;background:var(--live);color:#fff;text-align:center;
+  font:600 11px/14px Inter,sans-serif;white-space:nowrap;box-shadow:0 0 8px rgba(239,68,68,.6)}
+@media (prefers-reduced-motion:reduce){.b.in .m2::before{animation:none}}
+@media (max-width:520px){.ch img{width:32px;height:32px}.b .m1{font-size:14px}.b{padding:4px 6px}.gut .nt{font-size:10px;letter-spacing:-.02em}.dg{border-radius:12px;margin:0 -4px}}
+/* the game sheet: the full card (scores, situation, players, rivalry), one tap away from the grid */
+.gs{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(3,7,15,.82);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+.gs.on{display:flex}
+@media (min-width:700px){.gs{align-items:center}}
+.gs .bx{width:min(420px,100%);position:relative}
+.gs .x{position:absolute;top:-44px;right:0;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 18px/1 Inter,sans-serif;cursor:pointer}
+.gs .lead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--dim)}
+.gs .lead a{color:var(--ink);font-weight:600;border-bottom:1px solid var(--dim)}
+.gs .g{box-shadow:0 18px 50px rgba(0,0,0,.6)}
+/* round 2: "+N more" under a sport's picture, and the full list it opens */
+.ch .more{margin-top:3px;padding:2px 6px;border-radius:999px;border:1px solid #55648a;background:#18233a;color:var(--ink);cursor:pointer;
+  font:600 10px/1.3 Inter,sans-serif;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis}
+.ch .more:hover,.ch .more:focus-visible{border-color:var(--ink);outline:none}
+@media (pointer:coarse){.ch .more{padding:5px 6px}}
+/* v9: on the narrow phone label "+12 more" was clipped; slimmer sides, and it wraps to two lines rather than lose text */
+@media (max-width:520px){.ch .more{padding-left:3px;padding-right:3px;max-width:calc(100% - 2px);letter-spacing:-.01em;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.15;text-align:center}}
+.gs .mlist{max-height:min(70vh,560px);overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
+.mi{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;width:100%;padding:8px 10px;border-radius:9px;border:1px solid transparent;
+  background:#0f1828;color:var(--ink);font:inherit;font-size:14px;text-align:left;cursor:pointer;min-height:40px}
+.mi:hover,.mi:focus-visible{border-color:#6b7ea3;outline:none}
+.mi .mt{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi.in{border-color:rgba(239,68,68,.5)}.mi.in .mt{color:#ff8a8a;font-weight:600}
+.mi.fav .mm{font-weight:700}
+.mi .mm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi .mm i{font-style:normal;font-size:11px;color:var(--dim);margin-right:3px}
+.mi .mm em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums}
+.mi .mm .lo{color:var(--dim)}
+/* v11: golf. A tournament card names its tour and event, then the leader; the column says "No play today" when there is none; the sheet lists the top five */
+.b .m1 .k,.mi .mm i{color:#c9d3e4;font:500 10px/1 Oswald,sans-serif;letter-spacing:.08em;margin-right:5px}
+.b.gf .m1.tn{font-size:13px;color:#c3cde0}
+.ch .nop{margin-top:3px;font:400 10.5px/1.2 Inter,sans-serif;color:var(--dim);text-align:center}
+.mi .mm small{font-size:12px;margin-left:6px}
+.g.gfc{--c:#33415e}
+.gfc .gt{font:700 20px/1.2 Oswald,sans-serif;letter-spacing:.03em}
+.gfc .gr{margin-top:3px;font-size:12px;color:var(--dim)}
+.gfc .lb{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:2px}
+.gfc .lb li{display:grid;grid-template-columns:34px 1fr auto 46px;gap:8px;align-items:baseline;padding:4px 0;border-top:1px solid var(--line);font-size:14px}
+.gfc .lb li:first-child{border-top:0}
+.gfc .lb .p{color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+.gfc .lb .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.gfc .lb .n small{font-weight:400;font-size:11px;color:var(--dim);margin-left:6px}
+.gfc .lb .t{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.gfc .lb .s{font:700 18px/1 Oswald,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+.mi .mm .rv{display:block;background:none;padding:0;margin:2px 0 0;border-radius:0;color:#c4a8ff;font:500 10px/1.3 Oswald,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="https://sloanescott16.github.io/">&lsaquo; Press Box</a>
+  <h1 id="ttl"><span class="dot"></span><span id="ttlText">Schedule</span></h1>
+  <div class="meta" id="meta">Loading the boards</div>
+</header>
+<main id="app"><div class="sum" id="sum"></div><div class="dg" id="dg"><div class="dgi" id="dgi"></div></div><div id="msg"></div></main>
+<div class="gs" id="gs" role="dialog" aria-modal="true" aria-label="Game"><div class="bx"><button class="x" type="button" aria-label="Close">&times;</button><div id="gsb"></div></div></div>
+<script>
+"use strict";
+const SITE = "https://sloanescott16.github.io/";
+const LEAGUES = [
+  { key:"nfl", label:"NFL",              path:"football/nfl",              q:"",                       fav:"DAL", href:SITE+"lone-star-board/?lg=nfl#scores", game:SITE+"lone-star-board/?lg=nfl#game-" },
+  { key:"cfb", label:"College football", path:"football/college-football", q:"?groups=80&limit=400",   fav:"TTU", href:SITE+"lone-star-board/?lg=cfb#scores", game:SITE+"lone-star-board/?lg=cfb#game-", slim:true },
+  { key:"mlb", label:"MLB",              path:"baseball/mlb",              q:"",                       fav:"TEX", href:SITE+"lone-star-diamond/#live", game:SITE+"lone-star-diamond/#game-" },
+  { key:"nhl", label:"NHL",              path:"hockey/nhl",                q:"",                       fav:"DAL", href:SITE+"the-crease/#live", game:SITE+"the-crease/#game-" },
+  { key:"nba", label:"NBA",              path:"basketball/nba",            q:"",                       fav:"DAL", href:SITE+"the-paint/#live", game:SITE+"the-paint/#game-" },
+  // v5: soccer, every card opens The Pitch. Club leagues list the whole slate; the international boards only list the USA outside the live cards.
+  soc("epl",  "Premier League",          "eng.1"),
+  soc("liga", "LALIGA",                  "esp.1"),
+  soc("ucl",  "Champions League",        "uefa.champions"),
+  soc("mls",  "MLS",                     "usa.1"),
+  soc("wc",   "World Cup",               "fifa.world"),
+  soc("fri",  "Friendlies",              "fifa.friendly", { slim:true }),
+  soc("cnl",  "Concacaf Nations League", "concacaf.nations.league", { slim:true }),
+  soc("unl",  "UEFA Nations League",     "uefa.nations", { slim:true }),
+  // v11: golf; each card is a tournament, not a game, and opens The Green
+  // v12 (the Captain: "only pga tournaments and majors should get that treatment, don't care about other tours"): the PGA Tour feed only,
+  // which also carries the four men's majors; LPGA, LIV, DP World, Champions and Korn Ferry are not read at all
+  golf("pga",  "PGA Tour",           "pga",            "PGA")
+];
+/* v12: which tournaments the Golf column shows. Names are normalised first (curly quotes made straight, dots dropped, spaces
+   collapsed, lower case, any "presented by" tail cut). A name that says another tour or field (women, ladies, girls, junior,
+   senior, amateur, champions, LPGA, LIV, DP World, Korn Ferry) is dropped, from any feed; "Tournament of Champions" is a
+   PGA Tour event and stays. Then a major by its whole name, from any feed; otherwise only the PGA Tour feed. */
+const golfName = n => String(n || "").replace(/[\u2018\u2019\u201A\u201B\u2032]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\./g, "")
+  .replace(/\s+/g, " ").trim().toLowerCase().replace(/\s+(presented|pres|powered|hosted)\b.*$/, "").trim();
+const OTHER_TOUR = /\b(women|womens|women's|ladies|girls|junior|juniors|senior|seniors|amateur|amateurs|champions|lpga|liv|dp world|korn ferry)\b/;
+const MAJORS = { "masters tournament":1, "the masters":1, "masters":1, "pga championship":1, "us open":1, "the open championship":1, "the open":1 };
+function golfKeep(lg, ev) {
+  const ns = [(ev || {}).name, (ev || {}).shortName].map(golfName).filter(Boolean);
+  if (ns.some(n => OTHER_TOUR.test(n.replace(/\btournament of champions\b/g, "")))) return false;
+  return ns.some(n => MAJORS[n]) || (lg || {}).key === "pga";
+}
+function golf(key, label, slug, chip) { return { key, label, path:"golf/" + slug, q:"", golf:true, chip, href:SITE+"the-green/#home" }; }
+/* league-look: the short league mark shown as a chip on every list row */
+const CHIP = { nfl:"NFL", cfb:"CFB", mlb:"MLB", nhl:"NHL", nba:"NBA", epl:"EPL", liga:"LIGA", ucl:"UCL", mls:"MLS", wc:"WC", fri:"INTL", cnl:"CNL", unl:"UNL" };
+const chipOf = lg => CHIP[lg.key] || lg.chip || String(lg.abbr || lg.label || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 5) || "CUP";
+function soc(key, label, slug, more) { return Object.assign({ key, label, path:"soccer/" + slug, q:"", soc:true, cls:"soc", href:SITE+"the-pitch/#scores", game:SITE+"the-pitch/#match-" }, more || {}); }
+const MYSOC = { "185":1, "360":1, "86":1, "1068":1, "660":1 };   // FC Dallas, Man United, Real Madrid, Atletico, USA
+/* v9: classic Stars (job 1009-1116-ne2): the Dallas Stars (NHL only) show the classic heritage logo, a local copy in /img/. */
+const STARS_LOGO = "../img/stars-classic-dark.svg", STARS_RE = /\/teamlogos\/nhl\/500(?:-dark)?\/(?:scoreboard\/)?dal\.png/i;
+const BURN = "data:image/webp;base64,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";   // FC Dallas always wears the 1996 Burn
+/* A cup one of his five is about to play in joins the page for the day; only his own match is shown from it. */
+let cupAt = 0;
+async function socCups() {
+  if (Date.now() - cupAt < 15 * 60e3) return;
+  cupAt = Date.now();
+  const found = await Promise.all(Object.keys(MYSOC).map(async id => {
+    try {
+      const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/all/teams/${id}`, { cache:"no-store" });
+      const e = (((await r.json()).team || {}).nextEvent || [])[0];
+      if (!e || !e.league) return null;
+      const dt = +new Date(e.date) - Date.now();
+      return dt < 36 * 3600e3 && dt > -4 * 3600e3 ? e.league : null;
+    } catch (x) { return null; }
+  }));
+  for (let i = LEAGUES.length - 1; i >= 0; i--) if (LEAGUES[i].cup && !found.some(f => f && "soccer/" + f.slug === LEAGUES[i].path)) { delete data[LEAGUES[i].key]; LEAGUES.splice(i, 1); }
+  for (const f of found) if (f && f.slug && !LEAGUES.some(x => x.path === "soccer/" + f.slug))
+    LEAGUES.push(soc("cup-" + f.slug, f.shortName || f.abbreviation || f.name || "Cup", f.slug, { cup:true, slim:true, abbr:f.abbreviation || "" }));
+}
+const FAST = 5000, SLOW = 60000;
+const data = {}, down = {};
+let stamp = 0, timer = 0;
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+/* v6: the day is the Central day. ESPN's undated MLB, NHL and NBA boards keep showing yesterday until about
+   midday, so every board is asked for today's Central date by name, and before 6 AM for yesterday's as well,
+   so a late West Coast game still running after midnight keeps its card. */
+const CT = new Intl.DateTimeFormat("en-CA", { timeZone:"America/Chicago", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hourCycle:"h23" });
+function ctParts(d) { const o = {}; for (const x of CT.formatToParts(d)) o[x.type] = x.value; return o; }
+function ctKey(d, off) {     // YYYYMMDD of the Central date of d, moved by off days
+  const o = ctParts(d), t = new Date(Date.UTC(+o.year, +o.month - 1, +o.day + (off || 0)));
+  return t.getUTCFullYear() + String(t.getUTCMonth() + 1).padStart(2, "0") + String(t.getUTCDate()).padStart(2, "0");
+}
+const ctHour = d => +ctParts(d).hour;
+function ctDays() { const now = new Date(); return ctHour(now) < 6 ? [ctKey(now, -1), ctKey(now)] : [ctKey(now)]; }
+const sameDay = (a, b) => ctKey(a) === ctKey(b);
+
+/* Every board but MLB runs on ESPN ids, so a tile can link straight at the sport's game center.
+   Pennant Chase keys off the MLB gamePk, so today's Stats API slate is pulled once and matched
+   to the ESPN games by club name, with the start time breaking a doubleheader tie. */
+const PK = {}; let pkAt = 0;
+const slug = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+async function mlbKeys() {
+  if (Date.now() - pkAt < 15 * 60e3) return;
+  pkAt = Date.now();
+  try {
+    const ds = ctDays().map(k => k.slice(0, 4) + "-" + k.slice(4, 6) + "-" + k.slice(6));   // the Central day, and yesterday before 6 AM
+    const r = await fetch(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=${ds[0]}&endDate=${ds[ds.length - 1]}`, { cache:"no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    for (const day of j.dates || []) for (const g of day.games || []) {
+      const k = slug((g.teams.away.team || {}).name) + "|" + slug((g.teams.home.team || {}).name);
+      const set = PK[k] = PK[k] || [];
+      if (!set.some(x => x.pk === g.gamePk)) set.push({ pk:g.gamePk, t:+new Date(g.gameDate) });
+    }
+  } catch (e) { pkAt = Date.now() - 13 * 60e3; }   // try again in a couple of minutes, not every tick
+}
+function mlbPk(g) {
+  const set = PK[slug(g.away.full) + "|" + slug(g.home.full)];
+  if (!set || !set.length) return 0;
+  return set.slice().sort((x, y) => Math.abs(x.t - g.date) - Math.abs(y.t - g.date))[0].pk;
+}
+function gameHref(g) {
+  if (!g.lg.game) return g.lg.href;
+  if (g.lg.key === "mlb") { const pk = mlbPk(g); return pk ? g.lg.game + pk : g.lg.href; }
+  return g.id ? g.lg.game + g.id : g.lg.href;
+}
+
+/* v7: rivalry games carry a badge with the rivalry's name. Matched on ESPN's team ids (the same in every feed),
+   so the pair works in either order, home, away or at a neutral site, and shows on its own whenever the two meet.
+   Named trophy games and the classic rivalries, dormant ones included; [name, team id, team id]. College only. */
+const RIVALS = [
+  ["Red River Rivalry",251,201], ["Iron Bowl",333,2], ["The Game",130,194], ["Egg Bowl",145,344], ["Lone Star Showdown",251,245], ["Bedlam",201,197],
+  ["Apple Cup",264,265], ["Holy War",252,254], ["Holy War",103,87], ["Civil War",2483,204], ["Big Game",25,24], ["Paul Bunyan's Axe",275,135],
+  ["Old Oaken Bucket",84,2509], ["Little Brown Jug",130,135], ["Backyard Brawl",221,277], ["Clean, Old-Fashioned Hate",61,59],
+  ["Palmetto Bowl",228,2579], ["Sunshine Showdown",57,52], ["Army-Navy Game",349,2426], ["Commander-in-Chief's Trophy",2005,349],
+  ["Commander-in-Chief's Trophy",2005,2426], ["Cocktail Party",57,61], ["Third Saturday in October",333,2633], ["Deep South's Oldest Rivalry",2,61],
+  ["Magnolia Bowl",99,145], ["Battle for the Golden Boot",8,99], ["Southwest Classic",8,245], ["Battle Line Rivalry",8,142],
+  ["Governor's Cup",96,97], ["Commonwealth Cup",259,258], ["South's Oldest Rivalry",153,258], ["Victory Bell",150,153], ["Victory Bell",30,26],
+  ["Jeweled Shillelagh",30,87], ["Territorial Cup",12,9], ["Floyd of Rosedale",2294,135], ["Cy-Hawk Trophy",2294,66], ["Heroes Game",2294,158],
+  ["Paul Bunyan Trophy",130,127], ["Land Grant Trophy",213,127], ["Sunflower Showdown",2305,2306], ["Border War",2305,142], ["Farmageddon",66,2306],
+  ["Chancellor's Spurs",251,2641], ["Battle for the Iron Skillet",2567,2628], ["Bayou Bucket",248,242], ["Rocky Mountain Showdown",38,36],
+  ["Battle for the Fremont Cannon",2440,2439], ["Battle of I-75",2649,189], ["Shula Bowl",2226,2229], ["Bayou Classic",2755,2582],
+  ["The Game",108,43], ["The Rivalry",322,2329]
+];
+const RIVAL = {}; for (const [n, a, b] of RIVALS) RIVAL[a < b ? a + "|" + b : b + "|" + a] = n;
+function rivalryOf(a, b) {   // two ESPN team ids, either order: the rivalry's name, or ""
+  a = +a; b = +b; if (!a || !b || a === b) return "";
+  return RIVAL[a < b ? a + "|" + b : b + "|" + a] || "";
+}
+function norm(lg, ev) {
+  const c = (ev.competitions || [])[0] || {}, st = (c.status || ev.status || {}), ty = st.type || {}, sit = c.situation || {};
+  const side = ha => {
+    const x = (c.competitors || []).find(t => t.homeAway === ha) || {}, t = x.team || {};
+    const rk = x.curatedRank && x.curatedRank.current;
+    const id = String(t.id || x.id || ""), lgo0 = t.logo || "", lgo = (lg.path === "hockey/nhl" && id === "9") || STARS_RE.test(lgo0) ? STARS_LOGO : lgo0;
+    return { id, ab:t.abbreviation || "?", name:t.shortDisplayName || t.displayName || t.abbreviation || "?", full:t.displayName || t.shortDisplayName || "",
+      logo:lg.soc && id === "185" ? BURN : lg.soc ? lgo.replace("/soccer/500/", "/soccer/500-dark/") : lgo, alt:lg.soc && id !== "185" && /\/soccer\/500\//.test(lgo) ? lgo : "", score:x.score == null ? "" : x.score, rank:rk && rk <= 25 ? rk : 0, conf:String(t.conferenceId || ""),
+      rec:((x.records || [])[0] || {}).summary || "" };
+  };
+  const away = side("away"), home = side("home");
+  const bc = c.broadcasts || [], mk = m => [].concat(...bc.filter(b => b.market === m).map(b => b.names || []))[0] || "";
+  // MLB: the national network if there is one ("FS1"), else the two local feeds away / home; other leagues as before
+  const tv = (lg.key === "mlb" && (mk("national") || [mk("away"), mk("home")].filter((x, i, a) => x && a.indexOf(x) === i).join(" / "))) ||
+    [].concat(...bc.map(b => b.names || []))[0] || "";
+  const raw = ty.state || "pre", when = new Date(ev.date);
+  // ESPN flags a delayed start as "in" before first pitch; nothing is live until its start time passes
+  const held = raw === "in" && when - Date.now() > 60e3;
+  // ESPN can sit on "Scheduled" for several minutes past the start time (warmups, anthem); once the clock
+  // passes the start it counts as live and shows as a card, up to 3 hours in case the feed never flips
+  const late = raw === "pre" && Date.now() >= +when && Date.now() - when < 3 * 3600e3;
+  const soonTxt = { mlb:"First pitch soon", nhl:"Puck drop soon", nba:"Tip-off soon" }[lg.key] || "Kickoff soon";
+  const rival = lg.key === "cfb" ? rivalryOf(away.id, home.id) : "";   // v7
+  const who = people(lg, c, raw);   // v8
+  return { lg, id:ev.id, who, date:when, state:held ? "pre" : late ? "in" : raw, held, late, detail:late ? soonTxt : ty.shortDetail || ty.detail || "", away, home, tv,
+    rival, fav:lg.soc ? !!(MYSOC[away.id] || MYSOC[home.id]) : away.ab === lg.fav || home.ab === lg.fav, sit, close:Math.abs((+away.score || 0) - (+home.score || 0)) };
+}
+/* v8: the players on a card. Football: the game's passing, rushing and receiving leaders. Soccer: the scorers.
+   Baseball and hockey before the start: the probable pitchers or goalies. Otherwise each side's first leader. */
+function people(lg, c, state) {
+  const out = [], seen = {};
+  const add = (a, val, tag) => { if (!a || !a.id || seen[a.id] || out.length >= 3) return; seen[a.id] = 1; out.push({ id:String(a.id), nm:a.shortName || a.displayName || "", val:val || "", tag:tag || "" }); };
+  const sides = c.competitors || [];
+  if (lg.soc) {
+    for (const d of c.details || []) if (d.scoringPlay) for (const a of d.athletesInvolved || []) add(a, (d.clock && d.clock.displayValue) || "", "goal");
+    return out;
+  }
+  if (lg.path.startsWith("football")) {
+    for (const L of c.leaders || []) { const x = (L.leaders || [])[0]; if (x) add(x.athlete, x.displayValue); }
+    return out;
+  }
+  if (state === "pre") for (const t of sides) for (const p of t.probables || []) add(p.athlete, lg.key === "mlb" ? "probable" : "in goal");
+  if (out.length) return out;
+  for (const t of sides) { const L = (t.leaders || [])[0], x = L && (L.leaders || [])[0]; if (x) add(x.athlete, `${x.displayValue} ${L.shortDisplayName || L.abbreviation || ""}`.trim()); }
+  return out;
+}
+const whoHtml = g => g.who && g.who.length ? `<span class="who">${g.who.map(p => `<span data-pbp="${esc(g.lg.soc ? "soc" : g.lg.key)}:${esc(p.id)}" data-pbp-name="${esc(p.nm)}">${esc(p.nm)}</span>${p.val ? `<small>${esc(p.val)}</small>` : ""}`.replace(/^/, "<span>") + "</span>").join("")}</span>` : "";
+function keep(g) {              // college carries about 75 games, so the today lists keep only the ones he cares about
+  if (!g.lg.slim) return true;
+  if (g.lg.soc) return g.fav;
+  return g.fav || !!g.rival || g.away.rank || g.home.rank || g.away.conf === "4" || g.home.conf === "4";   // v7: a rivalry game always makes the list
+}
+function sitText(g) {
+  const s = g.sit || {};
+  if (g.lg.path.startsWith("football")) {
+    const dd = s.downDistanceText || s.shortDownDistanceText || "";
+    return dd ? `<span class="${s.isRedZone ? "rz" : ""}">${esc(dd)}</span>` : "";
+  }
+  if (g.lg.key === "mlb" && s.outs != null) {
+    const on = [s.onFirst && "1st", s.onSecond && "2nd", s.onThird && "3rd"].filter(Boolean);
+    return `<span>${s.outs} out${s.outs === 1 ? "" : "s"} · ${on.length ? "on " + on.join(", ") : "bases empty"}${g.tv ? " · " + esc(g.tv) : ""}</span>`;   // the network rides after the bases
+  }
+  return g.tv ? `<span>${esc(g.tv)}</span>` : "";
+}
+const logo = t => t.logo ? `<img src="${esc(t.logo)}" alt="" loading="lazy" data-ab="${esc(t.ab)}"${t.alt ? ` data-alt="${esc(t.alt)}"` : ""} onerror="logoFail(this)">` : `<span class="ph">${esc(t.ab)}</span>`;
+function logoFail(i) { if (i.dataset.alt) { const u = i.dataset.alt; delete i.dataset.alt; i.src = u; return; }   // a club with no dark crest falls back to the light one
+  const s = document.createElement("span"); s.className = "ph"; s.textContent = i.dataset.ab || ""; i.replaceWith(s); }
+function card(g) {
+  const a = +g.away.score || 0, h = +g.home.score || 0, pos = String((g.sit || {}).possession || "");
+  const row = (t, trail) => `<div class="row${trail ? " trail" : ""}">${logo(t)}<div class="tm">${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim || g.lg.soc ? t.name : t.ab)}${pos && pos === t.id ? "<b></b>" : ""}${g.lg.slim || g.lg.soc ? "" : `<small>${esc(t.rec)}</small>`}</div><div class="sc">${esc(t.score)}</div></div>`;
+  const top = g.lg.soc ? row(g.home, h < a) + row(g.away, a < h) : row(g.away, a < h) + row(g.home, h < a);   // soccer reads home side first
+  return `<a class="g ${g.lg.cls || g.lg.key}${g.fav ? " fav" : ""}" href="${gameHref(g)}">${g.rival ? `<span class="rv" title="Rivalry game">${esc(g.rival)}</span>` : ""}${top}${whoHtml(g)}<div class="foot"><span class="st">${esc(g.detail)}</span>${sitText(g)}</div></a>`;
+}
+/* GOLFNOW-START v33 (Press Box) / v9 (The Green): golf is live only while players are on the course.
+   ESPN keeps a tournament "In Progress" all week, overnight too, so the event status alone is not enough.
+   Same code in both pages; _tests/golf-live/test-golfnow.js checks the two copies match. */
+function golfNow(ev, now){
+  now = now == null ? Date.now() : now;
+  var STOP = /suspend|delay|postpon|cancel|halt|weather|rain|dark/i;
+  function ty(x){ return (x && x.status && x.status.type) || {}; }
+  function words(t){ return [t.name, t.description, t.detail, t.shortDetail].join(' '); }
+  function when(iso){
+    var d = new Date(iso), o = {timeZone:'America/Chicago'};
+    var day = function(x){ return x.toLocaleDateString('en-US', {timeZone:'America/Chicago'}); };
+    var t = d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', timeZone:o.timeZone});
+    return day(d) === day(new Date(now)) ? t : d.toLocaleDateString('en-US', {weekday:'short', timeZone:o.timeZone}) + ' ' + t;
+  }
+  var out = {live:false, text:'', round:0};
+  if (!ev) return out;
+  var es = ty(ev), cs = [];
+  (ev.competitions || []).forEach(function(c){ if (Array.isArray(c)) c.forEach(function(y){ cs.push(y); }); else cs.push(c); });
+  var c0 = cs[0] || {}, ct = ty(c0);
+  var round = out.round = (c0.status && c0.status.period) || 0;
+  if (es.state === 'post' || es.completed) {
+    out.text = /cancel/i.test(words(es)) ? 'Canceled' : /postpon/i.test(words(es)) ? 'Postponed' : 'Final';
+    return out;
+  }
+  var going = es.state === 'in' || cs.some(function(c){ return ty(c).state === 'in'; });
+  if (!going) return out;                                   // before the week starts: nothing to say here
+  var stopped = cs.filter(function(c){ return STOP.test(words(ty(c))); })[0] || (STOP.test(words(es)) ? ev : null);
+  // per-player status (leaderboard feed, stroke play) is the best evidence; the scoreboard feed has none
+  var players = cs.length === 1 ? (c0.competitors || []).filter(function(p){ return ty(p).state; }) : [];
+  if (!stopped) {
+    if (players.length) {
+      out.live = players.some(function(p){
+        var t = ty(p), tee = p.status.teeTime ? Date.parse(p.status.teeTime) : NaN;
+        return t.state === 'in' && !STOP.test(words(t)) && !(tee > now + 60e3);
+      });
+    } else {
+      out.live = cs.some(function(c){ var t = ty(c); return t.state === 'in' && !/complete|final/i.test(words(t)); });
+    }
+  }
+  if (out.live) { out.text = round ? 'Round ' + round : 'On the course'; return out; }
+  if (stopped) {
+    var w = words(ty(stopped)) + ' ' + words(es), r = (stopped.status && stopped.status.period) || round;
+    out.text = (r ? 'Round ' + r + ' ' : 'Play ') + (/suspend|halt|dark/i.test(w) ? 'suspended' : /postpon/i.test(w) ? 'postponed' : /cancel/i.test(w) ? 'canceled' : 'delayed');
+    return out;
+  }
+  var next = players.filter(function(p){ return ty(p).state === 'pre' && p.status.teeTime && Date.parse(p.status.teeTime) > now; })
+    .sort(function(a, b){ return Date.parse(a.status.teeTime) - Date.parse(b.status.teeTime); })[0];
+  if (next) {
+    var nr = next.status.period || round;
+    out.next = next.status.teeTime;
+    out.text = (nr ? 'R' + nr + ' tees off ' : 'Tees off ') + when(next.status.teeTime);
+    return out;
+  }
+  var allDone = players.length && players.every(function(p){ return ty(p).state === 'post'; });
+  if (round && (/complete/i.test(words(ct)) || allDone)) out.text = 'Round ' + round + ' complete';
+  else out.text = 'Between rounds';
+  return out;
+}
+/* GOLFNOW-END */
+/* v11: golf (the Captain: "golf is missing"). A tournament is a card in the Golf column, placed by the day's play window:
+   first tee time of the round played today to the last group's tee time plus about five hours (ESPN gives every
+   player's tee time for each round). The card names the tournament and tour, the leader and score, then "R3 in progress",
+   the tee-time window, or "R2 complete", and the network. Live (red) only while players are on the course, by the same
+   golfNow rule as the Press Box tile and The Green, and never before the first tee time. */
+const MON = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+const TZO = { PDT:-7, PST:-8, MDT:-6, MST:-7, CDT:-5, CST:-6, EDT:-4, EST:-5, GMT:0, UTC:0, BST:1 };
+function teeTime(l) {   // a round's tee time, from the last stat of its linescore ("Fri Oct 09 08:11:00 PDT 2026"); ms or 0
+  const st = ((((l || {}).statistics || {}).categories || [])[0] || {}).stats || [], s = String((st[st.length - 1] || {}).displayValue || "");
+  const m = /^\w{3} (\w{3}) (\d{1,2}) (\d{1,2}):(\d\d):(\d\d) ([A-Z]{3,4}) (\d{4})$/.exec(s);
+  if (m && MON[m[1]] != null && TZO[m[6]] != null) return Date.UTC(+m[7], MON[m[1]], +m[2], +m[3] - TZO[m[6]], +m[4], +m[5]);
+  const t = Date.parse(s); return isFinite(t) && /\d{4}/.test(s) && /:/.test(s) ? t : 0;
+}
+const etKey = d => new Intl.DateTimeFormat("en-CA", { timeZone:"America/New_York", year:"numeric", month:"2-digit", day:"2-digit" }).format(d).replace(/-/g, "");
+const shortT = n => String(n || "").replace(/\s+(presented|pres\.?|powered|hosted)\b.*$/i, "").replace(/ - Stroke Play$/i, "").trim();
+function normGolf(lg, ev) {
+  const c = (ev.competitions || [])[0] || {}, es = (ev.status || {}).type || {}, ct = (c.status || {}).type || {};
+  if (/cancel|postpon/i.test([es.name, es.description, ct.name].join(" "))) return null;
+  const now = Date.now(), day = gridDay(), gn = golfNow(ev, now), round = (c.status || {}).period || 0, ps = c.competitors || [];
+  const tees = {};
+  for (const x of ps) for (const l of x.linescores || []) { const t = teeTime(l); if (t && l.period) (tees[l.period] = tees[l.period] || []).push(t); }
+  const onDay = Object.keys(tees).map(Number).filter(p => tees[p].some(t => { const m = dayMin(new Date(t), day); return m >= 0 && m < 1440; }));
+  const inRange = etKey(new Date(ev.date)) <= day && day <= etKey(new Date(ev.endDate || ev.date));
+  let p = onDay.length ? Math.max(...onDay) : 0, s, last, guess = false;
+  if (p) { s = Math.min(...tees[p]); last = Math.max(...tees[p]); }
+  else if (inRange && (es.state === "in" || es.state === "pre")) {   // no tee times for today: a usual day's play, 8 AM to 6 PM Central
+    p = round || 1; guess = true;
+    s = +new Date(Date.UTC(+day.slice(0, 4), +day.slice(4, 6) - 1, +day.slice(6), 13)); last = s + 300 * 60e3;
+  } else return null;
+  const end = last + RUN.golf * 60e3, done = /complete|final/i.test([ct.name, ct.detail, ct.shortDetail].join(" "));
+  const a1 = ctTime(new Date(s)), b1 = ctTime(new Date(last)), ap = x => x.slice(-2);   // "9:35–11:36 PM", the first AM/PM dropped when both match
+  const win = guess ? "tee times not posted" : last - s > 5 * 60e3 ? (ap(a1) === ap(b1) ? a1.slice(0, -3) : a1) + "–" + b1 : a1;
+  let state, detail;
+  if (es.state === "post" || es.completed) { state = "post"; detail = "Final"; }
+  else if (round && p < round) { state = "post"; detail = "R" + p + " complete"; }
+  else if (/suspend|delay/i.test(gn.text)) { state = now < s ? "pre" : "post"; detail = gn.text; }
+  else if (now < s - 60e3) { state = "pre"; detail = "R" + p + " tees " + win; }
+  else if (gn.live || (es.state === "pre" && now < end)) { state = "in"; detail = "R" + p + " in progress"; }
+  else if (done || now >= end || es.state === "in") { state = "post"; detail = "R" + p + (done || now >= end ? " complete" : " · " + (gn.text || "between rounds")); }
+  else { state = "pre"; detail = "R" + p + " tees " + win; }
+  const tv = [].concat(...(c.broadcasts || []).map(b => b.names || []))[0] || "";
+  const order = ps.slice().sort((a, b) => (a.order || 999) - (b.order || 999));
+  const top = order.slice(0, 5).map(x => {
+    const same = order.filter(y => y.score === x.score), pos = order.indexOf(same[0]) + 1;
+    const l = (x.linescores || []).find(q => q.period === p) || {}, holes = (l.linescores || []).length;
+    const thru = state === "in" ? (holes >= 18 ? "F" : holes ? "thru " + holes : "") : "";
+    return { pos:(same.length > 1 ? "T" : "") + pos, nm:(x.athlete || {}).shortName || (x.athlete || {}).displayName || "", full:(x.athlete || {}).displayName || "",
+      score:x.score || "", today:l.displayValue || "", thru, flag:(((x.athlete || {}).flag || {}).alt) || "" };
+  });
+  return { lg, golf:true, id:ev.id, name:ev.name || "", short:shortT(ev.shortName || ev.name), date:new Date(s), end:new Date(end), last:new Date(last), win, guess,
+    round:p, state, detail, live:gn.live, tv, top, field:ps.length, fav:false, rival:"", who:[], away:{ rank:0, score:"", ab:"", name:"" }, home:{ rank:0, score:"", ab:"", name:"" } };
+}
+function golfBlock(g, x, w, y, h, col, s) {
+  const k = g.lg.key + ":" + g.id, L = g.top[0];
+  const ld = L ? `<span class="m1"><span>${L.pos.startsWith("T") ? `<small>${esc(L.pos)} </small>` : ""}${esc(L.nm)}</span> <em>${esc(L.score)}</em></span>` : `<span class="m1 lo"><span>${g.field ? esc(g.field) + " in the field" : "Field not posted"}</span></span>`;
+  return `<button type="button" class="b gf ${g.state}" data-g="${esc(k)}" data-col="${esc(col)}" data-s="${s}" style="left:${x}px;width:${w}px;top:${y}px;height:${h}px" title="${esc(g.lg.label)}: ${esc(g.name)}">` +
+    `<span class="m1 tn"><span><span class="k">${esc(chipOf(g.lg))}</span>${esc(g.short)}</span></span>${ld}<span class="m2">${esc(g.detail)}${g.tv ? " · " + esc(g.tv) : ""}</span></button>`;
+}
+function golfCard(g) {   // the sheet: tournament, round and window, top five, status and network
+  const rows = g.top.map(p => `<li><span class="p">${esc(p.pos)}</span><span class="n" title="${esc(p.full)}">${esc(p.nm)}${p.flag ? `<small>${esc(p.flag)}</small>` : ""}</span><span class="t">${esc(p.thru || (p.today ? "rd " + p.today : ""))}</span><span class="s">${esc(p.score)}</span></li>`).join("");
+  return `<a class="g gfc" href="${esc(g.lg.href)}"><div class="gt">${esc(g.name)}</div><div class="gr">${esc(g.lg.label)} · Round ${esc(g.round)} · ${g.guess ? "tee times not posted" : "tees " + esc(g.win) + " CT"}</div>` +
+    (rows ? `<ol class="lb">${rows}</ol>` : `<div class="gr">No leaderboard yet${g.field ? " · " + esc(g.field) + " in the field" : ""}</div>`) +
+    `<div class="foot"><span class="st">${esc(g.detail)}</span>${g.tv ? `<span>${esc(g.tv)}</span>` : ""}</div></a>`;
+}
+/* v10: the day grid. One column per sport, the Central day's hours down the right; the league chip rides under each column's picture. */
+const SPORTS = [
+  { key:"nfl", img:"https://a.espncdn.com/i/teamlogos/nfl/500/dal.png", chip:"NFL", name:"NFL" },
+  { key:"cfb", img:"https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png", chip:"CFB", name:"College football" },
+  { key:"mlb", img:"img/mlb.webp", chip:"MLB", name:"Baseball" },
+  { key:"nhl", img:"img/nhl.webp", chip:"NHL", name:"Hockey" },
+  { key:"nba", img:"img/nba.webp", chip:"NBA", name:"Basketball" },
+  { key:"soc", img:"img/soc.webp", chip:"Soccer", name:"Soccer" },
+  { key:"golf", img:"img/golf.webp", chip:"Golf", name:"Golf", unit:"tournaments" }   // v11
+];
+const RUN = { nfl:195, cfb:210, mlb:180, nhl:150, nba:150, soc:115, golf:300 };   // how long a game usually runs, minutes (golf: the last group's round)
+const sportOf = lg => lg.soc ? "soc" : lg.golf ? "golf" : lg.key;
+const CTT = new Intl.DateTimeFormat("en-US", { timeZone:"America/Chicago", hour:"numeric", minute:"2-digit" });
+const ctTime = d => CTT.format(d).replace(":00", "");
+function gridDay() { const now = new Date(); return ctHour(now) < 6 ? ctKey(now, -1) : ctKey(now); }   // past midnight the night's games stay on until 6 AM
+function dayMin(d, day) {   // minutes from Central midnight of day (YYYYMMDD) to d
+  const o = ctParts(d), a = Date.UTC(+o.year, +o.month - 1, +o.day), b = Date.UTC(+day.slice(0, 4), +day.slice(4, 6) - 1, +day.slice(6));
+  return Math.round((a - b) / 864e5) * 1440 + (+o.hour % 24) * 60 + +o.minute;
+}
+const hourName = h => { const x = ((h % 24) + 24) % 24; return x === 0 ? "12 AM" : x === 12 ? "Noon" : x < 12 ? x + " AM" : (x - 12) + " PM"; };
+const GM = {};
+let opened = "", scrolled = false, userAt = 0;
+/* v10: a game is a card standing in its sport's column: the two sides on their own lines (scores on the right), then the
+   clock and period, "Final", or the start time and network; a rivalry's name rides on top. */
+function block(g, x, w, y, h, col, s) {
+  if (g.golf) return golfBlock(g, x, w, y, h, col, s);   // v11
+  const a = +g.away.score || 0, hm = +g.home.score || 0, post = g.state === "post", pre = g.state === "pre";
+  const nm = (t, lose, pfx) => `<span class="m1${lose ? " lo" : ""}"><span>${pfx ? `<small>${pfx} </small>` : ""}${t.rank ? `<i>${t.rank}</i>` : ""}${esc(t.ab)}</span>${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
+  const one = g.lg.soc ? [g.home, hm < a && post, g.away, a < hm && post] : [g.away, a < hm && post, g.home, hm < a && post];
+  const st = pre ? ctTime(g.date) + (g.held ? " · " + (g.detail || "Delayed").split(",")[0] : "") + (g.tv ? " · " + g.tv : "") : esc(g.detail || (post ? "Final" : "Live"));
+  const m2 = (g.lg.soc ? `<span class="k">${esc(chipOf(g.lg))}</span>` : "") + (pre ? esc(st) : st);
+  const k = g.lg.key + ":" + g.id; GM[k] = g;
+  return `<button type="button" class="b ${g.state}${g.fav ? " fav" : ""}${g.rival ? " rvg" : ""}" data-g="${esc(k)}" data-col="${esc(col)}" data-s="${s}" style="left:${x}px;width:${w}px;top:${y}px;height:${h}px" title="${esc(g.away.full || g.away.name)} at ${esc(g.home.full || g.home.name)}">` +
+    `${g.rival ? `<span class="rv">${esc(g.rival)}</span>` : ""}${nm(one[0], one[1])} ${nm(one[2], one[3], pre ? (g.lg.soc ? "v" : "at") : "")}<span class="m2">${m2}</span></button>`;
+}
+function openSheet(k) {
+  const g = GM[k]; if (!g) return closeSheet();
+  opened = k;
+  if (g.golf) {   // v11: a tournament's sheet, its top five
+    document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "in" ? "live" : esc(g.detail)}</span><a href="${esc(g.lg.href)}">The Green &rsaquo;</a></div>${golfCard(g)}`;
+    return document.getElementById("gs").classList.add("on");
+  }
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(g.lg.label)} · ${g.state === "pre" ? "starts " + esc(ctTime(g.date)) : g.state === "in" ? "live" : "final"}</span><a href="${gameHref(g)}">Game center &rsaquo;</a></div>${card(g)}`;
+  document.getElementById("gs").classList.add("on");
+}
+function closeSheet() { opened = ""; document.getElementById("gs").classList.remove("on"); }
+/* round 2: a sport row keeps a few lanes; the rest of its games sit behind "+N more", a list in the same sheet */
+const MORE = {};
+function openMore(key) {
+  const m = MORE[key]; if (!m) return closeSheet();
+  const old = document.querySelector("#gsb .mlist"), keepTop = opened === "more:" + key && old ? old.scrollTop : 0;
+  opened = "more:" + key;
+  const row = g => g.golf ? `<button type="button" class="mi ${g.state}" data-g="${esc(g.lg.key + ":" + g.id)}"><span class="mt">${esc(g.detail)}</span><span class="mm"><i>${esc(chipOf(g.lg))}</i>${esc(g.short)}${g.top[0] ? ` <small class="lo">${esc(g.top[0].nm)} <em>${esc(g.top[0].score)}</em></small>` : ""}</span></button>` : row1(g);
+  const row1 = g => { const a = +g.away.score || 0, h = +g.home.score || 0, pre = g.state === "pre", post = g.state === "post";
+    const nm = (t, lose) => `<span${lose ? ' class="lo"' : ""}>${t.rank ? `<i>${t.rank}</i>` : ""}${esc(g.lg.slim || g.lg.soc ? t.name : t.ab)}${pre ? "" : ` <em>${esc(t.score)}</em>`}</span>`;
+    const one = g.lg.soc ? [g.home, h < a && post, g.away, a < h && post] : [g.away, a < h && post, g.home, h < a && post];
+    return `<button type="button" class="mi ${g.state}${g.fav ? " fav" : ""}" data-g="${esc(g.lg.key + ":" + g.id)}"><span class="mt">${pre ? esc(ctTime(g.date)) : esc(g.detail || (post ? "Final" : "Live"))}</span>` +
+      `<span class="mm">${nm(one[0], one[1])}${pre ? (g.lg.soc ? " v " : " at ") : " "}${nm(one[2], one[3])}${g.rival ? `<small class="rv">${esc(g.rival)}</small>` : ""}</span></button>`; };
+  document.getElementById("gsb").innerHTML = `<div class="lead"><span>${esc(m.name)} · ${m.gs.length} ${esc(m.unit || "games")} today</span></div><div class="g mlist">${m.gs.map(row).join("")}</div>`;
+  document.querySelector("#gsb .mlist").scrollTop = keepTop;
+  document.getElementById("gs").classList.add("on");
+}
+document.getElementById("dg").addEventListener("click", e => { const mo = e.target.closest(".more[data-more]"); if (mo) return openMore(mo.dataset.more);
+  const b = e.target.closest(".b[data-g]"); if (b) openSheet(b.dataset.g); });
+document.getElementById("gs").addEventListener("click", e => { const mi = e.target.closest(".mi[data-g]"); if (mi) return openSheet(mi.dataset.g);
+  if (e.target.closest(".x") || e.target.id === "gs") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && opened && !document.querySelector("#pbpSheet.on")) closeSheet(); });
+document.getElementById("dg").addEventListener("scroll", () => { if (scrolled && Date.now() > render.busy) userAt = Date.now(); }, { passive:true });   // v10: his own scrolling pauses the follow for two minutes
+function render() {
+  const now = new Date(), all = [].concat(...LEAGUES.map(l => data[l.key] || []));
+  const day = gridDay(), nowM = dayMin(now, day);
+  // round 2: live games pass the same keep() filter as the rest (college: his teams, ranked, rivalry, Big 12 country)
+  const today = all.filter(g => g.golf ? dayMin(g.date, day) < 1440 && dayMin(g.end, day) > 0 :   // v11: a tournament with play on the day
+    (!g.lg.cup || g.fav) && keep(g) && (g.state === "in" || ctKey(g.date) === day));
+  const live = today.filter(g => g.state === "in");
+  for (const k in GM) delete GM[k];
+  for (const k in MORE) delete MORE[k];
+  for (const g of today) GM[g.lg.key + ":" + g.id] = g;
+  const dg = document.getElementById("dg"), dgi = document.getElementById("dgi"); dg.style.display = "";   // shown before it is measured
+  const n = s => today.filter(g => g.state === s).length;
+  document.getElementById("sum").innerHTML = today.length ? `<span class="lv"><b>${live.length}</b> live</span><span><b>${n("pre")}</b> still to come</span><span><b>${n("post")}</b> final</span>` : "";
+  const phone = dg.clientWidth < 560;
+  // v10: the sport heads across the top, the hours down the right-hand side, at most three side-by-side lanes a sport
+  const GUT = phone ? 50 : 62, HH = phone ? 86 : 92, TOP = 8, MAXL = 3, GAP = 3, MINH = phone ? 60 : 58, LW = phone ? 82 : 0;
+  // the hours: from the first start (or now) to the last likely finish (or now), whole hours
+  let lo = nowM, hi = nowM + 30;
+  // v11: golf runs to its last group's finish, at most to midnight
+  const span = g => { const s = dayMin(g.date, day); let e = g.golf ? Math.min(dayMin(g.end, day), Math.max(1440, nowM + 15)) : s + RUN[sportOf(g.lg)]; if (g.state === "in") e = Math.max(e, nowM + 15); return [s, e]; };
+  for (const g of today) { const [s, e] = span(g); lo = Math.min(lo, s); hi = Math.max(hi, e); }
+  const h0 = Math.max(-6, Math.floor(lo / 60)), h1 = Math.max(h0 + 3, Math.ceil(hi / 60));
+  // the board fills the window under the header; the PC fits the whole day in that height when it can, the phone scrolls the hours
+  const topDoc = dg.getBoundingClientRect().top + scrollY, maxH = Math.max(phone ? 360 : 420, Math.floor(innerHeight - topDoc - 16));
+  dg.style.maxHeight = maxH + "px";
+  const PH = phone ? 64 : Math.max(52, Math.min(96, Math.floor((maxH - HH - TOP * 2 - 4) / (h1 - h0))));   // pixels an hour
+  const Y = m => TOP + (m - h0 * 60) * PH / 60, H = Math.ceil(TOP * 2 + (h1 - h0) * PH);
+  // which games get a lane first: his teams, live ones, rivalries, ranked, then by start time
+  const pri = g => (g.fav ? 1000 : 0) + (g.state === "in" ? 400 : 0) + (g.rival ? 200 : 0) + (g.away.rank || g.home.rank ? 100 - Math.min(g.away.rank || 99, g.home.rank || 99) : 0);
+  const cols = [];
+  for (const sp of SPORTS) {
+    const gs = today.filter(g => sportOf(g.lg) === sp.key).sort((p, q) => (p.date - q.date) || (q.fav - p.fav));
+    if (!gs.length && sp.key !== "golf") continue;   // a sport with nothing today gets no column; v11: golf always keeps its column, "No play today"
+    const lanes = [], put = [];
+    let hid = 0;
+    for (const g of gs.slice().sort((p, q) => (pri(q) - pri(p)) || (p.date - q.date))) {   // each game takes the first lane free for its whole card
+      const [s, e] = span(g), y = Y(s), h = Math.max(MINH + (g.rival ? 14 : 0), (e - s) * PH / 60 - GAP), z = y + h;
+      let i = lanes.findIndex(L => L.every(([a, b]) => z + GAP <= a || y >= b + GAP));
+      if (i < 0 && lanes.length < MAXL) { i = lanes.length; lanes.push([]); }
+      if (i < 0) { hid++; continue; }   // no room: it waits behind "+N more"
+      lanes[i].push([y, z]);
+      put.push({ g, s, y, h, i });
+    }
+    if (hid) MORE[sp.key] = { name:sp.name, gs, unit:sp.unit };
+    cols.push({ sp, gs, put, hid, n:Math.max(1, lanes.length), none:!gs.length });
+  }
+  if (cols.every(c => c.none)) cols.length = 0;   // nothing at all today: the "No games today" note instead
+  // column widths: the PC shares the width out by lanes so every sport shows; the phone gives each lane room to read and scrolls sideways if need be
+  const avail = dg.clientWidth - GUT;
+  let ws = phone ? cols.map(c => Math.max(86, c.n * LW + 6)) : cols.map(c => c.n + 1);
+  const sum = ws.reduce((p, q) => p + q, 0);
+  if ((!phone || sum < avail) && ws.length) { ws = ws.map(w => Math.floor(w * avail / sum)); ws[ws.length - 1] += avail - ws.reduce((p, q) => p + q, 0); }   // flush to the hours
+  const CW = ws.reduce((p, q) => p + q, 0), W = CW + GUT;
+  let heads = "", cards = "", x = 0, lines = "";
+  cols.forEach((c, ci) => {
+    const w = ws[ci], lw = (w - 6) / c.n; c.x = x; c.w = w;
+    heads += `<div class="ch" data-k="${esc(c.sp.key)}" style="width:${w}px;height:${HH}px" title="${esc(c.sp.name)}"><img src="${esc(c.sp.img)}" alt="${esc(c.sp.name)}"><span class="lc">${esc(c.sp.chip)}</span>` +
+      (c.hid ? `<button type="button" class="more" data-more="${esc(c.sp.key)}" title="All ${c.gs.length} ${esc(c.sp.name)} ${esc(c.sp.unit || "games")} today">+${c.hid} more</button>` : "") + (c.none ? `<span class="nop">No play today</span>` : "") + `</div>`;
+    if (ci) lines += `<i class="cl" style="left:${x}px"></i>`;
+    for (const p of c.put) cards += block(p.g, Math.round(x + 3 + p.i * lw), Math.floor(lw - 3), Math.round(p.y), Math.floor(p.h), c.sp.key, p.s);
+    x += w;
+  });
+  let hours = "";
+  for (let h = h0; h <= h1; h++) {
+    if (h > h0 && h < h1) lines += `<i class="hl" style="top:${Math.round(Y(h * 60))}px"></i>`;
+    if (h < h1 || h === h0) hours += `<span class="hr" style="top:${Math.round(Y(h * 60)) - 7}px">${hourName(h)}</span>`;
+  }
+  const inDay = nowM >= h0 * 60 && nowM <= h1 * 60;
+  render.busy = Date.now() + 900;   // the board's own scrolling is not his
+  dgi.style.width = W + "px";
+  dgi.innerHTML = cols.length ? `<div class="hd" style="width:${W}px">${heads}<span class="cn" style="width:${GUT}px;height:${HH}px"></span></div>` +
+    `<div class="bd" style="width:${W}px;height:${H}px"><div class="cols" style="width:${CW}px;height:${H}px">${lines}${cards}` +
+    (inDay ? `<div class="now" style="top:${Math.round(Y(nowM))}px;width:${CW}px"></div>` : "") + `</div>` +
+    `<div class="gut" style="width:${GUT}px;height:${H}px">${hours}${inDay ? `<span class="nt" style="top:${Math.round(Y(nowM))}px">${esc(ctTime(now))}</span>` : ""}</div></div>` : "";
+  dg.style.display = cols.length ? "" : "none";
+  // it opens at now (a third of the way down); if nothing is on yet, at the first game still to come (or now, once the day is done).
+  // Then it follows now gently, unless he has scrolled the board himself in the last two minutes.
+  if (cols.length && Date.now() - userAt > 120e3) {
+    const next = today.filter(g => g.state === "pre").map(g => dayMin(g.date, day)).sort((p, q) => p - q)[0];
+    const useNow = live.length || next == null || next <= nowM, view = dg.clientHeight - HH;
+    const top = Math.max(0, Math.round(useNow ? Y(nowM) - view * .3 : Y(next) - 24));
+    if (!scrolled) dg.scrollTop = top; else if (Math.abs(dg.scrollTop - top) > 2) dg.scrollTo({ top, behavior:"smooth" });
+    if (!scrolled && dg.scrollWidth > dg.clientWidth + 2) {   // a phone too narrow for every sport opens on the first one with a game on, or next up
+      const want = today.filter(g => useNow ? g.state === "in" : g.state === "pre" && dayMin(g.date, day) === next)[0], c = want && cols.find(c => c.sp.key === sportOf(want.lg));
+      if (c && c.x + c.w > dg.clientWidth - GUT) dg.scrollLeft = c.x;
+    }
+    scrolled = true;
+  }
+  document.getElementById("msg").innerHTML = today.length ? "" : `<div class="empty"><strong>No games today</strong>${Object.keys(data).length ? "This page fills in on its own when the day's games are posted." : "Waiting on the feeds."}</div>`;
+  if (opened) opened.startsWith("more:") ? openMore(opened.slice(5)) : GM[opened] ? openSheet(opened) : closeSheet();
+  document.getElementById("ttl").className = live.length ? "on" : "";
+  document.getElementById("ttlText").textContent = live.length ? `Schedule · ${live.length} live` : "Schedule";   // Schedule v1
+  document.title = (live.length ? `(${live.length}) ` : "") + "Schedule · Press Box";
+  const bad = LEAGUES.filter(l => down[l.key]).map(l => l.label);
+  document.getElementById("meta").textContent = (stamp ? "Updated " + new Date(stamp).toLocaleTimeString([], { hour:"numeric", minute:"2-digit", second:"2-digit" }) : "Loading the boards") + (bad.length ? " · no feed: " + bad.join(", ") : "");
+}
+/* v9: a game that starts 11 PM to midnight Central sits on the next day's ESPN board (it is past midnight in the East),
+   so from noon on tomorrow's board is read too, once a minute, and only its games still on today's Central date are kept. */
+const LATE = {};
+async function pull(lg, full) {
+  try {
+    const ask = async k => {
+      const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard${lg.q}${k ? (lg.q ? "&" : "?") + "dates=" + k : ""}`, { cache:"no-store" });
+      if (!r.ok) throw new Error(r.status);
+      return (await r.json()).events || [];
+    };
+    if (lg.golf) { data[lg.key] = (await ask("")).filter(e => golfKeep(lg, e)).map(e => normGolf(lg, e)).filter(Boolean); down[lg.key] = false; return; }   // v11: a tour's board holds the week's tournament
+    const now = new Date();
+    if (full) LATE[lg.key] = ctHour(now) >= 12 ? (await ask(ctKey(now, 1)).catch(() => [])).filter(e => ctKey(new Date(e.date)) === ctKey(now)) : [];
+    const got = await Promise.all(ctDays().map(ask));
+    got.unshift(LATE[lg.key] || []);
+    const seen = {};
+    data[lg.key] = [].concat(...got.reverse()).filter(e => !seen[e.id] && (seen[e.id] = 1)).map(e => norm(lg, e)); down[lg.key] = false;
+  } catch (e) { down[lg.key] = true; }
+}
+let rsz = 0; window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(render, 150); });
+async function tick() {
+  clearTimeout(timer);
+  const anyLive = k => (data[k] || []).some(g => g.state === "in");
+  const soon = k => (data[k] || []).some(g => g.state === "pre" && g.date - Date.now() < 10 * 60e3 && g.date - Date.now() > -60 * 60e3);
+  // while games are on, only the leagues with a live or imminent game are polled fast; the rest ride along once a minute
+  const full = !stamp || Date.now() - tick.full >= SLOW;
+  if (full) await socCups();
+  const want = LEAGUES.filter(l => full || (!l.golf && (anyLive(l.key) || soon(l.key))));   // v11: golf boards are big and move slowly, once a minute
+  if (full) tick.full = Date.now();
+  await Promise.all(want.map(l => pull(l, full)).concat([mlbKeys()]));   // self-throttled, one slate every 15 minutes
+  stamp = Date.now(); render();
+  const hot = LEAGUES.some(l => !l.golf && (anyLive(l.key) || soon(l.key)));
+  timer = setTimeout(tick, hot && !document.hidden ? FAST : SLOW);
+}
+tick.full = 0; render.busy = 0;
+document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); });
+render(); tick();
+</script>
+<script src="../pb-player.js"></script>
+</body>
+</html>
